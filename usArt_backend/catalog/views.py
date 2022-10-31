@@ -32,10 +32,14 @@ def item_list(request):
 def publicacionsuser(request,username):
     if (request.method == 'GET'):
         # Agafem la llista de DB
-        publicacions = Publication.objects.filter(author = username)
-        serializer = ItemSerializer(publicacions, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
+        try:
+            if Publication.objects.get(author=username):
+                publicacions = Publication.objects.filter(author = username)
+                serializer = ItemSerializer(publicacions, many=True)
+                return JsonResponse(serializer.data, safe=False)
+        except:
+            
+            return JsonResponse({"respuesta": "El usuario que buscas no tiene ninguna publicacion"})
     elif (request.method == 'POST'):
         pass
 
