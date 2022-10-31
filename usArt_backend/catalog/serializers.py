@@ -4,8 +4,9 @@ from rest_framework import serializers
 from catalog.models import Publication
 
 class PublicationSerializer(serializers.ModelSerializer):
+    images = serializers.StringRelatedField(many=True)
     
     class Meta:
         model = Publication
-        fields = ['id', 'title', 'description', 'author', 'review']
+        fields = ['id', 'title', 'description', 'author', 'review', 'images']
     
