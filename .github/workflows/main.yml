@@ -25,7 +25,7 @@ jobs:
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
             docker build -f ${GITHUB_WORKSPACE}/dockerfiles/front/production/Dockerfile ${GITHUB_WORKSPACE}/usArt_frontend -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/usart${{ github.sha }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/usart:${{ github.sha }}
 
         - name: 'Deploy to Azure Container Instances'
           uses: 'azure/aci-deploy@v1'
