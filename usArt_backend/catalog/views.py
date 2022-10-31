@@ -29,6 +29,22 @@ def item_list(request):
     elif (request.method == 'DELETE'):
         pass
 
+def publicacionsuser(request,username):
+    if (request.method == 'GET'):
+        # Agafem la llista de DB
+        publicacions = Publication.objects.filter(author = username)
+        serializer = ItemSerializer(publicacions, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif (request.method == 'POST'):
+        pass
+
+    elif (request.method == 'PUT'):
+        pass
+
+    elif (request.method == 'DELETE'):
+        pass
+
 class ItemDetail(generics.RetrieveAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
