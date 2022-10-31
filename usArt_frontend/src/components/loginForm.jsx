@@ -19,7 +19,7 @@ function Register() {
   return (
     
     <MDBContainer style={{marginTop:"14vmin", paddingBottom:"10vmin"}} className="items-align-center justify-content-center " >
-      <MDBCard className='text-black m-5 items-align-center shadow' style={{borderRadius: '25px'}}>
+      <MDBCard className='text-black m-5 items-align-center shadow' style={{borderRadius: '26px'}}>
         
         <MDBCardBody className='shadow'>
             <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow'/></a> 
@@ -36,10 +36,6 @@ function Register() {
               <div className="d-flex flex-row align-items-center mb-4 text-center ">
                 <MDBInput label='Password' id='form3' type='password'className='shadow-sm'/>
               </div>
-
-
-
-    
 
               <MDBBtn className='mb-5 mt-3 shadow' size='md'>Login</MDBBtn>
               Don't have an account? <a href='/join' className='mb-3'><strong>Sign up</strong></a>

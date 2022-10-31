@@ -1,7 +1,7 @@
 from pickletools import read_long1
 from unittest.util import _MAX_LENGTH
 from rest_framework import serializers
-from catalog.models import Item
+from catalog.models import Publication
 
 class ItemSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
@@ -14,5 +14,10 @@ class ItemSerializer(serializers.Serializer):
         """
         Create and return a new `Item` instance, given the validated data.
         """
-        return Item.objects.create(**validated_data)
+        return Publication.objects.create(**validated_data)
     
+
+class PublicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Publication
+        fields = ("id", "title", "description", "author", "price", "images", "review")
