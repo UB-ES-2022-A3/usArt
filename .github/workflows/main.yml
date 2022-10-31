@@ -1,7 +1,5 @@
-on:
-    push:
-        branches:
-            - "CI-AutoDeployment"
+on: [push]
+
 name: Linux_Container_Workflow
 
 jobs:
