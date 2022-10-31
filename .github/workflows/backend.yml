@@ -51,9 +51,9 @@ jobs:
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
-          name: python-app
+          name: usart-backend
           path: |
-            .
+            ${GITHUB_WORKSPACE}/usArt_backend
             !venv/
   deploy:
     runs-on: ubuntu-latest
