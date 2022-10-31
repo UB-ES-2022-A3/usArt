@@ -53,7 +53,7 @@ jobs:
         with:
           name: usart-backend
           path: |
-            ${GITHUB_WORKSPACE}/usArt_backend/
+            ./usArt_backend/
             !venv/
   deploy:
     runs-on: ubuntu-latest
