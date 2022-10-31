@@ -8,7 +8,9 @@ jobs:
         steps:
         # checkout the repo
         - name: 'Checkout GitHub Action'
-          uses: actions/checkout@CI-AutoDeployment
+          uses: actions/checkout@v3
+          with:
+            ref: CI-AutoDeployment
           
         - name: 'Login via Azure CLI'
           uses: azure/login@v1
