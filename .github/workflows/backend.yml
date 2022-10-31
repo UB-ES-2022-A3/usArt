@@ -47,7 +47,7 @@ jobs:
         run: pip install -r ${GITHUB_WORKSPACE}/usArt_backend/requirements.txt
         
       - name: Collect static
-        run: python ${GITHUB_WORKSPACE}/manage.py collectstatic
+        run: python ${GITHUB_WORKSPACE}/usArt_backend/manage.py collectstatic
       # Optional: Add a step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Upload artifact for deployment jobs
