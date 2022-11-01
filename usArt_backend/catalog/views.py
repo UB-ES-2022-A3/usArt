@@ -1,25 +1,24 @@
-from cmath import log
-from email import message
-from http.client import HTTPResponse
-from django.http import JsonResponse
-from catalog.models import Item
-from catalog.serializers import ItemSerializer, ItemSerializer2
-from rest_framework.parsers import JSONParser
-from django.contrib.auth.models import User
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from rest_framework.authtoken.models import Token
 from rest_framework import generics
+from catalog.models import Publication
+from catalog.serializers import PublicationSerializer
+from django.http import JsonResponse
 
-# Create your views here.
-def item_list(request):
+
+class PublicationList(generics.ListAPIView):
+    queryset = Publication.objects.all()
+    serializer_class = PublicationSerializer
+
+def publicacionsuser(request,username):
     if (request.method == 'GET'):
         # Agafem la llista de DB
-        items = Item.objects.all()
-        # La convertim a diccionari
-        serializer = ItemSerializer(items, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
+        try:
+            if Publication.objects.get(author=username):
+                publicacions = Publication.objects.filter(author = username)
+                serializer = PublicationSerializer(publicacions, many=True)
+                return JsonResponse(serializer.data, safe=False)
+        except:
+            
+            return JsonResponse({"respuesta": "El usuario que buscas no tiene ninguna publicacion"})
     elif (request.method == 'POST'):
         pass
 
@@ -30,5 +29,5 @@ def item_list(request):
         pass
 
 class ItemDetail(generics.RetrieveAPIView):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer2
+    queryset = Publication.objects.all()
+    serializer_class = PublicationSerializer

@@ -2,8 +2,7 @@ from cmath import log
 from email import message
 from http.client import HTTPResponse
 from django.http import JsonResponse
-from catalog.models import Item
-from catalog.serializers import ItemSerializer
+from catalog.models import Publication
 from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User
 from django.contrib import messages
