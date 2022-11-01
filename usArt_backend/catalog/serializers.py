@@ -1,12 +1,16 @@
-from pickletools import read_long1
-from unittest.util import _MAX_LENGTH
 from rest_framework import serializers
-from catalog.models import Publication
+from catalog.models import Publication, PublicationImage
+
+class PublicationImageField(serializers.RelatedField):
+    
+    def to_representation(self, value):
+        return value.image.url
+
 
 class PublicationSerializer(serializers.ModelSerializer):
-    images = serializers.StringRelatedField(many=True)
+    images = PublicationImageField(many=True, read_only=True)
     
     class Meta:
         model = Publication
-        fields = ['id', 'title', 'description', 'author', 'review', 'images']
+        fields = ['id', 'title', 'description', 'author', 'price', 'review', 'images']
     
