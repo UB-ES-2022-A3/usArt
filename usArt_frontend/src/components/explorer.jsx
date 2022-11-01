@@ -28,7 +28,7 @@ export default function Explorer() {
     return (
       <div class="card custom" key={index}  >
         <picture >
-          <source  srcset={card.image} ></source>
+          <source  srcset={card.images[0]} ></source>
           <img id={index} src={imageP} class="card-img-top size-img" alt="Sorry! not available at this time" ></img> 
         </picture>
         <div class="card-body">
