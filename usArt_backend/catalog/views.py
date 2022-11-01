@@ -10,6 +10,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from rest_framework.authtoken.models import Token
 from rest_framework import generics
+from django.db.models import Q
+from functools import reduce
+import operator
 
 # Create your views here.
 def item_list(request):
@@ -32,3 +35,25 @@ def item_list(request):
 class ItemDetail(generics.RetrieveAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
+
+
+def items_search(request, keywords, tag):
+    # falta gestionar tag quan funcioni
+    #keywords = keywords.split(" ")
+    if (request.method == 'GET'):
+        if (tag == 0):
+            items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords) |
+             Q(author__icontains = keywords)) & Q(tag = 0))
+            #items = Publication.objects.filter(reduce(operator.or_,(Q(title__icontains = x) for x in keywords)) | 
+            #reduce(operator.or_,(Q(description__icontains = x) for x in keywords)) | 
+            #reduce(operator.or_,(Q(author__icontains = x) for x in keywords)))
+            serializer = ItemSerializer(items, many=True)
+            return JsonResponse(serializer.data, safe=False)
+        elif (tag == 1):
+            items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords) |
+             Q(author__icontains = keywords)) & Q(tag = 1))
+            serializer = ItemSerializer(items, many=True)
+            return JsonResponse(serializer.data, safe=False)
+
+        else:
+            pass

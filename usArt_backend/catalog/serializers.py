@@ -9,6 +9,7 @@ class ItemSerializer(serializers.Serializer):
     description = serializers.CharField(required=True, max_length=200)
     author = serializers.CharField(required=True, max_length=200)
     price = serializers.FloatField(required=True)
+    tag = serializers.IntegerField(required=True)
 
     def create(self, validated_data):
         """
@@ -20,4 +21,4 @@ class ItemSerializer(serializers.Serializer):
 class PublicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publication
-        fields = ("id", "title", "description", "author", "price", "images", "review")
+        fields = ("id", "title", "description", "author", "price", "tag", "images", "review")

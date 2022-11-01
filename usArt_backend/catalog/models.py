@@ -6,14 +6,11 @@ class Publication(models.Model):
     description = models.CharField(max_length=200, blank=True)
     author = models.CharField(max_length=150, blank=False)
     price = models.FloatField()
-    review = models.FloatField()
-
-    def __str__(self):
-        return self.title
+    tag = models.IntegerField(default = 1)
 
     class Meta:
-        ordering = ['title', 'description', 'author']
-
+        ordering = ['title', 'description', 'author', 'tag']
+        
 """
 class Service(models.Model):
     title = models.CharField(max_length=100)

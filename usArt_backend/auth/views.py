@@ -19,19 +19,16 @@ def register(request, email, username, password):
         return JsonResponse({'resposta': 'funciona'})
     elif (request.method == 'POST'):
         # django auth hash password itself
-        
         user = User.objects.create_user(username=username, email=email, password=password)
         if user != None:
-            print("\njakljfajl\n", username)
-            print("\n")
             return JsonResponse({"username": username}, safe=False)
         else:
-            pass        
-       
+            pass          
     elif (request.method == 'PUT'):
         pass
     elif (request.method == 'DELETE'):
         pass
+
 
 def log_in(request,username,password):
     isloged = False
