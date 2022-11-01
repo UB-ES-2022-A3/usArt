@@ -1,6 +1,7 @@
 from rest_framework import generics
 from catalog.models import Publication
 from catalog.serializers import PublicationSerializer
+from django.http import JsonResponse
 
 
 class PublicationList(generics.ListAPIView):
@@ -13,7 +14,7 @@ def publicacionsuser(request,username):
         try:
             if Publication.objects.get(author=username):
                 publicacions = Publication.objects.filter(author = username)
-                serializer = ItemSerializer(publicacions, many=True)
+                serializer = PublicationSerializer(publicacions, many=True)
                 return JsonResponse(serializer.data, safe=False)
         except:
             
