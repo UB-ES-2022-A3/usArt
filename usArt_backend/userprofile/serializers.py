@@ -10,6 +10,7 @@ class PurchaseHistorySerializer(serializers.Serializer):
     author = serializers.CharField(required=True, max_length=200)
     price = serializers.FloatField(required=True)
     user_id = serializers.IntegerField(required=True)
+    user = serializers.CharField(required=True, max_length=100)
     date = serializers.DateField(required = True)
 
     def create(self, validated_data):
@@ -22,4 +23,4 @@ class PurchaseHistorySerializer(serializers.Serializer):
 class PublicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchaseHistory
-        fields = ("id", "publication_title", "author", "price", "user_id", "date" )
+        fields = ("id", "publication_title", "author", "price", "user_id", "user", "date" )

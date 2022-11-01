@@ -6,6 +6,7 @@ class PurchaseHistory(models.Model):
     author = models.CharField(max_length=200)
     price = models.FloatField()
     user_id = models.IntegerField()
+    user = models.CharField(max_length=100)
     date = models.DateField()
 
     class Meta:

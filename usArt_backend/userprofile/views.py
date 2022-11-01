@@ -13,11 +13,15 @@ from rest_framework import generics
 
 
 # Create your views here.
-def PurchaseHistory_list(request, userid):
-    if (request.user.id == userid):
+def PurchaseHistory_list(request, username):
+    #if (request.user.id == userid):
+    #if (request.user.user == user):
+    username = User.objects.get(username = username)
+    if (request.user.is_authenticated and request.user == username):
         if (request.method == 'GET'):
             # Agafem la llista de DB
-            full_history = PurchaseHistory.objects.filter(user_id = userid)
+            #full_history = PurchaseHistory.objects.filter(user_id = userid)
+            full_history = PurchaseHistory.objects.filter(user = username)
             # La convertim a diccionari
             serializer = PurchaseHistorySerializer(full_history, many=True)
             return JsonResponse(serializer.data, safe=False)
