@@ -24,6 +24,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: CI-AutoDeployment
 
       - name: Set up Python version
         uses: actions/setup-python@v4
