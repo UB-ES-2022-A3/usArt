@@ -1,5 +1,4 @@
 from django.urls import path
-from .views import ItemDetail
 from catalog import views
 from django.views.decorators.csrf import csrf_exempt
 
@@ -7,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
-    path('', views.item_list),
+    path('', views.PublicationList.as_view()),
     path('publicacionsuser/<username>',views.publicacionsuser),
-    path('<int:pk>', ItemDetail.as_view())
+    path('<int:pk>', views.ItemDetail.as_view())
 ]
