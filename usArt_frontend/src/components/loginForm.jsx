@@ -61,7 +61,7 @@ function Login() {
             <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
               <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Log In.</p>
               <div className="d-flex flex-row align-items-center mb-4 text-center ">
-                <MDBInput label='Your Email' id='form2' type='email' placeholder="Email" className='shadow-sm ' onChange={e => setUserName(e.target.value)} />
+                <MDBInput label='Username' id='form2' type='email' placeholder="Username" className='shadow-sm ' onChange={e => setUserName(e.target.value)} />
               </div>
               <div className="d-flex flex-row align-items-center mb-4 text-center ">
                 <MDBInput label='Password' id='form3' type='password' placeholder="Password" className='shadow-sm' onChange={e => setPassword(e.target.value)} />
