@@ -1,6 +1,6 @@
 from rest_framework import generics
 from catalog.models import Publication, PublicationImage
-from catalog.serializers import PublicationSerializer
+from catalog.serializers import PublicationSerializer, ItemSerializer
 from django.http import JsonResponse
 from django.db.models import Q
 from functools import reduce

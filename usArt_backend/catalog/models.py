@@ -11,6 +11,7 @@ class Publication(models.Model):
     description = models.CharField(max_length=200, blank=True)
     author = models.CharField(max_length=150, blank=False)
     price = models.FloatField()
+    review = models.FloatField()
     tag = models.IntegerField(default = 1)
 
     class Meta:

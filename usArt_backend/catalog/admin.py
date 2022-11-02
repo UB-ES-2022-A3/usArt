@@ -5,6 +5,6 @@ from catalog import models
 
 @admin.register(models.Publication)
 class PublicationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'price', 'review', 'author')
+    list_display = ('title', 'description', 'price', 'author', 'review')
 
 admin.site.register(models.PublicationImage)

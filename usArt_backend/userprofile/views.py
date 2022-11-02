@@ -58,4 +58,4 @@ def items_search(request, keywords):
     user = serialize("json", items)
     user = [obj["fields"] for obj in json.loads(user)]
     # falta añadir datos del perfil de usuario (no está hecho)
-    return JsonResponse({"username": user[0]["username"], "email": user[0]["email"]}, safe=False)
+    return JsonResponse({"username": user[0]["username"]}, safe=False)
