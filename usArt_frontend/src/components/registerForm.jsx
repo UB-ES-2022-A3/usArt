@@ -62,12 +62,11 @@ function Register() {
     e.preventDefault();
     setFormErrors(validate(formValues, checkValue));
     setIsSubmit(true);
-    console.log("erorre: ", formErrors)
-
 
   };
 
   useEffect(() => {
+
 
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       modal.show()
