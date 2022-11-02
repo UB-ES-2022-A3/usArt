@@ -45,7 +45,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: usart
-        path: ./usArt_frontend/release.zip
+        path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
