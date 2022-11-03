@@ -53,9 +53,6 @@ jobs:
     environment:
       name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    defaults:
-      run:
-        working-directory: 'usArt_frontend'
 
     steps:
     - name: Download artifact from build job
