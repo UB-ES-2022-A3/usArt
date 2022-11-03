@@ -153,23 +153,23 @@ function Register() {
                   </div>
                   <p className='text-danger mb-3'>{formErrors.password}</p>
 
-                  <div class="form-check  text-center align-items-center justify-content-center">
-                    <input class="form-check-input d-inline-block px-1 " name="checkboxTerms" type="checkbox" id="flexCheckDefault" value={formValues.checkboxTerms} onChange={handleCheck} />
-                    <label class="form-check-label px-3 " for="flexCheckDefault" >
+                  <div className="form-check  text-center align-items-center justify-content-center">
+                    <input className="form-check-input d-inline-block px-1 " name="checkboxTerms" type="checkbox" id="flexCheckDefault" value={formValues.checkboxTerms} onChange={handleCheck} />
+                    <label className="form-check-label px-3 " for="flexCheckDefault" >
                       I agree to <a href='https://www.termsofusegenerator.net/'>Terms of Use</a> and <a href='https://www.termsofusegenerator.net/'>Privacy Policy </a>of UsArt
                     </label>
                   </div>
                   <p className='text-danger'>{formErrors.check}</p>
 
-                  <div class="form-check  text-center align-items-center justify-content-center py-3">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2"/>
-                      <label class="form-check-label px-3 " for="flexCheckDefault2">
+                  <div className="form-check  text-center align-items-center justify-content-center py-3">
+                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault2"/>
+                      <label className="form-check-label px-3 " for="flexCheckDefault2">
                        I agree recieving emails about usArt services
                       </label>
                   </div>
                   
 
-                  <button type="button" onClick={handleSubmit} class="btn btn-primary shadow mb-5 mt-3">Register</button>
+                  <button type="button" onClick={handleSubmit} className="btn btn-primary shadow mb-5 mt-3">Register</button>
 
                   <div className="modal fade" tabIndex="-1" ref={parseExceptionModal} onChange={modalChangerHome}>
                     <div className="modal-dialog">

@@ -2,58 +2,55 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams } from "react-router-dom"
 import imageP from '../assets/not-found-image.jpg'
-import imageP2 from '../assets/pincel.jpg'
 import "./publicacion.css"
-
+import LINK from "./Link"
 
 
 function Publicacion(props) {
 
     const { id } = useParams()
     const [card, setCard] = useState([])
-
-    const cards = [
-        { author: "Pepito", price: 5000, image: imageP, title: "card 1", descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan nunc vel sapien scelerisque rhoncus. Etiam sed pretium ante. Nulla malesuada accumsan mi, sit amet scelerisque nunc venenatis vel. Sed fermentum ante augue, vel maximus risus consectetur at. Donec suscipit sapien et rutrum bibendum. Suspendisse pulvinar purus tellus, ac ultricies enim accumsan quis. Nunc sapien metus, convallis et lorem a, faucibus fermentum ante. Nulla hendrerit nunc eu velit ultrices, sed egestas velit mattis. Fusce congue placerat massa, non cursus tellus volutpat sit amet. Aliquam aliquet nunc id leo sagittis, at fermentum risus scelerisque. Maecenas volutpat aliquet lobortis. Etiam rhoncus elit dui, a tempor est rhoncus ac. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan nunc vel sapien scelerisque rhoncus. Etiam sed pretium ante. Nulla malesuada accumsan mi, sit amet scelerisque nunc venenatis vel. Sed fermentum ante augue, vel maximus risus consectetur at. Donec suscipit sapien et rutrum bibendum. Suspendisse pulvinar purus tellus, ac ultricies enim accumsan quis. Nunc sapien metus, convallis et lorem a, faucibus fermentum ante. Nulla hendrerit nunc eu velit ultrices, sed egestas velit mattis. Fusce congue placerat massa, non cursus tellus volutpat sit amet. Aliquam aliquet nunc id leo sagittis, at fermentum risus scelerisque. Maecenas volutpat aliquet lobortis. Etiam rhoncus elit dui, a tempor est rhoncus ac." },
-        { image: imageP2, title: "card 2", descripcion: "hola soy la card 1 y vendo vestidos de boda hechos a mano con el mejor material hola soy la card 1 y vendo vestidos de boda hechos a mano con el mejor material" },
-        { image: imageP, title: "card 3", descripcion: "hola soy la card 3" },
-        { image: imageP2, title: "card 4", descripcion: "hola soy la card 4" },
-        { image: imageP, title: "card 5", descripcion: "hola soy la card 5" },]
-
+    const [review, setReview] = useState(0)
 
     useEffect(callApi, [])
 
     function callApi() {
-        /*fetch(
-          "http://localhost:8000/catalog/")
-          .then((res) => res.json())
-          .then(data => {
-            setCard(data)
-          }
-          )*/
-        setCard(cards)
+        fetch(
+            LINK + "/catalog/" + id)
+            .then((res) => res.json())
+            .then(data => {
+                setReview(data.review / 5 * 100 + "%");
+                setCard(data);
+                if (data.images.length === 0) {
+                    data.images.push(imageP)
+                    setCard(data);
+                }
+            }
+            )
     }
 
-    if (card.length === 0) return <div class="errorApi"><h1>Cargando..</h1></div>
+    if (card.length === 0) return <div className="errorApi"><h1>Cargando..</h1></div>
 
     function renderCard(card, index) {
         if (index === 0) return (
-            <div class="carousel-item active" data-bs-interval="30000">
-                <img src={card.image} class=" img-slider" alt="..."></img>
+            <div className="carousel-item active" data-bs-interval="30000">
+                <picture >
+                    <source src={card} className=" img-slider" alt="..."></source>
+                    <img id={index} src={imageP} className="img-slider" alt="Sorry! not available at this time" ></img>
+                </picture>
             </div>
         )
         return (
-            <div class="carousel-item" data-bs-interval="30000">
-                <img src={card.image} class="img-slider" alt="..."></img>
+            <div className="carousel-item" data-bs-interval="30000">
+                <img src={card} className="img-slider" alt="..."></img>
             </div>
         )
     }
     function renderButtons(card, index) {
-        const label_i = "Slide " + (index + 1)
-        const index_ = (index)
-        console.log("label:", label_i)
-        console.log("index:", index_)
+        let label_i = "Slide " + (index + 1)
+        let index_ = (index)
         if (index_ === 0) return (
-            <button class="active"
+            <button className="active"
                 type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to={index_}
                 aria-label={label_i} aria-current="true" ></button>
         )
@@ -68,42 +65,66 @@ function Publicacion(props) {
 
 
     return (
-        <div class="publicacion">
-            <div class="custom-container">
-                <div id="carouselExampleControls" class="carousel carousel-dark  slide" data-bs-ride="carousel"  >
-                    <div class="carousel-indicators">
-                        {card.map(renderButtons)}
-                    </div>
-                    <div class="carousel-inner " >
-                        {card.map(renderCard)}
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon " aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                <div class="card-body custom-body ">
-                    <div class="grid" style={{justifyContent:"left",marginInlineStart:"0%"}}>
-                        <h1 style={{ color: "black" }}>{card[0].author}</h1>
-                        <div class="ratings">
-                            <div class="empty-stars"></div>
-                            <div class="full-stars" style={{ width: "70%" }}></div>
+        <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
+            <div className="grid template"  >
+                <div className="card card-item">
+                    <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
+                        <picture >
+                            <source src={LINK+card.imageAuthor} className="card-img-top size-img-card" alt="..."></source>
+                            <img src={imageP} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
+                        </picture>
+                        <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author}</h1>
+                        <div className="ratings">
+                            <div className="empty-stars"></div>
+                            <div className="full-stars" style={{ width: review }}></div>
+                        </div>
+                        <div className="card-body" style={{ paddingTop: "0%" }}>
                         </div>
                     </div>
-                    <h4 style={{ color: "black" }}>{card[0].price}€</h4>
                     <hr></hr>
-                    <p style={{ color: "black" }}>{card[0].descripcion}</p>
+                    <div style={{ marginLeft: "2%" }}>
+                        <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
+                        <p placeholder="Description not found.." className="card-text">{card.description}</p>
+                    </div>
                     <hr></hr>
-                    <div style={{ textAlign: "right", marginBottom: "1%" }}>
-                        <button class="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                    <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
+                        <button className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
                     </div>
                 </div>
-            </div>
-        </div >
+
+                <div className="custom-container">
+                    <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
+                        <div className="carousel-indicators">
+                            {LINK+card.images.map(renderButtons)}
+                        </div>
+                        <div className="carousel-inner " >
+                            {LINK+card.images.map(renderCard)}
+                        </div>
+                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                            <span className="carousel-control-prev-icon " aria-hidden="true"></span>
+                            <span className="visually-hidden">Previous</span>
+                        </button>
+                        <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    <div className="card-body custom-body ">
+                        <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
+                            <h1 style={{ color: "black" }}>{card.title}</h1>
+                        </div >
+                        <h4 style={{ color: "black" }}>{card.price}€</h4>
+                        <hr></hr>
+                        <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
+                        
+                    </div>
+                    <hr style={{marginInlineStart:"30px",marginInlineEnd:"30px"}}></hr>
+                    <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
+                        <button className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                    </div>
+                </div>
+            </div >
+        </div>
     );
 }
 

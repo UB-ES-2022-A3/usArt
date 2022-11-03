@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Register from './components/registerForm'
 import LogIn from './components/loginForm'
 import Explorer from './components/explorer';
+import Publicacion from './components/publicacion';
 import "./app.css"
 import {
   BrowserRouter as Router,
@@ -15,7 +16,7 @@ import {
 
 function VideoBG(){
   if(window.location.href.includes('home')){
-    return (<video class="video"
+    return (<video className="video"
     src = {video}
     autoPlay={true} muted={true}loop={true}
   ></video>);
@@ -35,9 +36,9 @@ function NavbarSelector(){
 
 function App() {
   return (
-    <div class="main" id="main" >
+    <div className="main" id="main" >
       <VideoBG/>
-      <div class="content  ">
+      <div className="content  ">
         <NavbarSelector/>
         <Router>
           <Routes>
@@ -45,6 +46,7 @@ function App() {
             <Route path="/explore" element={<Explorer />}></Route>
             <Route path="/join" element={<Register />}></Route>
             <Route path="/login" element={<LogIn />}></Route>
+            <Route path="/publicacion/:id" element={<Publicacion />}></Route>
           </Routes>
         </Router>
       </div>
