@@ -81,7 +81,7 @@ function Register() {
     if (!values.username) {
       errors.username = "Username is required!";
     }else if(values.username.length < 3){
-      errors.username = "Username must be 3 characters or more";
+      errors.username = "Username must be 3 characters or more! ";
     }
     else if(!usernameRegex.test(values.username)){
       errors.username = "Username must not contain special characters";
