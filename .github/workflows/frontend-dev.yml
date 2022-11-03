@@ -28,7 +28,7 @@ jobs:
         ref: development
     - name: Replace URLs
       run: |
-        sed -i -e 's/localhost:8000/usart.azurewebsites.net/g' ./usArt_frontend/src/components/LINK_RESOURCES.jsx
+        sed -i -e 's/localhost:8000/usart-backend.azurewebsites.net/g' ./usArt_frontend/src/components/LINK_RESOURCES.jsx
         sed -i -e 's/localhost:3000/usart.azurewebsites.net/g' ./usArt_frontend/src/components/LINK_FRONTEND.jsx
         continue-on-error: true
     - name: Set up Node.js
