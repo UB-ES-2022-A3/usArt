@@ -22,12 +22,40 @@ import {
 
 function Register() {
 
+  function registerUser(credentials) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    };
+    let path = "http://localhost:8000/auth/register/" + credentials.email + "&" + credentials.username + "&" + credentials.password;
+    fetch(
+      path, requestOptions)
+      .then((res) => {
+        if (res["status"] !== 200) {
+          setServerError(res["statusText"])
+        } else {
+          return res.json();
+        }
+
+      }
+      )
+      .then(data => {
+        setUsername(data.id);
+      })
+  }
+
+
+
+
   const initialValues = { username: "", email: "", password: "", passwordRepeat: "" };
   let initialValue = false;
+
+  const [username, setUsername] = useState();
   const [formValues, setFormValues] = useState(initialValues);
   const [checkValue, setCheckValue] = useState(initialValue);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+  const [serverError, setServerError] = useState();
 
 
   const handleChange = (e) => {
@@ -51,7 +79,10 @@ function Register() {
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      window.location.assign("http://localhost:3000/home")
+      let response = registerUser(formValues);
+      if (response) {
+        window.location.assign("http://localhost:3000/home")
+      }
     }
   }, [formErrors]);
   const validate = (values, checkValue) => {
@@ -133,6 +164,7 @@ function Register() {
                   </div>
                   <button type="button" onClick={handleSubmit} class="btn btn-primary shadow mb-5 mt-3">Register</button>
                 </form>
+                <p className='text-danger'>{serverError}</p>
 
                 Already have an account? <a href='/login' className='mb-3'><strong>Log in</strong></a>
 
