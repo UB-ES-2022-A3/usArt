@@ -62,12 +62,11 @@ function Register() {
     e.preventDefault();
     setFormErrors(validate(formValues, checkValue));
     setIsSubmit(true);
-    console.log("erorre: ", formErrors)
-
 
   };
 
   useEffect(() => {
+
 
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       modal.show()
@@ -82,7 +81,7 @@ function Register() {
     if (!values.username) {
       errors.username = "Username is required!";
     }else if(values.username.length < 3){
-      errors.username = "Username must be 3 characters or more";
+      errors.username = "Username must be 3 characters or more! ";
     }
     else if(!usernameRegex.test(values.username)){
       errors.username = "Username must not contain special characters";
@@ -156,7 +155,7 @@ function Register() {
                   <div class="form-check  text-center align-items-center justify-content-center">
                     <input class="form-check-input d-inline-block px-1 " name="checkboxTerms" type="checkbox" id="flexCheckDefault" value={formValues.checkboxTerms} onChange={handleCheck} />
                     <label class="form-check-label px-3 " for="flexCheckDefault" >
-                      I agree to <a href='https://www.termsofusegenerator.net/'>Terms of Use</a> and <a href='https://www.termsofusegenerator.net/'>Privacy Policy </a>of UsArt
+                      I agree to <a href='https://www.termsofusegenerator.net/'>Terms of Use</a> and <a href='https://www.termsofusegenerator.net/'>Privacy Policy </a>of UsArt.
                     </label>
                   </div>
                   <p className='text-danger'>{formErrors.check}</p>
@@ -164,7 +163,7 @@ function Register() {
                   <div class="form-check  text-center align-items-center justify-content-center py-3">
                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2"/>
                       <label class="form-check-label px-3 " for="flexCheckDefault2">
-                       I agree recieving emails about usArt services
+                       I agree recieving emails about usArt services.
                       </label>
                   </div>
                   
