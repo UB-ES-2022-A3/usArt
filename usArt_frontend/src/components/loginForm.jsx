@@ -1,57 +1,83 @@
 import React from 'react';
+import { useState } from 'react';
+import './register.css'
+
 
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 
 import {
-  MDBBtn,
   MDBContainer,
   MDBRow,
   MDBCol,
   MDBCard,
   MDBCardBody,
   MDBCardImage,
-  MDBInput,
-  MDBIcon,
+  MDBInput
 }
-from 'mdb-react-ui-kit';
+  from 'mdb-react-ui-kit';
 
-function Register() {
-  return (
+function Login() {
+
+  const [formErrors, setFormErrors] = useState();
+  const [formResponse, setFormResponse] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
+
+  function loginUser(credentials) {
+    let path = "http://localhost:8000/auth/log_in/" + credentials.username + "&" + credentials.password
+    fetch(
+      path)
+      .then((res) => res.json())
+      .then(data => {
+        if (data["IsLogged"] == true) {
+          window.location.assign("http://localhost:3000/home")
+        } else {
+          setFormErrors(data["respuesta"])
+          console.log("erorres: ", formErrors)
+        }
+      }
+      )
+  }
+  const [username, setUserName] = useState();
+  const [password, setPassword] = useState();
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmit(true);
+    loginUser({
+      username,
+      password
+    });
+
     
-    <MDBContainer style={{marginTop:"14vmin", paddingBottom:"10vmin"}} className="items-align-center justify-content-center " >
-      <MDBCard className='text-black m-5 items-align-center shadow' style={{borderRadius: '26px'}}>
-        
+  };
+
+  return (
+    <MDBContainer style={{ marginTop: "14vmin", paddingBottom: "10vmin" }} className="items-align-center justify-content-center " >
+      <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '26px' }}>
         <MDBCardBody className='shadow'>
-            <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow'/></a> 
+          <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
           <MDBRow>
             <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
-
-              <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{color: "#001a1a"}}>Log In.</p>
-
-
+              <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Log In.</p>
               <div className="d-flex flex-row align-items-center mb-4 text-center ">
-                <MDBInput label='Your Email' id='form2' type='email' className='shadow-sm '/> 
+                <MDBInput label='Username' id='form2' type='email' placeholder="Username" className='shadow-sm ' onChange={e => setUserName(e.target.value)} />
               </div>
-
               <div className="d-flex flex-row align-items-center mb-4 text-center ">
-                <MDBInput label='Password' id='form3' type='password'className='shadow-sm'/>
+                <MDBInput label='Password' id='form3' type='password' placeholder="Password" className='shadow-sm' onChange={e => setPassword(e.target.value)} />
               </div>
-
-              <MDBBtn className='mb-5 mt-3 shadow' size='md'>Login</MDBBtn>
+              <button type="button" onClick={handleSubmit} className="btn btn-primary shadow mb-3 mt-3">Login</button>
+              <p className='text-danger mb-5'>{formErrors}</p>
               Don't have an account? <a href='/join' className='mb-3'><strong>Sign up</strong></a>
             </MDBCol>
-
             <MDBCol md='10' lg='6' className='order-1 order-lg-2 d-flex align-items-center'>
-              <MDBCardImage src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp' fluid/>
+              <MDBCardImage src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp' fluid />
             </MDBCol>
-           
-
           </MDBRow>
         </MDBCardBody>
       </MDBCard>
-
     </MDBContainer>
   );
 }
 
-export default Register;
+export default Login;

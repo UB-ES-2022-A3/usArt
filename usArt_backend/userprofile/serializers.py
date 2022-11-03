@@ -1,6 +1,4 @@
-from pickletools import read_long1
-import re
-from unittest.util import _MAX_LENGTH
+from authentication.models import UsArtUser
 from rest_framework import serializers
 from userprofile.models import PurchaseHistory
 
@@ -18,6 +16,31 @@ class PurchaseHistorySerializer(serializers.Serializer):
         Create and return a new `PurchaseHistory` instance, given the validated data.
         """
         return PurchaseHistory.objects.create(**validated_data)
+
+
+class UsArtUserSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(allow_empty_file=True, use_url=True)
+    is_self = serializers.BooleanField(default=True)
+
+    class Meta:
+        model = UsArtUser
+        fields = ('id', 'user_name', 'email', 'description', 'photo', 'is_self')
+
+class UsArtUserFilterSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(allow_empty_file=True, use_url=True)
+
+    class Meta:
+        model = UsArtUser
+        fields = ('id', 'user_name', 'photo')
+
+
+class ExternalUserSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(allow_empty_file=True, use_url=True)
+    is_self = serializers.BooleanField(default=False)
+
+    class Meta:
+        model = UsArtUser
+        fields = ('id', 'user_name', 'description', 'photo', 'is_self')
     
 
 class PublicationSerializer(serializers.ModelSerializer):
