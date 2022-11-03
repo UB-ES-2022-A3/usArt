@@ -1,19 +1,30 @@
 from django.db import models
 
-# Create your models here.
-class Item(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
-    author = models.CharField(max_length=200)
+
+def user_directory_path(instance, filename):
+    return 'images/{0}'.format(filename)
+
+
+class Publication(models.Model):
+
+    title = models.CharField(max_length=100, blank=False)
+    description = models.CharField(max_length=200, blank=True)
+    author = models.CharField(max_length=150, blank=False)
     price = models.FloatField()
+    review = models.FloatField()
+    tag = models.IntegerField(default = 1)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
-        ordering = ['title', 'description', 'author']
+        ordering = ['title', 'description', 'author', 'price', 'review']
 
-"""
-class Service(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
-    author = models.CharField(max_length=200)
-    rate = models.IntegerField(default=0)
-"""
+
+class PublicationImage(models.Model):
+    
+    image = models.ImageField(upload_to=user_directory_path, default='images/default.jpg')
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='images')
+
+
+

@@ -26,13 +26,13 @@ a,p {
 
 
 .size-img {
-
     object-fit: scale-down;
     max-height: 150px;
     border-radius: 20px 20px 0 0;
 }
 
 .max {
+    margin-top: -5%;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -92,3 +92,16 @@ a,p {
 
 
 }
+
+.errorApi{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    
+    
+    
+}
+

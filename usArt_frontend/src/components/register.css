@@ -1,0 +1,21 @@
+body {
+    /*
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: 200vh;
+    background-image: url("assets/image1.jpg");
+    background-repeat: repeat-y;*/
+    background-color: #001a1a;
+    overflow-x: hidden;
+  
+  }
+  
+  
+
+  .modal {
+    background: rgba(0, 0, 0, 0.5); 
+  }
+  .modal-backdrop {
+    display: none;
+  }

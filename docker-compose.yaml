@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: dockerfiles/back/Dockerfile
+    volumes:
+      - ./usArt_backend:/app/
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: dockerfiles/front/Dockerfile
+    volumes:
+      - ./usArt_frontend:/app/
+      - /app/node_modules/
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
