@@ -41,9 +41,14 @@ class PurchaseHistoryDetail(generics.RetrieveAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = UsArtUser.objects.all()
 
+    def get_object(self):
+        queryset = self.get_queryset()
+        user = get_object_or_404(queryset, user_name=self.kwargs['user_name'])
+        return user
+
     def get_serializer(self, *args, **kwargs):
-        user = UsArtUser.objects.get(pk=self.kwargs['pk'])
-        if (self.request.user.id == self.kwargs['pk']):
+        user = UsArtUser.objects.get(user_name=self.kwargs['user_name'])
+        if (self.request.user.user_name == self.kwargs['user_name']):
             return UsArtUserSerializer(user)
         else:
             return ExternalUserSerializer(user)
