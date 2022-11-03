@@ -1,15 +1,22 @@
+
 .img-slider {
-    object-fit: scale-down;
+    object-fit: contain;
     height: 33vh;
-    width: 40vw;
+    width: 38vw;
     min-width: 300px;
+
     
-    /*max-width: 685px;*/
+}
+
+.carousel-item {
+    
+    align-content: center;
+    justify-content: center;
 }
 
 .carousel {
     width: 38vw;
-    /*max-width: 685px;*/
+    
 }
 
 
@@ -20,8 +27,8 @@
     background-color: white;
     padding-top: 20px;
     width: 38vw;
+
     
-    /*max-width: 685px;*/
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 20px;
 
@@ -36,10 +43,26 @@
     margin-top: 35px;
     padding-left: 30px;
     padding-right: 30px;
-    min-height:26vh;
+    min-height: 26vh;
 }
 
-@media only screen and (max-width:1384px) {
+
+@media only screen and (max-width:1863px) {
+    .img-slider {
+        object-fit: contain;
+        height: 33vh;
+        width: 23vw;
+        min-width: 300px;
+        max-width: 450px;
+        margin-left:125px
+    }
+}
+
+@media only screen and (max-width:1472px) {
+
+    .template {
+        justify-content: center;
+    }
 
     .custom-container {
 
@@ -59,12 +82,15 @@
     }
 
     .img-slider {
-        object-fit: scale-down;
+        object-fit: contain;
         height: 30vh;
-        width: 40vw;
-        min-width: 625px;
-        min-height: 300px;
+        width: 25vw;
+        min-width: 350px;
+        max-width: 450px;
+        margin-left:125px
+
     }
+
 
     .card-item {
         margin-left: 10%;
@@ -80,15 +106,15 @@
 
 }
 
-@media only screen and (max-width:705px) {
+@media only screen and (max-width:699px) {
     .custom-container {
 
         border-radius: 20px;
         background-color: white;
         padding-top: 20px;
-
         width: 40vw;
         min-width: 300px;
+
 
     }
 
@@ -100,11 +126,14 @@
 
     .img-slider {
         object-fit: scale-down;
+        overflow: hidden;
         height: 30vh;
-        width: 40vw;
-        min-width: 300px;
+        width: 10vw;
+        min-width: 200px;
+        margin-left: 50px;
 
     }
+
 
     .card-item {
         margin-left: 10%;
@@ -193,15 +222,14 @@
     -webkit-text-stroke: 1px orange;
 }
 
-/* Webkit-text-stroke is not supported on firefox or IE */
-/* Firefox */
+
 @-moz-document url-prefix() {
     .full-stars {
         color: #ECBE24;
     }
 }
 
-/* IE */
+
 .full-stars {
     color: #ECBE24;
 }
@@ -230,9 +258,10 @@
 
 .size-img-card {
     object-fit: scale-down;
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     margin-left: 3%;
-    margin-top: 1%;
+    margin-top: 10px;
 
 }
+

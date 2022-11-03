@@ -3,7 +3,7 @@ import './explorerStyles.css'
 import imageP from '../assets/not-found-image.jpg'
 import imageP2 from '../assets/pincel.jpg'
 import { useState, useEffect } from "react";
-import LINK  from "./Link";
+import LINK_BACKEND  from "./LINK_BACKEND";
 
 export default function Explorer() {
 
@@ -13,7 +13,7 @@ export default function Explorer() {
 
   function callApi() {
     fetch(
-      LINK+"/catalog/")
+      LINK_BACKEND+"/catalog/")
       .then((res) => res.json())
       .then(data => {
         setCards(data)
@@ -29,8 +29,7 @@ export default function Explorer() {
       <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + card.id} key={card.id}>
         <div className="card custom ">
           <picture >
-            <source srcSet={card.image} ></source>
-            <img id={index} src={imageP} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
+            <img id={index} src={LINK_BACKEND+card.images[0]} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
           </picture>
           <div className="card-body ">
             <h5 style={{ color: "black" }}><strong>{card.price}€</strong></h5>

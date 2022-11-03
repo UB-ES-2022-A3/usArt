@@ -47,6 +47,7 @@ function App() {
             <Route path="/join" element={<Register />}></Route>
             <Route path="/login" element={<LogIn />}></Route>
             <Route path="/publicacion/:id" element={<Publicacion />}></Route>
+            
           </Routes>
         </Router>
       </div>
