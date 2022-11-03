@@ -41,9 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'authentication.apps.AuthenticationConfig',
     'catalog.apps.CatalogConfig',
     'userprofile.apps.UserprofileConfig',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -90,10 +91,10 @@ WSGI_APPLICATION = 'usArt_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'usart-db',
-        'USER': 'server_db_admin@usart-db-server',
-        'PASSWORD': '!usart_ES_A3_password!',
-        'HOST': 'usart-db-server.postgres.database.azure.com',
+        'NAME': 'usart-database',
+        'USER': 'serveradmin@usart-database-server',
+        'PASSWORD': 'UsArtAdmin1234',
+        'HOST': 'usart-database-server.postgres.database.azure.com',
         'PORT': '5432',
         'OPTIONS': {'sslmode': 'require'},
     
@@ -141,6 +142,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'authentication.UsArtUser'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
