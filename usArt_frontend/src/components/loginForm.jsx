@@ -28,7 +28,12 @@ function Login() {
       path)
       .then((res) => res.json())
       .then(data => {
-        setFormResponse(data)
+        if (data["IsLogged"] == true) {
+          window.location.assign("http://localhost:3000/home")
+        } else {
+          setFormErrors(data["respuesta"])
+          console.log("erorres: ", formErrors)
+        }
       }
       )
   }
@@ -44,12 +49,7 @@ function Login() {
       password
     });
 
-    if (formResponse["IsLogged"] == true) {
-      window.location.assign("http://localhost:3000/home")
-    } else {
-      setFormErrors(formResponse["respuesta"])
-      console.log("erorres: ", formErrors)
-    }
+    
   };
 
   return (
