@@ -27,7 +27,7 @@ function Register() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     };
-    let path = "http://localhost:8000/auth/register/" + credentials.email + "&" + credentials.username + "&" + credentials.password;
+    let path = "http://localhost:8000/auth/register/" + credentials.email + "&" + credentials.username + "&" + credentials.password +"?format=json";
     fetch(
       path, requestOptions)
       .then((res) => {
@@ -36,7 +36,6 @@ function Register() {
         } else {
           return res.json();
         }
-
       }
       )
       .then(data => {
@@ -79,14 +78,11 @@ function Register() {
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      let response = registerUser(formValues);
-      if (response) {
-        window.location.assign("http://localhost:3000/home")
-      }
+      registerUser(formValues);
+      window.location.assign("http://localhost:3000/home")
     }
   }, [formErrors]);
   const validate = (values, checkValue) => {
-    console.log("entro")
     const errors = {};
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     var usernameRegex = /^[a-zA-Z0-9.\$]{3,30}$/;
