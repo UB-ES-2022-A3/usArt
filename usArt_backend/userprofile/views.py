@@ -48,10 +48,13 @@ class UserDetail(generics.RetrieveAPIView):
 
     def get_serializer(self, *args, **kwargs):
         user = UsArtUser.objects.get(user_name=self.kwargs['user_name'])
+        if not self.request.user.is_authenticated:
+            return ExternalUserSerializer(user)
+        
         if (self.request.user.user_name == self.kwargs['user_name']):
             return UsArtUserSerializer(user)
-        else:
-            return ExternalUserSerializer(user)
+        
+        return ExternalUserSerializer(user)
 
 def items_search(request, keywords):
     if (request.method == 'GET'):
