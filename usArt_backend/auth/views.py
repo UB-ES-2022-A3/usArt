@@ -21,8 +21,6 @@ def register(request, email, username, password):
         
         user = User.objects.create_user(username=username, email=email, password=password)
         if user != None:
-            print("\njakljfajl\n", username)
-            print("\n")
             return JsonResponse({"username": username}, safe=False)
         else:
             pass        
@@ -33,22 +31,21 @@ def register(request, email, username, password):
         pass
 
 def log_in(request,username,password):
-    isloged = False
+    IsLogged = False
     if (request.method == 'GET'):
         try:
             user1 = User.objects.get(username=username)
             if user1.check_password(password):# hash por defecto de django
                 #token = Token.objects.create(username=username)
                 login(request=request,user=user1)
-                isloged= user1.is_authenticated
-                print(isloged)
-                return JsonResponse({"respuesta": "login correcto", "Isloged": isloged})
+                IsLogged= user1.is_authenticated
+                return JsonResponse({"respuesta": "login correcto", "IsLogged": IsLogged})
             #token que devuelva que la sesion de este usuario este iniciada
             else:
-                return JsonResponse({"respuesta": "El usuario o la contaseña son incorrectos"})
+                return JsonResponse({"respuesta": "El usuario o la contaseña son incorrectos", "IsLogged": IsLogged})
         except:
             
-            return JsonResponse({"respuesta": "El usuario no existe"})
+            return JsonResponse({"respuesta": "El usuario o la contaseña son incorrectos" , "IsLogged": IsLogged})
             
 @login_required               
 def prova(request,username):
