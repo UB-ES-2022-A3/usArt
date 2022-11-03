@@ -1,5 +1,5 @@
 from rest_framework import generics
-from catalog.models import Publication
+from catalog.models import Publication, PublicationImage
 from catalog.serializers import PublicationSerializer
 from django.http import JsonResponse
 
