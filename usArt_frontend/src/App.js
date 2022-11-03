@@ -29,7 +29,7 @@ function VideoBG(){
 
 function NavbarSelector(){
   if(!window.location.href.includes('join') && (!window.location.href.includes('login')) ){
-    return <NavBar logged={false} />
+    return <NavBar logged={true} />
   }
 }
 
@@ -47,7 +47,7 @@ function App() {
             <Route path="/explore" element={<Explorer />}></Route>
             <Route path="/join" element={<Register />}></Route>
             <Route path="/login" element={<LogIn />}></Route>
-            <Route path="/profile" element={<Profile />}></Route>
+            <Route path="/profile/:username" element={<Profile />}></Route>
           </Routes>
         </Router>
       </div>
