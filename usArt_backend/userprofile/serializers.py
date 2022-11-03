@@ -26,6 +26,13 @@ class UsArtUserSerializer(serializers.ModelSerializer):
         model = UsArtUser
         fields = ('id', 'user_name', 'email', 'description', 'photo', 'is_self')
 
+class UsArtUserFilterSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(allow_empty_file=True, use_url=True)
+
+    class Meta:
+        model = UsArtUser
+        fields = ('id', 'user_name', 'photo')
+
 
 class ExternalUserSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField(allow_empty_file=True, use_url=True)

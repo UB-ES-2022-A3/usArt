@@ -2,10 +2,10 @@ from authentication.models import UsArtUser
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from userprofile.models import PurchaseHistory
-from userprofile.serializers import PurchaseHistorySerializer, PublicationSerializer, UsArtUserSerializer, ExternalUserSerializer
+from userprofile.serializers import PurchaseHistorySerializer, PublicationSerializer, UsArtUserSerializer, ExternalUserSerializer, UsArtUserFilterSerializer
 from rest_framework import generics
 from rest_framework.permissions import BasePermission, SAFE_METHODS
-
+from django.db.models import Q
 
 # Create your views here.
 def PurchaseHistory_list(request, username):
@@ -52,3 +52,11 @@ class UserDetail(generics.RetrieveAPIView):
             return UsArtUserSerializer(user)
         else:
             return ExternalUserSerializer(user)
+
+def items_search(request, keywords):
+    if (request.method == 'GET'):
+        items = UsArtUser.objects.filter(user_name__icontains = keywords)
+        serializer = UsArtUserFilterSerializer(items, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    
+        
