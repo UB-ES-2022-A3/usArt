@@ -12,6 +12,7 @@ class Publication(models.Model):
     author = models.CharField(max_length=150, blank=False)
     price = models.FloatField()
     review = models.FloatField()
+    tag = models.IntegerField(default = 1)
 
     def __str__(self):
         return self.title
