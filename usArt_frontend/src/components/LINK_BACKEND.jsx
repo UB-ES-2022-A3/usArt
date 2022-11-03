@@ -1,2 +1,2 @@
-const LINK_BACKEND = "http://usart-backend.azurewebsites.net"
+const LINK_BACKEND = "http://localhost:8000/"
 export default LINK_BACKEND

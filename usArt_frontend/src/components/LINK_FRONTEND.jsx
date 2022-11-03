@@ -1,2 +1,2 @@
-const LINK_FRONTEND = "http://usart.azurewebsites.net/"
+const LINK_FRONTEND = "http://localhost:3000/"
 export default LINK_FRONTEND
