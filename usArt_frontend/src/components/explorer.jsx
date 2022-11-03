@@ -3,7 +3,7 @@ import './explorerStyles.css'
 import imageP from '../assets/not-found-image.jpg'
 import imageP2 from '../assets/pincel.jpg'
 import { useState, useEffect } from "react";
-
+import LINK  from "./Link";
 
 export default function Explorer() {
 
@@ -13,7 +13,7 @@ export default function Explorer() {
 
   function callApi() {
     fetch(
-      "https://usart-backend.azurewebsites.net/catalog/")
+      LINK+"/catalog/")
       .then((res) => res.json())
       .then(data => {
         setCards(data)
