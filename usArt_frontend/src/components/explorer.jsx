@@ -25,6 +25,7 @@ export default function Explorer() {
 
   function RenderCard(card, index) {
     return (
+
       <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + card.id} key={card.id}>
         <div className="card custom ">
           <picture >
@@ -37,6 +38,7 @@ export default function Explorer() {
             <p className="card-text max-text"><small>{card.author}</small>  </p>
             <p className="card-text max">{card.description}</p>
           </div>
+
         </div>
       </a>
     )
