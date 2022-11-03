@@ -19,7 +19,7 @@ env:
 
 defaults:
   run:
-    working-directory: ./usArt_frontend
+    working-directory: 'usArt_frontend'
 
 jobs:
   build:
