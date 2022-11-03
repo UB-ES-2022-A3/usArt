@@ -162,7 +162,7 @@ function Register() {
                       I agree recieving emails about usArt services.
                     </label>
                   </div>
-                  <button type="button" onClick={handleSubmit} class="btn btn-primary shadow mb-5 mt-3">Register</button>
+                  <button type="button" onClick={handleSubmit} class="btn btn-primary shadow mb-3 mt-3">Register</button>
                 </form>
                 <p className='text-danger'>{serverError}</p>
 
