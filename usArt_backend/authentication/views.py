@@ -1,14 +1,14 @@
-from cmath import log
-from email import message
-from http.client import HTTPResponse
+from authentication.models import UsArtUser
 from django.http import JsonResponse
 from catalog.models import Publication
 from rest_framework.parsers import JSONParser
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
+from authentication.models import UsArtUser
+from authentication.serializers import UsArtUserSerializer
+from rest_framework import generics
 
 
 # Create your views here.
@@ -19,7 +19,7 @@ def register(request, email, username, password):
     elif (request.method == 'POST'):
         # django auth hash password itself
         
-        user = User.objects.create_user(username=username, email=email, password=password)
+        user = UsArtUser.objects.create_user(user_name=username, email=email, password=password)
         if user != None:
             print("\njakljfajl\n", username)
             print("\n")
@@ -36,7 +36,7 @@ def log_in(request,username,password):
     isloged = False
     if (request.method == 'GET'):
         try:
-            user1 = User.objects.get(username=username)
+            user1 = UsArtUser.objects.get(user_name=username)
             if user1.check_password(password):# hash por defecto de django
                 #token = Token.objects.create(username=username)
                 login(request=request,user=user1)
@@ -52,8 +52,13 @@ def log_in(request,username,password):
             
 @login_required               
 def prova(request,username):
-    user1 = User.objects.get(username=username)
+    user1 = UsArtUser.objects.get(user_name=username)
     if user1.is_authenticated:
         return JsonResponse({"respuesta": "true"})
+
+
+class UsArtUserDetail(generics.RetrieveAPIView):
+    queryset = UsArtUser.objects.all()
+    serializer_class = UsArtUserSerializer()
         
 

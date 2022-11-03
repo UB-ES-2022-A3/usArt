@@ -1,27 +1,22 @@
-from cmath import log
-from email import message
-from http.client import HTTPResponse
+from authentication.models import UsArtUser
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from userprofile.models import PurchaseHistory
-from userprofile.serializers import PurchaseHistorySerializer, PublicationSerializer
-from rest_framework.parsers import JSONParser
-from django.contrib.auth.models import User
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from rest_framework.authtoken.models import Token
+from userprofile.serializers import PurchaseHistorySerializer, PublicationSerializer, UsArtUserSerializer, ExternalUserSerializer
 from rest_framework import generics
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 # Create your views here.
 def PurchaseHistory_list(request, username):
     #if (request.user.id == userid):
     #if (request.user.user == user):
-    username = User.objects.get(username = username)
-    if (request.user.is_authenticated and request.user == username):
+    user_name = UsArtUser.objects.get(user_name = username)
+    if (request.user.is_authenticated and request.user == user_name):
         if (request.method == 'GET'):
             # Agafem la llista de DB
             #full_history = PurchaseHistory.objects.filter(user_id = userid)
-            full_history = PurchaseHistory.objects.filter(user = username)
+            full_history = PurchaseHistory.objects.filter(user = user_name)
             # La convertim a diccionari
             serializer = PurchaseHistorySerializer(full_history, many=True)
             return JsonResponse(serializer.data, safe=False)
@@ -36,7 +31,19 @@ def PurchaseHistory_list(request, username):
             pass
     else:
         return JsonResponse({"Not logged in":"Not logged in"})
+        
 
 class PurchaseHistoryDetail(generics.RetrieveAPIView):
     queryset = PurchaseHistory.objects.all()
     serializer_class = PublicationSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = UsArtUser.objects.all()
+
+    def get_serializer(self, *args, **kwargs):
+        user = UsArtUser.objects.get(pk=self.kwargs['pk'])
+        if (self.request.user.id == self.kwargs['pk']):
+            return UsArtUserSerializer(user)
+        else:
+            return ExternalUserSerializer(user)
