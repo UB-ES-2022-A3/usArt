@@ -40,7 +40,7 @@ function NoLoggedNavBar() {
 }
 function LoggedNavBar() {
   return (
-    <nav className="navbar navbar-expand-sm navbar-light" aria-label="Offcanvas navbar small">
+    <nav classNameName="navbar navbar-expand-sm navbar-light" aria-label="Offcanvas navbar small">
       <div className="container-fluid">
         <a className="navbar-brand p-4 " href="/home"><h1>UsArt</h1></a>
         <button style={{background:"white"}} className="navbar-toggler" id="button"
@@ -87,7 +87,7 @@ export default class navBar extends Component {
   }
   render() {
     //#IMPORTANT: Quitar la negación.
-    if(this.logged){
+    if(!this.logged){
       return <LoggedNavBar/>
     }else{
       return <NoLoggedNavBar/>
