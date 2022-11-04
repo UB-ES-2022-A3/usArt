@@ -40,7 +40,7 @@ function NoLoggedNavBar() {
 }
 function LoggedNavBar() {
   return (
-    <nav classNameName="navbar navbar-expand-sm navbar-light" aria-label="Offcanvas navbar small">
+    <nav className="navbar navbar-expand-sm navbar-light" aria-label="Offcanvas navbar small">
       <div className="container-fluid">
         <a className="navbar-brand p-4 " href="/home"><h1>UsArt</h1></a>
         <button style={{background:"white"}} className="navbar-toggler" id="button"

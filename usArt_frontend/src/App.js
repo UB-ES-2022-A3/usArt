@@ -30,7 +30,7 @@ function VideoBG(){
 
 function NavbarSelector(){
   if(!window.location.href.includes('join') && (!window.location.href.includes('login')) ){
-    return <NavBar logged={true} />
+    return <NavBar logged={false} />
   }
 }
 
