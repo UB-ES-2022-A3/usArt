@@ -17,9 +17,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "homepage": "/home"
-  ,
-  "eslintConfig": {
+  
+   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"

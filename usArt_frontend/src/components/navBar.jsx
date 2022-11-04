@@ -5,31 +5,31 @@ import './navBar.css'
 //#TODO: Poner lo de underL en la NoLogged
 function NoLoggedNavBar() {
   return (
-    <nav class="navbar navbar-expand-sm navbar-light " aria-label="Offcanvas navbar small">
-      <div class="container-fluid">
-        <a class="navbar-brand i p-4" id="navBar-brand" href="/home"><h1>UsArt</h1></a>
-        <button class="navbar-toggler"
+    <nav className="navbar navbar-expand-sm navbar-light " aria-label="Offcanvas navbar small">
+      <div className="container-fluid">
+        <a className="navbar-brand i p-4" id="navBar-brand" href="/home"><h1>UsArt</h1></a>
+        <button className="navbar-toggler"
           type="button" style={{background:"white"}}
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasNavbar2"
           aria-controls="offcanvasNavbar2">
-          <span class="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon"></span>
         </button>
-        <div class="offcanvas offcanvas-start text-bg-dark" id="offcanvasNavbar2" aria-labelledby="offcanvasNavbar2Label">
-          <div class="offcanvas-header">
-            <a  class="nav-link active"  id="offcanvasNavbar2Label" href="/home"><h1>UsArt</h1> </a>
-            <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <div className="offcanvas offcanvas-start text-bg-dark" id="offcanvasNavbar2" aria-labelledby="offcanvasNavbar2Label">
+          <div className="offcanvas-header">
+            <a  className="nav-link active"  id="offcanvasNavbar2Label" href="/home"><h1>UsArt</h1> </a>
+            <button type="button" className="btn-close btn-close-dark" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3" style={{zIndex:"2"}}>
-                <li class="nav-item px-3">
-                  <a  class="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
+          <div className="offcanvas-body">
+              <ul className="navbar-nav justify-content-end flex-grow-1 pe-3" style={{zIndex:"2"}}>
+                <li className="nav-item px-3">
+                  <a  className="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
                 </li>
-                <li class="nav-item px-3">
-                  <a  class="nav-link underL px-3" href="/login">Log in</a>
+                <li className="nav-item px-3">
+                  <a  className="nav-link underL px-3" href="/login">Log in</a>
                 </li>
-                <li class="nav-item px-3">
-                  <a class="nav-link  px-3 landingNoRegisterJoin" href="/join">Join</a>
+                <li className="nav-item px-3">
+                  <a className="nav-link  px-3 landingNoRegisterJoin" href="/join">Join</a>
                 </li>
               </ul>
           </div>
@@ -40,35 +40,35 @@ function NoLoggedNavBar() {
 }
 function LoggedNavBar() {
   return (
-    <nav class="navbar navbar-expand-sm navbar-light" aria-label="Offcanvas navbar small">
-      <div class="container-fluid">
-        <a class="navbar-brand p-4 " href="/home"><h1>UsArt</h1></a>
-        <button style={{background:"white"}} class="navbar-toggler" id="button"
+    <nav className="navbar navbar-expand-sm navbar-light" aria-label="Offcanvas navbar small">
+      <div className="container-fluid">
+        <a className="navbar-brand p-4 " href="/home"><h1>UsArt</h1></a>
+        <button style={{background:"white"}} className="navbar-toggler" id="button"
           type="button"
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasNavbar2"
           aria-controls="offcanvasNavbar2"
           >
-          <span class="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon"></span>
         </button>
-        <div class="offcanvas offcanvas-start text-bg-dark"  id="offcanvasNavbar2" aria-labelledby="offcanvasNavbar2Label">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasNavbar2Label">UsArt</h5>
-            <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <div className="offcanvas offcanvas-start text-bg-dark"  id="offcanvasNavbar2" aria-labelledby="offcanvasNavbar2Label">
+          <div className="offcanvas-header">
+            <h5 className="offcanvas-title" id="offcanvasNavbar2Label">UsArt</h5>
+            <button type="button" className="btn-close btn-close-dark" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 " style={{zIndex:"2"}}>
-                <li class="nav-item px-3">
-                  <a  class="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
+          <div className="offcanvas-body">
+              <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 " style={{zIndex:"2"}}>
+                <li className="nav-item px-3">
+                  <a  className="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
                 </li>
-                <li class="nav-item px-3 ">
-                  <a  class="nav-link underL px-3" href="/favoritos">Favoritos</a>
+                <li className="nav-item px-3 ">
+                  <a  className="nav-link underL px-3" href="/favoritos">Favoritos</a>
                 </li>
-                <li class="nav-item px-3">
-                  <a  class="nav-link underL px-3" href="/buzon">Buzon</a>
+                <li className="nav-item px-3">
+                  <a  className="nav-link underL px-3" href="/buzon">Buzon</a>
                 </li>
-                <li class="nav-item px-3">
-                  <a  class="nav-link underL px-3" href="/perfil">Mi perfil</a>
+                <li className="nav-item px-3">
+                  <a  className="nav-link underL px-3" href="/perfil">Mi perfil</a>
                 </li>
               </ul>
           </div>
@@ -86,7 +86,8 @@ export default class navBar extends Component {
 
   }
   render() {
-    if(this.logged){
+    //#IMPORTANT: Quitar la negación.
+    if(!this.logged){
       return <LoggedNavBar/>
     }else{
       return <NoLoggedNavBar/>

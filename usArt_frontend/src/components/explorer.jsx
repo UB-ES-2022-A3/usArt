@@ -1,60 +1,69 @@
 import { Component } from "react";
 import './explorerStyles.css'
-import imageP from  '../assets/image1.jpg'
-import imageP2 from  '../assets/pincel.jpg'
-function renderCard(card, index) {
-  fetch("https://api.example.com/items")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            items: result.items
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
+import imageP from '../assets/not-found-image.jpg'
+import imageP2 from '../assets/pincel.jpg'
+import { useState, useEffect } from "react";
+import LINK_BACKEND  from "./LINK_BACKEND";
+
+export default function Explorer() {
+
+  const [cards, setCards] = useState([]);
+
+  useEffect(callApi, [])
+
+  function callApi() {
+    fetch(
+      LINK_BACKEND+"/catalog/")
+      .then((res) => res.json())
+      .then(data => {
+        setCards(data)
+      }
       )
+  }
+
+  if (cards.length === 0) {
+    return (
+        <div className='center'>
+            <div  class="loader">
+                <div className="loader-wheel"></div>
+                <div className="loader-text"></div>
+            </div>
+        </div>)
+}
+
+  function RenderCard(card, index) {
+    return (
+
+      <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + card.id} key={card.id}>
+        <div className="card custom ">
+          <picture >
+            <img id={index} src={LINK_BACKEND+card.images[0]} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
+          </picture>
+          <div className="card-body ">
+            <h5 style={{ color: "black" }}><strong>{card.price}€</strong></h5>
+            <h5 style={{ color: "black" }} className="card-title max-text"><strong>{card.title}</strong></h5>
+            <p className="card-text max-text"><small>{card.author}</small>  </p>
+            <p className="card-text max">{card.description}</p>
+          </div>
+
+        </div>
+      </a>
+    )
+  }
+
+
+
   return (
-    <div class="card custom" key={index}>
-      <img src={card.image} class="card-img-top size-img" alt="imagen_pincel" ></img>
-      <div class="card-body">
-        <h5 style={{color:"black"}}class="card-title">{card.title}</h5>
-        <p class="card-text max">{card.descripcion}</p>
+    <div>
+      <div className="row header border">
+        <h1>Explore el talento en UsArt</h1>
+        <p style={{ color: "white" }}>Miles de personas ofrecen servicios de arte diariamente</p>
+      </div>
+      <div className="grid ">
+        {cards.map(RenderCard)}
       </div>
     </div>)
 }
-export default class explorer extends Component {
-  
-  constructor(props) {
-    super(props);
-    this.cards = [
-      { image: imageP, title: "card 1", descripcion: "hola soy la card 1 y vendo vestidos de boda hechos a mano con el mejor material hola soy la card 1 y vendo vestidos de boda hechos a mano con el mejor material" },
-      { image: imageP2, title: "card 2", descripcion: "hola soy la card 1 y vendo vestidos de boda hechos a mano con el mejor material hola soy la card 1 y vendo vestidos de boda hechos a mano con el mejor material" },
-      { image: imageP, title: "card 3", descripcion: "hola soy la card 3" },
-      { image: imageP2, title: "card 4", descripcion: "hola soy la card 4" },
-      { image: imageP, title: "card 5", descripcion: "hola soy la card 5" },]
-
-  }
-  render() {
-    return (
-      <div>
-        <div class="row header border">
-          <h1>Explore el talento en UsArt</h1>
-          <p style={{color:"white"}}>Miles de personas ofrecen servicios de arte diariamente</p>
-        </div>
-        <div class="grid ">
-          {this.cards.map(renderCard)}
-        </div>
-      </div>)
-  }
 
 
-}
+

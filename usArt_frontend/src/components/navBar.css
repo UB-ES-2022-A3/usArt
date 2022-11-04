@@ -67,5 +67,5 @@
 .landingNoRegisterJoin:hover{
   transition: transform 3s ease;
   background: rgb(255, 255, 255);
-  color:black;
+  color:black!important;
 }
