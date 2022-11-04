@@ -22,7 +22,6 @@ function Search() {
     useEffect(callApi, [])
 
 
-
     function callApi() {
         let link = ""
 
@@ -41,26 +40,19 @@ function Search() {
             .then((res) => res.json())
             .then(data => {
                 setCards(data);
-
+                if (cards.length === 0) {
+                    return (
+                        <div className='center'>
+                            <div class="loader">
+                                <div className="loader-wheel"></div>
+                                <div className="loader-text"></div>
+                            </div>
+                        </div>)
+                }
             }
             )
     }
-
-    if (cards.length === 0) {
-
-        setTimeout(function () {
-            console.log("holaaa")
-            document.getElementById("loading").innerHTML = "<h1>No se han encontrado resultados..</h1>";
-        }, 5000);
-        return (
-            <div className='center' id="loading">
-                <div class="loader">
-                    <div className="loader-wheel"></div>
-                    <div className="loader-text"></div>
-                </div>
-            </div>)
-
-    }
+    
 
     function RenderCard(card, index) {
         if (id === "2") {
@@ -71,9 +63,9 @@ function Search() {
                             <img style={{ marginTop: "10px" }} id={index} src={LINK_BACKEND + card.photo} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
                         </picture>
                         <div className="card-body ">
-                            <div className='grid' style={{ justifyContent: "inherit" }}>
+                            <div className='grid' style={{justifyContent:"inherit"}}>
                                 <h5 style={{ color: "black" }}><strong>{card.user_name}</strong></h5>
-                                <div className="ratings" style={{ marginTop: "-5px" }}>
+                                <div className="ratings" style={{marginTop:"-5px"}}>
                                     <div className="empty-stars"></div>
                                     <div className="full-stars" style={{ width: "70%" }}></div>
                                 </div>
