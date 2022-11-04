@@ -39,19 +39,20 @@ function Search() {
             link)
             .then((res) => res.json())
             .then(data => {
-                setCards(data)
+                setCards(data);
+                if (cards.length === 0) {
+                    return (
+                        <div className='center'>
+                            <div class="loader">
+                                <div className="loader-wheel"></div>
+                                <div className="loader-text"></div>
+                            </div>
+                        </div>)
+                }
             }
             )
     }
-    if (cards.length === 0) {
-        return (
-            <div className='center'>
-                <div class="loader">
-                    <div className="loader-wheel"></div>
-                    <div className="loader-text"></div>
-                </div>
-            </div>)
-    }
+    
 
     function RenderCard(card, index) {
         if (id === "2") {
