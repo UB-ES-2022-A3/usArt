@@ -42,13 +42,18 @@ function Publicacion(props) {
 
 
     if (card.length === 0 || author.length === 0) {
+        setTimeout(function () {
+            console.log("holaaa")
+            document.getElementById("loading").innerHTML = "<h1>No se han encontrado resultados..</h1>";
+        }, 5000);
         return (
-            <div className='center'>
-                <div  class="loader">
+            <div className='center' id="loading">
+                <div class="loader">
                     <div className="loader-wheel"></div>
                     <div className="loader-text"></div>
                 </div>
             </div>)
+
     }
 
 
