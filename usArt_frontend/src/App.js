@@ -4,15 +4,11 @@ import Home from './components/Home';
 import Register from './components/registerForm'
 import LogIn from './components/loginForm'
 import Explorer from './components/explorer';
-import Profile from './components/profile';
-import Publicacion from './components/publicacion';
 import "./app.css"
 import {
   BrowserRouter as Router,
   Routes,
-  Route,
-  Form,
-  useHistory 
+  Route
 } from "react-router-dom";
 
 function VideoBG(){
@@ -47,8 +43,6 @@ function App() {
             <Route path="/explore" element={<Explorer />}></Route>
             <Route path="/join" element={<Register />}></Route>
             <Route path="/login" element={<LogIn />}></Route>
-            <Route path="/profile/:username" element={<Profile />}></Route>
-            <Route path="/publicacion/:id" element={<Publicacion />}></Route>
           </Routes>
         </Router>
       </div>

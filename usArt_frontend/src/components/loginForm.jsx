@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
 import './register.css'
+import LINK_BACKEND from "./LINK_BACKEND"
+import LINK_FRONTEND from "./LINK_FRONTEND"
 
 
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
@@ -23,13 +25,13 @@ function Login() {
   const [isSubmit, setIsSubmit] = useState(false);
 
   function loginUser(credentials) {
-    let path = "http://localhost:8000/auth/log_in/" + credentials.username + "&" + credentials.password
+    let path = LINK_BACKEND + "/auth/log_in/" + credentials.username + "&" + credentials.password
     fetch(
       path)
       .then((res) => res.json())
       .then(data => {
         if (data["IsLogged"] == true) {
-          window.location.assign("http://localhost:3000/home")
+          window.location.assign(LINK_FRONTEND + "/home")
         } else {
           setFormErrors(data["respuesta"])
           console.log("erorres: ", formErrors)

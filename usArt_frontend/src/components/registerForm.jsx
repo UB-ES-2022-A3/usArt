@@ -1,9 +1,9 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from "react-router-dom";
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
-import { Modal } from 'bootstrap'
 import './register.css'
+import LINK_BACKEND from "./LINK_BACKEND"
+import LINK_FRONTEND from "./LINK_FRONTEND"
 
 
 
@@ -27,7 +27,7 @@ function Register() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     };
-    let path = "http://localhost:8000/auth/register/" + credentials.email + "&" + credentials.username + "&" + credentials.password +"?format=json";
+    let path = LINK_BACKEND + "/auth/register/" + credentials.email + "&" + credentials.username + "&" + credentials.password +"?format=json";
     fetch(
       path, requestOptions)
       .then((res) => {
@@ -79,7 +79,7 @@ function Register() {
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       registerUser(formValues);
-      window.location.assign("http://localhost:3000/home")
+      window.location.assign(LINK_FRONTEND + "/home")
     }
   }, [formErrors]);
   const validate = (values, checkValue) => {

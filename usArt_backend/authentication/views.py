@@ -1,14 +1,11 @@
 from authentication.models import UsArtUser
 from django.http import JsonResponse
-from catalog.models import Publication
-from rest_framework.parsers import JSONParser
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from rest_framework.authtoken.models import Token
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from authentication.models import UsArtUser
 from authentication.serializers import UsArtUserSerializer
 from rest_framework import generics
+from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
@@ -57,5 +54,15 @@ def prova(request,username):
 class UsArtUserDetail(generics.RetrieveAPIView):
     queryset = UsArtUser.objects.all()
     serializer_class = UsArtUserSerializer()
-        
+
+
+def logged_user(request):
+    if (request.method == 'GET'):
+        if request.user.is_authenticated:
+            queryset = UsArtUser.objects.all()
+            user = get_object_or_404(queryset, user_name=request.user.user_name)
+            return JsonResponse({'username':user.user_name, 'photo': user.photo.url, 'logged-in': True})
+        else:
+            return JsonResponse({'logged-in': False})
+
 
