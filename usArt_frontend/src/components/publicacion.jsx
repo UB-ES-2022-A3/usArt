@@ -79,12 +79,12 @@ function Publicacion(props) {
         )
     }
     function LINK_FRONTENDContact() {
-        const link = LINK_FRONTEND + "message/" + author.id;
+        const link = LINK_FRONTEND + "/message/" + author.id;
         window.location.assign(link)
     }
     function LINK_FRONTENDProfile() {
 
-        const link = LINK_FRONTEND + "profile/" + author.user_name
+        const link = LINK_FRONTEND + "/profile/" + author.user_name
         window.location.assign(link)
     }
 
