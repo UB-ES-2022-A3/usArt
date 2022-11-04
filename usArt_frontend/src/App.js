@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Register from './components/registerForm'
 import LogIn from './components/loginForm'
 import Explorer from './components/explorer';
+import Profile from './components/profile';
 import Publicacion from './components/publicacion';
 import Search from './components/search';
 import "./app.css"
@@ -29,7 +30,7 @@ function VideoBG(){
 
 function NavbarSelector(){
   if(!window.location.href.includes('join') && (!window.location.href.includes('login')) ){
-    return <NavBar logged={false} />
+    return <NavBar logged={true} />
   }
 }
 
@@ -47,8 +48,10 @@ function App() {
             <Route path="/explore" element={<Explorer />}></Route>
             <Route path="/join" element={<Register />}></Route>
             <Route path="/login" element={<LogIn />}></Route>
+            <Route path="/profile/:username" element={<Profile />}></Route>
             <Route path="/publicacion/:id" element={<Publicacion />}></Route>
             <Route path="/search/:search/:id" element={<Search/>}></Route>
+
           </Routes>
         </Router>
       </div>
