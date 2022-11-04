@@ -86,7 +86,8 @@ export default class navBar extends Component {
 
   }
   render() {
-    if(this.logged){
+    //#IMPORTANT: Quitar la negación.
+    if(!this.logged){
       return <LoggedNavBar/>
     }else{
       return <NoLoggedNavBar/>
