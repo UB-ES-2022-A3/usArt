@@ -9,17 +9,33 @@ from django.contrib.auth.decorators import login_required
 from authentication.models import UsArtUser
 from authentication.serializers import UsArtUserSerializer
 from rest_framework import generics
-
+from django.core.validators import RegexValidator
+import re
 
 # Create your views here.
 def register(request, email, username, password):
     
     if (request.method == 'GET'):
-        return JsonResponse({'resposta': 'funciona'})
+        pass
     elif (request.method == 'POST'):
         # django auth hash password itself
-        
-        user = UsArtUser.objects.create_user(user_name=username, email=email, password=password)
+        if (not re.search(r"^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$", email)):
+            return JsonResponse({"response": "the email is not valid"})
+        if (not re.search(r"^[a-zA-Z0-9.\$]{3,30}$", username)):
+            return JsonResponse({"response": "the username is not valid"})
+        if not (re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\.-_!@#\$%\^&\*])(?=.{7,})", password)):
+            return JsonResponse({"response": "the password is not valid"})
+        try:
+            user = UsArtUser.objects.create_user(user_name=username, email=email, password=password)
+        except:
+            if (UsArtUser.objects.filter(user_name = username).exists() & UsArtUser.objects.filter(email = email).exists()):
+                return JsonResponse({"response": "the username and email already exist"})
+            elif (UsArtUser.objects.filter(user_name = username).exists()):
+                return JsonResponse({"response": "the username already exist"})
+            elif (UsArtUser.objects.filter(email = email).exists()):
+                return JsonResponse({"response": "the email already exist"})
+            else:
+                return JsonResponse({"response": "cannot create user"})
         if user != None:
             return JsonResponse({"username": username}, safe=False)
         else:
