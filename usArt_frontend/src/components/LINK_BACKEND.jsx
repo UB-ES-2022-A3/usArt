@@ -1,2 +1,2 @@
-const LINK_BACKEND = "http://localhost:8000/"
+const LINK_BACKEND = "http://localhost:8000"
 export default LINK_BACKEND

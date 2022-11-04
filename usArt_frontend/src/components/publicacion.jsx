@@ -42,13 +42,18 @@ function Publicacion(props) {
 
 
     if (card.length === 0 || author.length === 0) {
-        return <div className="errorApi"><h1>Cargando..</h1></div>
-
+        return (
+            <div className='center'>
+                <div  class="loader">
+                    <div className="loader-wheel"></div>
+                    <div className="loader-text"></div>
+                </div>
+            </div>)
     }
 
 
     function renderCard(card, index) {
-        card = LINK_BACKEND + card
+        card = LINK_BACKEND +'/'+ card
         if (index === 0) return (
             <div className="carousel-item active" data-bs-interval="30000">
                 <img id={index} src={card} className="img-slider" alt="Sorry! not available at this time" ></img>
@@ -79,12 +84,12 @@ function Publicacion(props) {
         )
     }
     function LINK_FRONTENDContact() {
-        const link = LINK_FRONTEND + "message/" + author.id;
+        const link = LINK_FRONTEND + "/message/" + author.id;
         window.location.assign(link)
     }
     function LINK_FRONTENDProfile() {
 
-        const link = LINK_FRONTEND + "profile/" + author.user_name
+        const link = LINK_FRONTEND + "/profile/" + author.user_name
         window.location.assign(link)
     }
 

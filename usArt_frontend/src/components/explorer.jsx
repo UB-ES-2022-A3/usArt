@@ -21,7 +21,15 @@ export default function Explorer() {
       )
   }
 
-  if (cards.length === 0) return <div className="errorApi"><h1>Cargando..</h1></div>
+  if (cards.length === 0) {
+    return (
+        <div className='center'>
+            <div  class="loader">
+                <div className="loader-wheel"></div>
+                <div className="loader-text"></div>
+            </div>
+        </div>)
+}
 
   function RenderCard(card, index) {
     return (

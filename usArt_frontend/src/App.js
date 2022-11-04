@@ -5,6 +5,7 @@ import Register from './components/registerForm'
 import LogIn from './components/loginForm'
 import Explorer from './components/explorer';
 import Publicacion from './components/publicacion';
+import Search from './components/search';
 import "./app.css"
 import {
   BrowserRouter as Router,
@@ -47,7 +48,7 @@ function App() {
             <Route path="/join" element={<Register />}></Route>
             <Route path="/login" element={<LogIn />}></Route>
             <Route path="/publicacion/:id" element={<Publicacion />}></Route>
-            
+            <Route path="/search/:search/:id" element={<Search/>}></Route>
           </Routes>
         </Router>
       </div>
