@@ -56,7 +56,6 @@ class UserDetail(generics.RetrieveAPIView):
         
         return ExternalUserSerializer(user)
 
-
 def items_search(request, keywords):
     if (request.method == 'GET'):
         items = UsArtUser.objects.filter(user_name__icontains = keywords)

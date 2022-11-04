@@ -7,6 +7,5 @@ urlpatterns = [
     path('register/<email>&<username>&<password>', csrf_exempt(views.register), name = 'register'),
     path('log_in/<username>&<password>', views.log_in),
     path('log_in/test/<username>', views.prova),
-    path('users/<int:pk>', views.UsArtUserDetail.as_view()),
-    path('logged-user', views.logged_user)
+    path('users/<int:pk>', views.UsArtUserDetail.as_view())
 ]
