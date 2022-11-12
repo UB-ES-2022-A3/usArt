@@ -25,7 +25,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        ref: development
+        ref: main
     - name: Replace URLs
       run: |
         sed -i -e 's#http://localhost:8000#https://usart-backend.azurewebsites.net#g' ./usArt_frontend/src/components/LINK_BACKEND.jsx
