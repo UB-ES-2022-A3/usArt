@@ -2,7 +2,11 @@ import React from 'react';
 import { useState } from 'react';
 import './register.css';
 import LINK_BACKEND from "./LINK_BACKEND";
-import LINK_FRONTEND from "./LINK_FRONTEND"
+import LINK_FRONTEND from "./LINK_FRONTEND";
+import cookie from 'react-cookies';
+import axios, * as others from 'axios';
+import { useContext } from "react";
+import AuthContext from "../context/authcontext";
 
 
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
@@ -19,26 +23,12 @@ import {
   from 'mdb-react-ui-kit';
 
 function Login() {
+  const { loginUser } = useContext(AuthContext);
 
   const [formErrors, setFormErrors] = useState();
   const [formResponse, setFormResponse] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
 
-  function loginUser(credentials) {
-    let path = LINK_BACKEND + "/auth/log_in/" + credentials.username + "&" + credentials.password
-    fetch(
-      path)
-      .then((res) => res.json())
-      .then(data => {
-        if (data["IsLogged"] == true) {
-          window.location.assign(LINK_FRONTEND + "/home")
-        } else {
-          setFormErrors(data["respuesta"])
-          console.log("erorres: ", formErrors)
-        }
-      }
-      )
-  }
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
 
@@ -46,12 +36,9 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmit(true);
-    loginUser({
-      username,
-      password
-    });
-
-    
+    console.log(username);
+    console.log(password);
+    username.length > 0 && loginUser(username, password)
   };
 
   return (

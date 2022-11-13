@@ -53,7 +53,7 @@ function Publicacion(props) {
 
 
     function renderCard(card, index) {
-        card = LINK_BACKEND +'/'+ card
+        card = LINK_BACKEND + card
         if (index === 0) return (
             <div className="carousel-item active" data-bs-interval="30000">
                 <img id={index} src={card} className="img-slider" alt="Sorry! not available at this time" ></img>

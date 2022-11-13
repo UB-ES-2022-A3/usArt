@@ -7,13 +7,14 @@ import Explorer from './components/explorer';
 import Profile from './components/profile';
 import Publicacion from './components/publicacion';
 import Search from './components/search';
+import { AuthProvider } from './context/authcontext';
+import { useContext } from "react";
+import AuthContext from "./context/authcontext";
 import "./app.css"
 import {
   BrowserRouter as Router,
   Routes,
-  Route,
-  Form,
-  useHistory 
+  Route
 } from "react-router-dom";
 
 function VideoBG(){
@@ -29,8 +30,9 @@ function VideoBG(){
 
 
 function NavbarSelector(){
+  let { user } = useContext(AuthContext);
   if(!window.location.href.includes('join') && (!window.location.href.includes('login')) ){
-    return <NavBar logged={false} />
+    return <NavBar logged={user !== null}/>
   }
 }
 
@@ -38,25 +40,27 @@ function NavbarSelector(){
 
 function App() {
   return (
+    
+    
+    <Router>
     <div className="main" id="main" >
-      <VideoBG/>
-      <div className="content  ">
-        <NavbarSelector/>
-        <Router>
-          <Routes>
-            <Route path="/home" element={<Home />}></Route>
-            <Route path="/explore" element={<Explorer />}></Route>
-            <Route path="/join" element={<Register />}></Route>
-            <Route path="/login" element={<LogIn />}></Route>
-            <Route path="/profile/:username" element={<Profile />}></Route>
-            <Route path="/publicacion/:id" element={<Publicacion />}></Route>
-            <Route path="/search/:search/:id" element={<Search/>}></Route>
-
-          </Routes>
-        </Router>
-      </div>
+      <AuthProvider>
+        <VideoBG/>
+        <div className="content">
+          <NavbarSelector/>
+            <Routes>
+              <Route path="/home" element={<Home />}></Route>
+              <Route path="/explore" element={<Explorer />}></Route>
+              <Route path="/join" element={<Register />}></Route>
+              <Route path="/login" element={<LogIn />}></Route>
+              <Route path="/profile/:username" element={<Profile />}></Route>
+              <Route path="/publicacion/:id" element={<Publicacion />}></Route>
+              <Route path="/search/:search/:id" element={<Search/>}></Route>
+            </Routes>
+        </div>
+      </AuthProvider>
     </div>
-
+    </Router>
   );
 }
 

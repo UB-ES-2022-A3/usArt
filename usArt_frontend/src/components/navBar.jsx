@@ -1,5 +1,7 @@
 import { Component } from "react";
-import './navBar.css'
+import './navBar.css';
+import { useContext } from "react";
+import AuthContext from "../context/authcontext";
 
 
 //#TODO: Poner lo de underL en la NoLogged
@@ -39,6 +41,7 @@ function NoLoggedNavBar() {
   );
 }
 function LoggedNavBar() {
+  let { user, logoutUser } = useContext(AuthContext);
   return (
     <nav className="navbar navbar-expand-sm navbar-light" aria-label="Offcanvas navbar small">
       <div className="container-fluid">
@@ -61,14 +64,14 @@ function LoggedNavBar() {
                 <li className="nav-item px-3">
                   <a  className="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
                 </li>
-                <li className="nav-item px-3 ">
-                  <a  className="nav-link underL px-3" href="/favoritos">Favoritos</a>
-                </li>
                 <li className="nav-item px-3">
                   <a  className="nav-link underL px-3" href="/buzon">Buzon</a>
                 </li>
                 <li className="nav-item px-3">
-                  <a  className="nav-link underL px-3" href="/perfil">Mi perfil</a>
+                  <a  className="nav-link underL px-3" href={"/profile/"+user.username}>Mi perfil</a>
+                </li>
+                <li className="nav-item px-3 ">
+                  <a  className="nav-link underL px-3" href="/home" onClick={logoutUser}>Log Out</a>
                 </li>
               </ul>
           </div>
@@ -87,7 +90,7 @@ export default class navBar extends Component {
   }
   render() {
     //#IMPORTANT: Quitar la negación.
-    if(!this.logged){
+    if(this.logged){
       return <LoggedNavBar/>
     }else{
       return <NoLoggedNavBar/>
