@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-m(h-0tjc3h^y!ln5-n#5btp^q*0*stmr7*-y^2)d!!w@kge3j*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net', 'usart-backend-dev.azurewebsites.net']
 
 
 # Application definition
@@ -65,7 +65,15 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'http://usart.azurewebsites.net',
+    'http://usart-dev.azurewebsites.net',
+    'https://usart.azurewebsites.net',
+    'https://usart-dev.azurewebsites.net',
+    'http://usart-backend.azurewebsites.net',
+    'http://usart-backend-dev.azurewebsites.net',
+    'https://usart-backend.azurewebsites.net',
+    'https://usart-backend-dev.azurewebsites.net'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -79,7 +87,11 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'None'
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    'http://usart.azurewebsites.net',
+    'http://usart-dev.azurewebsites.net',
+    'https://usart.azurewebsites.net',
+    'https://usart-dev.azurewebsites.net'
 ]
 
 ROOT_URLCONF = 'usArt_backend.urls'
