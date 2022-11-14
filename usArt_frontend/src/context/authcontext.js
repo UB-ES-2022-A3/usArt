@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
       })
     });
     const data = await response.json();
+    console.log(response);
 
     if (response.status === 200) {
       setAuthTokens(data);
