@@ -32,7 +32,7 @@ function Publicacion(props) {
     }
     function callApi2(data) {
         fetch(
-            LINK_BACKEND + "/userprofile/" + data.author)
+            LINK_BACKEND + "/userprofile/" + data.author.user_name)
             .then((res) => res.json())
             .then(data => {
                 setAuthor(data);
@@ -41,7 +41,7 @@ function Publicacion(props) {
     }
 
 
-    if (card.length === 0 || author.length === 0) {
+    if (card.length === 0 || author === undefined) {
         return (
             <div className='center'>
                 <div  class="loader">
@@ -103,7 +103,7 @@ function Publicacion(props) {
                         <picture >
                             <img src={LINK_BACKEND + author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
                         </picture>
-                        <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author}</h1>
+                        <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
                         <div className="ratings">
                             <div className="empty-stars"></div>
                             <div className="full-stars" style={{ width: review }}></div>

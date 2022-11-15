@@ -36,16 +36,14 @@ def items_search(request, keywords, tag):
     #keywords = keywords.split(" ")
     if (request.method == 'GET'):
         if (tag == 0):
-            items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords) |
-                Q(author__icontains = keywords)) & Q(tag = 0))
+            items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords)) & Q(tag = 0))
             #items = Publication.objects.filter(reduce(operator.or_,(Q(title__icontains = x) for x in keywords)) | 
             #reduce(operator.or_,(Q(description__icontains = x) for x in keywords)) | 
             #reduce(operator.or_,(Q(author__icontains = x) for x in keywords)))
             serializer = PublicationSerializer(items, many=True)
             return JsonResponse(serializer.data, safe=False)
         elif (tag == 1):
-            items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords) |
-                Q(author__icontains = keywords)) & Q(tag = 1))
+            items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords)) & Q(tag = 1))
             serializer = PublicationSerializer(items, many=True)
             return JsonResponse(serializer.data, safe=False)
 
