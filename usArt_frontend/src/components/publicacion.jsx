@@ -22,20 +22,12 @@ function Publicacion(props) {
             .then(data => {
                 setReview(data.review / 5 * 100 + "%");
                 setCard(data);
+                console.log(data);
                 if (data.images.length === 0) {
                     data.images.push(imageP)
                     setCard(data);
                 }
-                callApi2(data)
-            }
-            )
-    }
-    function callApi2(data) {
-        fetch(
-            LINK_BACKEND + "/userprofile/" + data.author.user_name)
-            .then((res) => res.json())
-            .then(data => {
-                setAuthor(data);
+                setAuthor(data.author);
             }
             )
     }
@@ -101,7 +93,7 @@ function Publicacion(props) {
                 <div className="card card-item">
                     <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
                         <picture >
-                            <img src={LINK_BACKEND + author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
+                            <img src={LINK_BACKEND + '/media/' + author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
                         </picture>
                         <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
                         <div className="ratings">

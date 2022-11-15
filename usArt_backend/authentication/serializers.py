@@ -3,7 +3,7 @@ from authentication.models import UsArtUser
 
 
 class UsArtUserSerializer(serializers.ModelSerializer):
-    photo = serializers.ImageField(allow_empty_file=True, use_url=True)
+    photo = serializers.ImageField(allow_empty_file=True, use_url=False)
     
     class Meta:
         model = UsArtUser
