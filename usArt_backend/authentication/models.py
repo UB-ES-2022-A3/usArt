@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+import uuid
 
 # Create your models here.
 
@@ -38,6 +39,7 @@ def upload_to_photo(instance, filename):
 
 class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField('Correo electronico', unique=True)
     user_name = models.CharField(max_length=150, unique=True)
     description = models.TextField(default="")

@@ -84,7 +84,6 @@ ACCESS_CONTROL_ALLOW_HEADERS = '*'
 CSRF_COOKIE_PATH = '/'
 CSRF_COOKIE_SAMESITE = 'Strict'  
 CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'None'
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
@@ -120,16 +119,16 @@ WSGI_APPLICATION = 'usArt_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'usart-database',
-        'USER': 'serveradmin@usart-database-server',
-        'PASSWORD': 'UsArtAdmin1234',
-        'HOST': 'usart-database-server.postgres.database.azure.com',
-        'PORT': '5432',
-        'OPTIONS': {'sslmode': 'require'},
-    
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'usartdatabase',
+        'USER': 'usartadmin',
+        'PASSWORD': '4GAg*JFY0!4!72%N',
+        'HOST': 'usart-database.mysql.database.azure.com',
+        'PORT': '3306',
+        'OPTIONS': {}
     }
 }
+
 
 
 # Password validation
