@@ -44,9 +44,15 @@ class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
     user_name = models.CharField(max_length=150, unique=True)
     description = models.TextField(default="")
     photo = models.ImageField(upload_to=upload_to_photo, default='photos/default.jpg')
-    is_artist = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    STATUS_CHOICES = [
+        ('BAN', 'Banned'),
+        ('ALO', 'Allowed')
+    ]
+    status = models.CharField(choices=STATUS_CHOICES, default='ALO', max_length=3)
+    ban_date = models.DateTimeField(null=True)
+    unban_date = models.DateTimeField(null=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
     objects = AccountManager()
 
     USERNAME_FIELD = 'user_name'
