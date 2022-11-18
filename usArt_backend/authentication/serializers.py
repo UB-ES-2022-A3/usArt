@@ -7,4 +7,4 @@ class UsArtUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UsArtUser
-        fields = ('id', 'email', 'user_name', 'description', 'is_artist', 'photo')
+        fields = ('id', 'email', 'user_name', 'description', 'photo')
