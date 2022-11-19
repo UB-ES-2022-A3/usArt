@@ -28,9 +28,11 @@ def publicacionsuser(request,username):
     elif (request.method == 'DELETE'):
         pass
 
-class ItemDetail(generics.RetrieveAPIView):
+
+class PublicationDetail(generics.RetrieveAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationSerializer
+
 
 def items_search(request, keywords, tag):
     if (request.method == 'GET'):

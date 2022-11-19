@@ -20,7 +20,7 @@ from django.urls import path, include
 from rest_framework.authtoken import views
 
 urlpatterns = [
-    path('catalog/', include('catalog.urls')),
+    path('catalog/', include('catalog.urls', namespace='catalog')),
     path('admin/', admin.site.urls),
     path('auth/', include('authentication.urls')),
     path('userprofile/', include('userprofile.urls')),

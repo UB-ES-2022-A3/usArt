@@ -47,7 +47,7 @@ class Auction(models.Model):
     ]
     staus = models.CharField(
         max_length=2,
-        choices= STATUS_CHOICES,
+        choices=STATUS_CHOICES,
         default='OP'
     )
     closure_date = models.DateTimeField()
@@ -55,9 +55,10 @@ class Auction(models.Model):
     stock = models.IntegerField()
     last_updated = models.DateTimeField(auto_now=True)
 
+
 class Bid(models.Model):
     auc_id = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='bids')
-    user_id = models.ForeignKey(UsArtUser, on_delete= models.CASCADE, related_name='bidder')
+    user_id = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name='bidder')
     bid = models.FloatField(blank=False)
     date = models.DateTimeField(auto_now=True)
 
@@ -67,6 +68,7 @@ class Bid(models.Model):
                 fields=['auc_id', 'user_id'], name='unique_auction_user_combination'
             )
         ]
+
 
 class Commission(models.Model):
     pub_id = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='publication')
@@ -81,10 +83,10 @@ class Commission(models.Model):
         ('DO', 'Done')
     ]
     status = models.CharField(choices=STATUS_CHOICES, max_length=2, default='PD')
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=['pub_id', 'user_id'], name='unique_publication_user_commission_combination'
             )
         ]
-
