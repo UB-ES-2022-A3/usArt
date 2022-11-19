@@ -34,7 +34,6 @@ class Publication(models.Model):
 
 
 class PublicationImage(models.Model):
-    
     image = models.ImageField(upload_to=user_directory_path, default='images/default.jpg')
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='images')
 
@@ -64,9 +63,7 @@ class Bid(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(
-                fields=['auc_id', 'user_id'], name='unique_auction_user_combination'
-            )
+            models.UniqueConstraint(fields=['auc_id', 'user_id'], name='unique_auction_user_combination')
         ]
 
 
@@ -86,7 +83,5 @@ class Commission(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(
-                fields=['pub_id', 'user_id'], name='unique_publication_user_commission_combination'
-            )
+            models.UniqueConstraint(fields=['pub_id', 'user_id'], name='unique_publication_user_commission_combination')
         ]

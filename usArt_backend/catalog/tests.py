@@ -12,8 +12,7 @@ class TestPublicationModel(TestCase):
     @classmethod
     def setUpTestData(cls):
         user = UsArtUser.objects.create_user(email='test@test.com', user_name='test', password='test')
-        Publication.objects.create(title='Title test', description='Description test',
-                                   author_id=user.id, price=5.0)
+        Publication.objects.create(title='Title test', description='Description test', author_id=user.id, price=5.0)
 
     def test_publication_content(self):
         publication = Publication.objects.get(title='Title test')
@@ -28,12 +27,22 @@ class TestPublicationAPI(APITestCase):
     @classmethod
     def setUpTestData(cls):
         user = UsArtUser.objects.create_user(email='test@test.com', user_name='test', password='test')
+        user2 = UsArtUser.objects.create_user(email='test2@test.com', user_name='test2', password='test')
         Publication.objects.create(title='Title test', description='Description test', author_id=user.id, price=5.0)
+        Publication.objects.create(title='Title test 2', description='Description test 2', author_id=user.id, price=8.0)
+        Publication.objects.create(title='Title test 3', description='Description test 3',
+                                   author_id=user2.id, price=5.0)
 
     def test_get_publications(self):
         url = reverse('catalog:publications_list')
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_user_publications(self):
+        url = reverse('catalog:publications_user', kwargs={'username': 'test'})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
 
     def test_get_publication_detail(self):
         publication = Publication.objects.get(title='Title test')
@@ -48,5 +57,5 @@ class TestPublicationAPI(APITestCase):
     def test_delete_publication(self):
         pass
 
-    def test_get_user_publications(self):
+    def test_search_publications(self):
         pass

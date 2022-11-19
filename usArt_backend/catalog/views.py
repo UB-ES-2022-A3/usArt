@@ -1,48 +1,48 @@
-from rest_framework import generics
-from catalog.models import Publication, PublicationImage
-from catalog.serializers import PublicationSerializer
-from django.http import JsonResponse
 from django.db.models import Q
+from django.http import JsonResponse
+
+from catalog.models import Publication
+from catalog.serializers import PublicationListSerializer
+
+from rest_framework import filters, generics
+
 
 class PublicationList(generics.ListAPIView):
     queryset = Publication.objects.all()
-    serializer_class = PublicationSerializer
+    serializer_class = PublicationListSerializer
 
-def publicacionsuser(request,username):
-    if (request.method == 'GET'):
-        # Agafem la llista de DB
-        try:
-            if Publication.objects.get(author=username):
-                publicacions = Publication.objects.filter(author = username)
-                serializer = PublicationSerializer(publicacions, many=True)
-                return JsonResponse(serializer.data, safe=False)
-        except:
-            
-            return JsonResponse({"respuesta": "El usuario que buscas no tiene ninguna publicacion"})
-    elif (request.method == 'POST'):
-        pass
 
-    elif (request.method == 'PUT'):
-        pass
+class PublicationUser(generics.ListAPIView):
+    serializer_class = PublicationListSerializer
 
-    elif (request.method == 'DELETE'):
-        pass
+    def get_queryset(self):
+        username = self.kwargs['username']
+        return Publication.objects.filter(author__user_name=username)
 
 
 class PublicationDetail(generics.RetrieveAPIView):
     queryset = Publication.objects.all()
-    serializer_class = PublicationSerializer
+    serializer_class = PublicationListSerializer
+
+
+"""
+class PublicationsSearch(generics.ListAPIView):
+    queryset = Publication.objects.all()
+    serializer_class = PublicationListSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ['title', 'description', 'author__user_name']
+"""
 
 
 def items_search(request, keywords, tag):
     if (request.method == 'GET'):
         if (tag == 0):
             items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords)) & Q(tag = 0))
-            serializer = PublicationSerializer(items, many=True)
+            serializer = PublicationListSerializer(items, many=True)
             return JsonResponse(serializer.data, safe=False)
         elif (tag == 1):
             items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords)) & Q(tag = 1))
-            serializer = PublicationSerializer(items, many=True)
+            serializer = PublicationListSerializer(items, many=True)
             return JsonResponse(serializer.data, safe=False)
 
         else:
