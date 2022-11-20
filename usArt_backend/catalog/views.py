@@ -1,15 +1,16 @@
-from django.db.models import Q
-from django.http import JsonResponse
-
 from catalog.models import Publication
 from catalog.serializers import PublicationListSerializer
 
 from rest_framework import filters, generics
+import django_filters.rest_framework
 
 
 class PublicationList(generics.ListAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationListSerializer
+    filter_backends = (filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend)
+    search_fields = ['title', 'description', 'author__user_name']
+    filterset_fields = ['type']
 
 
 class PublicationUser(generics.ListAPIView):
@@ -25,25 +26,18 @@ class PublicationDetail(generics.RetrieveAPIView):
     serializer_class = PublicationListSerializer
 
 
-"""
 class PublicationsSearch(generics.ListAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationListSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ['title', 'description', 'author__user_name']
-"""
 
 
-def items_search(request, keywords, tag):
+"""def items_search(request, keywords, tag):
     if (request.method == 'GET'):
-        if (tag == 0):
-            items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords)) & Q(tag = 0))
-            serializer = PublicationListSerializer(items, many=True)
-            return JsonResponse(serializer.data, safe=False)
-        elif (tag == 1):
-            items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords)) & Q(tag = 1))
-            serializer = PublicationListSerializer(items, many=True)
-            return JsonResponse(serializer.data, safe=False)
-
-        else:
-            pass
+       
+        items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords)) & Q(tag = tag))
+        serializer = PublicationListSerializer(items, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        pass"""
