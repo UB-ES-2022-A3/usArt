@@ -3,6 +3,7 @@ from catalog.models import Publication
 from authentication.models import UsArtUser
 import uuid
 
+
 # Create your models here.
 class PurchaseHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -21,6 +22,9 @@ class PurchaseHistory(models.Model):
         choices=STATUS_CHOICES,
         default='PR'
     )
+
+    def __str__(self):
+        return str(self.price)
 
 
 class Fav(models.Model):
