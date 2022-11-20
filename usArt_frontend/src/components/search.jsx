@@ -30,7 +30,7 @@ function Search() {
         }
 
         else {
-            link = LINK_BACKEND + "/catalog/filter/" + search + "&" + id
+            link = LINK_BACKEND + "/api/catalog/filter/" + search + "&" + id
 
         }
 

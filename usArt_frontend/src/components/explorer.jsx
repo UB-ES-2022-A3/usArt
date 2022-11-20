@@ -13,7 +13,7 @@ export default function Explorer() {
 
   function callApi() {
     fetch(
-      LINK_BACKEND+"/catalog/")
+      LINK_BACKEND+"/api/catalog/")
       .then((res) => res.json())
       .then(data => {
         setCards(data)
