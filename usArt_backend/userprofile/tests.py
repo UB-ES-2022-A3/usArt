@@ -74,3 +74,15 @@ class TestPublicationAPI(APITestCase):
         url = reverse('userprofile:user_purchases')
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_search_users(self):
+        # Devuelve todos los usuarios que contiene la palabra test
+        url = reverse('userprofile:users_list') + '?search=test'
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        # Devuelve todos los usuarios que contienen la palabra test2
+        url = reverse('userprofile:users_list') + '?search=test2'
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)

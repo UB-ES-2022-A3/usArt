@@ -37,7 +37,7 @@ class UserDetail(generics.RetrieveAPIView):
         return ExternalUserSerializer(user)
 
 
-class UserSearch(generics.ListAPIView):
+class UserList(generics.ListAPIView):
     queryset = UsArtUser.objects.all()
     serializer_class = UsArtUserFilterSerializer
     filter_backends = (filters.SearchFilter,)
