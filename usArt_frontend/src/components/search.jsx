@@ -26,9 +26,9 @@ function Search() {
         let link = ""
 
         if (id === "2") {
-            link = LINK_BACKEND + "api//userprofile/users/?search=" + search
+            link = LINK_BACKEND + "/api/userprofile/users/?search=" + search
         } else {
-            link = LINK_BACKEND + "/catalog/filter/" + search + "&" + id
+            link = LINK_BACKEND + "/api/catalog/?search=" + search
         }
 
         setOption(id)
