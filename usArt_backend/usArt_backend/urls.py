@@ -23,6 +23,6 @@ urlpatterns = [
     path('catalog/', include('catalog.urls')),
     path('admin/', admin.site.urls),
     path('auth/', include('authentication.urls')),
-    path('userprofile/', include('userprofile.urls', namespace='userprofile')),
+    path('api/userprofile/', include('userprofile.urls', namespace='userprofile')),
     path('api/', include("api.urls", namespace='api'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
