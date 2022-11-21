@@ -1,6 +1,6 @@
 from authentication.models import UsArtUser
 from rest_framework import serializers
-from catalog.serializers import PublicationSerializer
+from catalog.serializers import PublicationListSerializer
 from userprofile.models import PurchaseHistory
 
 
@@ -15,7 +15,7 @@ class UsArtUserSerializer(serializers.ModelSerializer):
 
 class PurchaseHistorySerializer(serializers.ModelSerializer):
     user_id = UsArtUserSerializer(read_only=True)
-    pub_id = PublicationSerializer(read_only=True)
+    pub_id = PublicationListSerializer(read_only=True)
 
     class Meta:
         model = PurchaseHistory
