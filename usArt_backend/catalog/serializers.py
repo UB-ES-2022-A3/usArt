@@ -8,7 +8,7 @@ class PublicationImageField(serializers.RelatedField):
         return value.image.url
 
 
-class PublicationSerializer(serializers.ModelSerializer):
+class PublicationListSerializer(serializers.ModelSerializer):
     images = PublicationImageField(many=True, read_only=True)
     author = UsArtUserSerializer(read_only=True)
     

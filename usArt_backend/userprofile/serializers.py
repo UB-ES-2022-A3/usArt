@@ -37,9 +37,3 @@ class ExternalUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsArtUser
         fields = ('id', 'user_name', 'description', 'photo', 'is_self')
-    
-
-class PublicationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PurchaseHistory
-        fields = ("id", "publication_title", "author", "price", "user_id", "user", "date" )
