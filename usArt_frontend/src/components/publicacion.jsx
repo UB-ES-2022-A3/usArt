@@ -17,7 +17,7 @@ function Publicacion(props) {
 
     function callApi() {
         fetch(
-            LINK_BACKEND + "/catalog/" + id)
+            LINK_BACKEND + "/api/catalog/" + id)
             .then((res) => res.json())
             .then(data => {
                 setReview(data.review / 5 * 100 + "%");

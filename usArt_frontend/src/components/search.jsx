@@ -27,11 +27,8 @@ function Search() {
 
         if (id === "2") {
             link = LINK_BACKEND + "/userprofile/filter/" + search
-        }
-
-        else {
-            link = LINK_BACKEND + "/catalog/filter/" + search + "&" + id
-
+        } else {
+            link = LINK_BACKEND + "/api/catalog/?search=" + search
         }
 
         setOption(id)
