@@ -26,12 +26,9 @@ function Search() {
         let link = ""
 
         if (id === "2") {
-            link = LINK_BACKEND + "/userprofile/filter/" + search
-        }
-
-        else {
+            link = LINK_BACKEND + "/userprofile/users/?search=" + search
+        } else {
             link = LINK_BACKEND + "/catalog/filter/" + search + "&" + id
-
         }
 
         setOption(id)
