@@ -24,20 +24,3 @@ class PublicationUser(generics.ListAPIView):
 class PublicationDetail(generics.RetrieveAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationListSerializer
-
-
-class PublicationsSearch(generics.ListAPIView):
-    queryset = Publication.objects.all()
-    serializer_class = PublicationListSerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ['title', 'description', 'author__user_name']
-
-
-"""def items_search(request, keywords, tag):
-    if (request.method == 'GET'):
-       
-        items = Publication.objects.filter((Q(title__icontains = keywords) | Q(description__icontains = keywords)) & Q(tag = tag))
-        serializer = PublicationListSerializer(items, many=True)
-        return JsonResponse(serializer.data, safe=False)
-    else:
-        pass"""
