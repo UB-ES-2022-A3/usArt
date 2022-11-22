@@ -1,41 +1,27 @@
 from authentication.models import UsArtUser
-from django.http import JsonResponse
+
 from django.shortcuts import get_object_or_404
+
+from catalog.serializers import PublicationListSerializer
+
+from userprofile import serializers
 from userprofile.models import PurchaseHistory
-from userprofile.serializers import PurchaseHistorySerializer, PublicationSerializer, UsArtUserSerializer, ExternalUserSerializer, UsArtUserFilterSerializer
-from rest_framework import generics
-from rest_framework.permissions import BasePermission, SAFE_METHODS
-from django.db.models import Q
 
-# Create your views here.
-def PurchaseHistory_list(request, username):
-    #if (request.user.id == userid):
-    #if (request.user.user == user):
-    user_name = UsArtUser.objects.get(user_name = username)
-    if (request.user.is_authenticated and request.user == user_name):
-        if (request.method == 'GET'):
-            # Agafem la llista de DB
-            #full_history = PurchaseHistory.objects.filter(user_id = userid)
-            full_history = PurchaseHistory.objects.filter(user = user_name)
-            # La convertim a diccionari
-            serializer = PurchaseHistorySerializer(full_history, many=True)
-            return JsonResponse(serializer.data, safe=False)
+from rest_framework import filters, generics
+from rest_framework.permissions import IsAuthenticated
 
-        elif (request.method == 'POST'):
-            pass
 
-        elif (request.method == 'PUT'):
-            pass
+class PurchaseHistoryList(generics.ListAPIView):
+    serializer_class = serializers.PurchaseHistorySerializer
+    permission_classes = [IsAuthenticated]
 
-        elif (request.method == 'DELETE'):
-            pass
-    else:
-        return JsonResponse({"Not logged in":"Not logged in"})
-        
+    def get_queryset(self):
+        return PurchaseHistory.objects.filter(user_id=self.request.user)
+
 
 class PurchaseHistoryDetail(generics.RetrieveAPIView):
     queryset = PurchaseHistory.objects.all()
-    serializer_class = PublicationSerializer
+    serializer_class = PublicationListSerializer
 
 
 class UserDetail(generics.RetrieveAPIView):
@@ -49,17 +35,14 @@ class UserDetail(generics.RetrieveAPIView):
     def get_serializer(self, *args, **kwargs):
         user = UsArtUser.objects.get(user_name=self.kwargs['user_name'])
         if not self.request.user.is_authenticated:
-            return ExternalUserSerializer(user)
-        
-        if (self.request.user.user_name == self.kwargs['user_name']):
-            return UsArtUserSerializer(user)
-        
-        return ExternalUserSerializer(user)
+            return serializers.ExternalUserSerializer(user)
+        if self.request.user.user_name == self.kwargs['user_name']:
+            return serializers.UsArtUserSerializer(user)
+        return serializers.ExternalUserSerializer(user)
 
-def items_search(request, keywords):
-    if (request.method == 'GET'):
-        items = UsArtUser.objects.filter(user_name__icontains = keywords)
-        serializer = UsArtUserFilterSerializer(items, many=True)
-        return JsonResponse(serializer.data, safe=False)
-    
-        
+
+class UserList(generics.ListAPIView):
+    queryset = UsArtUser.objects.all()
+    serializer_class = serializers.UsArtUserFilterSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ['user_name']
