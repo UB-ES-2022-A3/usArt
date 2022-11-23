@@ -59,10 +59,12 @@ class FavList(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        request.data['user_id'] = request.user
-        request.data['pub_id'] = Publication.objects.get(id=request.data['pub_id'])
+        request.data['user_id'] = request.user.id
+        user = UsArtUser.objects.get(id=request.data['user_id'])
+        pub = Publication.objects.get(id=request.data['pub_id'])
+        #print(request.data)
         obj = serializers.FavSerializer(data=request.data)
         if obj.is_valid():
-            #print(obj.data)
+            obj.save(user_id=user, pub_id=pub)
             return Response(data=obj.data, status=status.HTTP_201_CREATED)
         return Response(data=obj.data, status=status.HTTP_400_BAD_REQUEST)

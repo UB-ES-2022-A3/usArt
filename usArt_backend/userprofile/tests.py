@@ -109,5 +109,4 @@ class TestPublicationAPI(APITestCase):
             'pub_id': publication.id
         }
         response = self.client.post(url, fav_data, format='json')
-        #print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
