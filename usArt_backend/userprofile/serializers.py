@@ -1,7 +1,8 @@
 from authentication.models import UsArtUser
 from rest_framework import serializers
 from catalog.serializers import PublicationListSerializer
-from userprofile.models import PurchaseHistory
+from userprofile.models import PurchaseHistory, Fav
+from catalog.models import Publication
 
 
 class UsArtUserSerializer(serializers.ModelSerializer):
@@ -37,3 +38,13 @@ class ExternalUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsArtUser
         fields = ('id', 'user_name', 'description', 'photo', 'is_self')
+
+
+class FavSerializer(serializers.ModelSerializer):
+    user_id = UsArtUserSerializer(read_only=True)
+    pub_id = PublicationListSerializer(read_only=True)
+
+    class Meta:
+        model = Fav
+        fields = ['user_id', 'pub_id']
+
