@@ -31,6 +31,13 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net', 'u
 
 
 # Application definition
+AZURE_ACCOUNT_NAME = "usartresources"
+AZURE_ACCOUNT_KEY = "1WPY2BzstRyZjmGymFxgPHAojlfRggM4JtrF2mmbTWSxs4Ca9yQdVb9mNS7tuTvLHBa3ng8Nh1DV+ASt4kToVA=="
+AZURE_CONTAINER = "images"
+AZURE_SSL = True
+
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 
 INSTALLED_APPS = [
     'api',

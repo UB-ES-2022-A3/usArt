@@ -45,7 +45,6 @@ function Publicacion(props) {
 
 
     function renderCard(card, index) {
-        card = LINK_BACKEND + card
         if (index === 0) return (
             <div className="carousel-item active" data-bs-interval="30000">
                 <img id={index} src={card} className="img-slider" alt="Sorry! not available at this time" ></img>
@@ -93,7 +92,7 @@ function Publicacion(props) {
                 <div className="card card-item">
                     <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
                         <picture >
-                            <img src={LINK_BACKEND + '/media/' + author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
+                            <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
                         </picture>
                         <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
                         <div className="ratings">

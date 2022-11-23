@@ -37,7 +37,7 @@ export default function Explorer() {
       <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + card.id} key={card.id}>
         <div className="card custom ">
           <picture >
-            <img id={index} src={LINK_BACKEND+card.images[0]} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
+            <img id={index} src={card.images[0]} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
           </picture>
           <div className="card-body ">
             <h5 style={{ color: "black" }}><strong>{card.price}€</strong></h5>
