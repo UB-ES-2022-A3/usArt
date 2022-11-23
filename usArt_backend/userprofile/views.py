@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 
+
 class PurchaseHistoryList(generics.ListAPIView):
     serializer_class = serializers.PurchaseHistorySerializer
     permission_classes = [IsAuthenticated]
@@ -60,11 +61,10 @@ class FavList(generics.CreateAPIView):
 
     def post(self, request):
         request.data['user_id'] = request.user.id
-        user = UsArtUser.objects.get(id=request.data['user_id'])
-        pub = Publication.objects.get(id=request.data['pub_id'])
-        #print(request.data)
-        serializer = serializers.FavSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user_id=user, pub_id=pub)
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        user = get_object_or_404(UsArtUser, id=request.data['user_id'])
+        pub = get_object_or_404(Publication, id=request.data['pub_id'])
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user_id=user, pub_id=pub)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
