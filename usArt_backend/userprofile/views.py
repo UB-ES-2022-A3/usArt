@@ -63,8 +63,8 @@ class FavList(generics.CreateAPIView):
         user = UsArtUser.objects.get(id=request.data['user_id'])
         pub = Publication.objects.get(id=request.data['pub_id'])
         #print(request.data)
-        obj = serializers.FavSerializer(data=request.data)
-        if obj.is_valid():
-            obj.save(user_id=user, pub_id=pub)
-            return Response(data=obj.data, status=status.HTTP_201_CREATED)
-        return Response(data=obj.data, status=status.HTTP_400_BAD_REQUEST)
+        serializer = serializers.FavSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user_id=user, pub_id=pub)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
