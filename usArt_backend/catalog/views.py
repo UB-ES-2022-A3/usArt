@@ -1,5 +1,5 @@
-from catalog.models import Publication
-from catalog.serializers import PublicationListSerializer
+from catalog.models import Publication, Commission
+from catalog.serializers import PublicationListSerializer, CommissionListSerializer
 
 from rest_framework import filters, generics
 import django_filters.rest_framework
@@ -24,3 +24,13 @@ class PublicationUser(generics.ListAPIView):
 class PublicationDetail(generics.RetrieveAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationListSerializer
+
+
+class CommissionList(generics.ListAPIView):
+    queryset = Publication.objects.all()
+    serializer_class = CommissionListSerializer
+
+    def get_queryset(self):
+        pub_id = self.kwargs['pub_id']
+        commissions = Commission.objects.filter(pub_id__author=self.request.user, pub_id__id=pub_id)
+        return commissions
