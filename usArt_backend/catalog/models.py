@@ -3,8 +3,6 @@ from authentication.models import UsArtUser
 import uuid
 
 
-def user_directory_path(instance, filename):
-    return 'images/{0}'.format(filename)
 
 
 class Publication(models.Model):
@@ -34,7 +32,7 @@ class Publication(models.Model):
 
 
 class PublicationImage(models.Model):
-    image = models.ImageField(upload_to=user_directory_path, default='images/default.jpg')
+    image = models.ImageField(default='default.jpg')
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='images')
 
 

@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
             name='PublicationImage',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(default='images/default.jpg', upload_to=catalog.models.user_directory_path)),
+                ('image', models.ImageField(default='images/default.jpg')),
                 ('publication', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='catalog.publication')),
             ],
         ),

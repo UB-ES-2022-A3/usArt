@@ -18,9 +18,6 @@ class TestPublicationModel(TestCase):
 
     def test_publication_content(self):
         purchase = PurchaseHistory.objects.get(price=5.0)
-
-        """self.assertEqual(f'{purchase.user_id}', user.id)
-        self.assertEqual(f'{purchase.pub_id}', publication.id)"""
         self.assertEqual(purchase.price, 5.0)
 
 
@@ -35,9 +32,6 @@ class TestPublicationAPI(APITestCase):
 
     def test_publication_content(self):
         purchase = PurchaseHistory.objects.get(price=5.0)
-
-        """self.assertEqual(f'{purchase.user_id}', user.id)
-        self.assertEqual(f'{purchase.pub_id}', publication.id)"""
         self.assertEqual(purchase.price, 5.0)
 
     def test_authentication(self):

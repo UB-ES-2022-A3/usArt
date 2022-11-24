@@ -57,7 +57,7 @@ function Search() {
                 <a style={{ margin: "1%", textDecoration: 'none' }} href={"/profile/" + card.user_name} key={card.id}>
                     <div className="card custom search-card">
                         <picture >
-                            <img style={{ marginTop: "10px" }} id={index} src={LINK_BACKEND + card.photo} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
+                            <img style={{ marginTop: "10px" }} id={index} src={card.photo} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
                         </picture>
                         <div className="card-body ">
                             <div className='grid' style={{justifyContent:"inherit"}}>
