@@ -27,7 +27,7 @@ class PublicationDetail(generics.RetrieveAPIView):
 
 
 class CommissionList(generics.ListAPIView):
-    queryset = Publication.objects.all()
+    queryset = Commission.objects.all()
     serializer_class = CommissionListSerializer
 
     def get_queryset(self):
