@@ -2,8 +2,6 @@ from authentication.models import UsArtUser
 
 from django.shortcuts import get_object_or_404
 
-from catalog.serializers import PublicationListSerializer
-
 from userprofile import serializers
 from userprofile.models import PurchaseHistory
 
@@ -20,8 +18,11 @@ class PurchaseHistoryList(generics.ListAPIView):
 
 
 class PurchaseHistoryDetail(generics.RetrieveAPIView):
-    queryset = PurchaseHistory.objects.all()
-    serializer_class = PublicationListSerializer
+    serializer_class = serializers.PurchaseHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return PurchaseHistory.objects.filter(user_id=self.request.user)
 
 
 class UserDetail(generics.RetrieveAPIView):
