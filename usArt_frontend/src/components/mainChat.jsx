@@ -1,5 +1,5 @@
 import React from 'react'
-import { BsThreeDots } from "react-icons/bs";
+import { BsThreeDots, BsFillImageFill } from "react-icons/bs";
 import { Messages } from './Messages';
 
 const mainChat = () => {
@@ -11,7 +11,15 @@ const mainChat = () => {
                     <BsThreeDots/>
                 </div>      
             </div>
-            <Messages/>
+            <Messages className="messages"/>
+
+            <div className="inputMessage">  
+                <input type="text" className='textInput'  placeholder='Type something...' style={{width:"100%", border:"none", outline:"none", fontSize:"18px", color:"black", backgroundColor:"#556b6b"}}/>
+                <div className="send">
+                    <BsFillImageFill className="" size={35} style={{color:"black", marginRight:"10px"}}/>
+                    <button className='buttonSend  'style={{ marginRight:"10px"}}>Send</button>
+                </div>
+            </div>
         </div>
     )
 }

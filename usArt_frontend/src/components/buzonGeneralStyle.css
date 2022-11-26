@@ -96,7 +96,7 @@
 
 .chat{
     flex:7;
-    background-color: #263636;
+    bckground-color: #263636;
     
 }
 
@@ -111,4 +111,37 @@
     color: white;
     font-size: 25px;
     font-weight: 500;
+}
+
+.chat .messages{
+    background-color: #263636;
+    padding: 10px;
+    height: calc(100% - 160px);
+}
+
+.chat .inputMessage{
+    height: 80px;
+    padding: 10px;
+    background-color: #556b6b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.chat .send{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.chat .inputMessage .textInput::placeholder{
+    color:rgb(32, 31, 31);
+    
+}
+
+.chat .send .buttonSend{
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    background-color: #000f0e;
+    
+
 }
