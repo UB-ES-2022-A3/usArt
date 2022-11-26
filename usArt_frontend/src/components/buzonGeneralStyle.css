@@ -117,8 +117,39 @@
     background-color: #263636;
     padding: 10px;
     height: calc(100% - 160px);
+    overflow-y: visible;
+
 }
 
+.chat .owner{
+    flex-direction: row-reverse;
+
+}
+.chat .messages .message{
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.chat .messages .message .messageInfo{
+    display: flex;
+    flex-direction: column;
+   
+    font-weight: 300;
+}
+
+.chat .messages .message .messageInfo .messageContent{
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+    
+}
+.chat .messages .message .messageInfo .messageContent p{
+    background-color: white;
+    padding: 10px 20px;
+    border-radius: 0px 10px 10px 10px;
+}
 .chat .inputMessage{
     height: 80px;
     padding: 10px;
