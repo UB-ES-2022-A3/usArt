@@ -13,7 +13,7 @@ const mainChat = () => {
             </div>
             <Messages className="messages"/>
 
-            <div className="inputMessage">  
+            <div className="inputMessage ">  
                 <input type="text" className='textInput'  placeholder='Type something...' style={{width:"100%", border:"none", outline:"none", fontSize:"18px", color:"black", backgroundColor:"#556b6b"}}/>
                 <div className="send">
                     <BsFillImageFill className="" size={35} style={{color:"black", marginRight:"10px"}}/>
