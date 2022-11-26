@@ -7,6 +7,7 @@ import Explorer from './components/explorer';
 import Profile from './components/profile';
 import Publicacion from './components/publicacion';
 import Search from './components/search';
+import BuzonTest from './components/buzonChat';
 import { AuthProvider } from './context/authcontext';
 import { useContext } from "react";
 import AuthContext from "./context/authcontext";
@@ -50,7 +51,7 @@ function App() {
           <NavbarSelector/>
             <Routes>
               <Route path="/home" element={<Home />}></Route>
-              <Route path="/explore" element={<Explorer />}></Route>
+              <Route path="/explore" element={<BuzonTest />}></Route>
               <Route path="/join" element={<Register />}></Route>
               <Route path="/login" element={<LogIn />}></Route>
               <Route path="/profile/:username" element={<Profile />}></Route>

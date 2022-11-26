@@ -1,0 +1,114 @@
+.containerC{
+    
+    max-width: 1600px;
+    overflow: hidden;
+    margin-left: 150px;
+    
+    
+}
+
+/*Aquí lo del sidebar*/
+
+.sidebar{
+    flex:2; 
+    background-color: #000f0e;
+    border-right: 1px solid gray;
+}
+
+
+
+.sidebar .navbar{
+    
+    height: 80px;
+    text-align: center;
+    background-color: #000f0e;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid gray;
+}
+
+.sidebar .selectGoP{
+    margin-top: 20px;
+    
+}
+
+.sidebar .search{
+    border-bottom: 1px solid gray;
+}
+
+.sidebar .search .searchForm{
+    padding: 10px;
+    
+
+}
+
+
+
+.sidebar .search .userChat{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    cursor: pointer;
+
+}
+
+.sidebar .search .userChat:hover{
+    background-color: #263636;
+    transition: 0.1s;
+
+}
+
+.sidebar .chats .userChat{
+    padding: 10px;
+    display: flex;
+    padding-top: 20px;
+    gap: 10px;
+    color: white;
+    cursor: pointer;
+
+}
+
+.sidebar .chats .userChat .userChatInfo .chatsFirstName{
+    font-size: 18px;
+    font-weight: 500; 
+ 
+}
+
+.sidebar .chats .userChat .userChatInfo .chatsMessage{
+    font-size: 14px;
+    color: lightgray;
+}
+
+
+.sidebar .chats .userChat:hover{
+    background-color: #263636;
+    transition: 0.1s;
+
+}
+
+/*Aquí lo del chat*/
+
+
+.chat{
+    flex:7;
+    background-color: #263636;
+    
+}
+
+.chat .chatInfo{
+    height: 80px;
+    border-bottom: 1px solid gray;
+    background-color: #263636;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px;
+    color: white;
+    font-size: 25px;
+    font-weight: 500;
+}
