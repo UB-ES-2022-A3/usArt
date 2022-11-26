@@ -20,6 +20,7 @@ const mainChat = () => {
                     <button className='buttonSend  'style={{ marginRight:"10px"}}>Send</button>
                 </div>
             </div>
+            
         </div>
     )
 }
