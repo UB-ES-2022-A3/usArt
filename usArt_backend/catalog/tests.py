@@ -41,7 +41,7 @@ class TestPublicationAPI(APITestCase):
                                    type='CO')
         pub1 = Publication.objects.create(title='Title test 3', description='Description test 3',
                                           author=user2, price=5.0)
-        pub2 = Publication.objects.create(title='Title test 4', description='Description test 4',
+        Publication.objects.create(title='Title test 4', description='Description test 4',
                                           author=user2, price=5.0, type='AU')
         Commission.objects.create(pub_id=pub1, user_id=user, description='Description test user')
         Commission.objects.create(pub_id=pub1, user_id=user3, description='Description test user3')
@@ -116,3 +116,101 @@ class TestPublicationAPI(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
+
+    def test_commission_update(self):
+        user = UsArtUser.objects.get(user_name='test')
+        pub = Publication.objects.get(title='Title test 3')
+        update_data = {
+            'user_id': user.id,
+            'pub_id': pub.id,
+            'description': None,
+            'status': 'AC'
+        }
+        url = reverse('catalog:commission_update_delete')
+        response = self.client.put(url, update_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test2',
+            'password': 'test'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        user = UsArtUser.objects.get(user_name='test')
+        pub = Publication.objects.get(title='Title test 3')
+        update_data = {
+            'user_id': user.id,
+            'pub_id': pub.id,
+            'description': None,
+            'status': 'AC'
+        }
+        url = reverse('catalog:commission_update_delete')
+        response = self.client.put(url, update_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['status'], 'AC')
+
+        update_data2 = {
+            'user_id': user.id,
+            'pub_id': pub.id,
+            'description': 'Description Changed',
+            'status': 'DO'
+        }
+        url = reverse('catalog:commission_update_delete')
+        response = self.client.put(url, update_data2, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['description'], 'Description Changed')
+        self.assertEqual(response.data['status'], 'DO')
+
+        update_data3 = {
+            'user_id': user.id,
+            'pub_id': pub.id,
+            'description': 'Description Changed',
+            'status': None
+        }
+        url = reverse('catalog:commission_update_delete')
+        response = self.client.put(url, update_data3, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['description'], 'Description Changed')
+
+        update_data4 = {
+            'user_id': user.id,
+            'pub_id': pub.id,
+            'description': None,
+            'status': None
+        }
+        url = reverse('catalog:commission_update_delete')
+        response = self.client.put(url, update_data4, format='json')
+        self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)
+
+    def test_commission_delete(self):
+        user = UsArtUser.objects.get(user_name='test')
+        pub = Publication.objects.get(title='Title test 3')
+        update_data = {
+            'user_id': user.id,
+            'pub_id': pub.id,
+        }
+        url = reverse('catalog:commission_update_delete')
+        response = self.client.put(url, update_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test2',
+            'password': 'test'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        user = UsArtUser.objects.get(user_name='test')
+        pub = Publication.objects.get(title='Title test 3')
+        update_data = {
+            'user_id': user.id,
+            'pub_id': pub.id
+        }
+        url = reverse('catalog:commission_update_delete')
+        response = self.client.delete(url, update_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
