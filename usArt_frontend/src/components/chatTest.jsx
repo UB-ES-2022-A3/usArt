@@ -46,12 +46,12 @@ export default function ChatTets() {
 
   }, [lastMessage, setMessageHistory]);
 
-
+  console.table(messageHistory)
 
 
 
   const handleClickSendMessage = useCallback(() => {
-    let m = ' {"message":" User: '+user.username +" message: "+ message + '"}';
+    let m = ' {"message":"'+ message + '","user":"'+user.username+'"}';
     sendMessage(m);
   });
   if (user === null) {
