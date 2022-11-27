@@ -61,3 +61,14 @@ class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
 
     def __str__(self):
         return self.user_name
+
+
+
+
+class idChats(models.Model):
+
+    id_sala = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id_1 = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name="user1")
+    id_2 = models.ForeignKey(UsArtUser, on_delete=models.CASCADE,related_name="user2")
+
+    
