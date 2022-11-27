@@ -7,6 +7,7 @@ import LINK_FRONTEND from "./LINK_FRONTEND";
 import AuthContext from "../context/authcontext";
 import { Modal } from 'bootstrap'
 import './register.css'
+import Footer from './footer';
 
 
 
@@ -159,6 +160,8 @@ function Register() {
         </MDBCard>
 
       </MDBContainer>
+
+      <Footer/>
     </div>
 
 
