@@ -32,7 +32,7 @@ class Publication(models.Model):
 
 
 class PublicationImage(models.Model):
-    image = models.ImageField(default='default.jpg')
+    image = models.ImageField(upload_to='images/', default='images/default.jpg')
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='images')
 
 
