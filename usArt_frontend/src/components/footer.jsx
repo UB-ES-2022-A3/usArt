@@ -52,20 +52,21 @@ function Footer() {
                     <hr className="my-5" />
 
 
-                    <section className="mb-5">
+                    <section className="mb-2">
                         <div className="row d-flex justify-content-center">
                             <div className="col-lg-8">
                                 <p style={{color: "white"}}>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-                                    distinctio earum repellat quaerat voluptatibus placeat nam,
-                                    commodi optio pariatur est quia magnam eum harum corrupti
-                                    dicta, aliquam sequi voluptate quas.
+                                    Privacy is important for us, from the usArt team we recommend reading our terms and services,
+                                    if you have any inquirie contact us at: 
+                                    <br />
+                                    <br />
+                                    <strong> inquiries@usart.com</strong>
                                 </p>
                             </div>
                         </div>
                     </section>
 
-                    <section className="text-center mb-5">
+                    <section className="text-center mb-2">
                         <a href="" className="text-white me-4">
 
                         </a>
