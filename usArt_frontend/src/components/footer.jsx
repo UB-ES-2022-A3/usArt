@@ -24,7 +24,7 @@ function Footer() {
 
                             <div className="col-md-2">
                                 <h6 className="text-uppercase font-weight-bold">
-                                    <p href="#!" className="text-white">Terms And Services</p>
+                                    <a href="http://localhost:3000/termsandconditions" className="text-white" style={{textDecoration: "none"}}>Terms And Conditions</a>
                                 </h6>
                             </div>
 
