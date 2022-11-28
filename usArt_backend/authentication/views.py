@@ -126,7 +126,7 @@ class ChatHistory(generics.RetrieveAPIView):
 
         
 
-        return JsonResponse({'messages':lines},status=status.HTTP_201_CREATED)
+        return JsonResponse({'messages':lines},status=status.HTTP_200_OK)
 
 
 # e21496d5-b4a7-40ac-bd65-72989e852b6a user
