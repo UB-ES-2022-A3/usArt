@@ -16,3 +16,9 @@ class PublicationListSerializer(serializers.ModelSerializer):
         model = Publication
         fields = ['id', 'title', 'description', 'author', 'price', 'images', 'type']
     
+class PublicationPostSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Publication
+        fields = ['id', 'title', 'description', 'price', 'type']
+    
