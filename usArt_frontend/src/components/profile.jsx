@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import './profile.css';
 import { useParams } from "react-router-dom";
 import LINK_BACKEND from "./LINK_BACKEND"
+import Footer from './footer'
 
 function Profile() {
 
@@ -84,6 +85,7 @@ function Profile() {
                 </div>
 
             </section>
+            <Footer/>
         </div>
 
     );
