@@ -134,7 +134,7 @@ function Register() {
                   <div className="form-check  text-center align-items-center justify-content-center">
                     <input className="form-check-input d-inline-block px-1 " name="checkboxTerms" type="checkbox" id="flexCheckDefault" value={formValues.checkboxTerms} onChange={handleCheck} />
                     <label className="form-check-label px-3 " htmlFor="flexCheckDefault" >
-                      I agree to <a href='https://www.termsofusegenerator.net/'>Terms of Use</a> and <a href='https://www.termsofusegenerator.net/'>Privacy Policy </a>of UsArt
+                      I agree to <a href={LINK_FRONTEND +"/termsandconditions"}>Terms of Use</a> and <a href={LINK_FRONTEND +"/termsandconditions"}>Privacy Policy </a>of UsArt
                     </label>
                   </div>
                   <p className='text-danger'>{formErrors.check}</p>
