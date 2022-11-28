@@ -22,3 +22,4 @@ class CommissionListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Commission
         fields = '__all__'
+        extra_kwargs = {'description': {'required': False}}

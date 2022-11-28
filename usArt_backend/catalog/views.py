@@ -50,43 +50,16 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommissionListSerializer
     permission_classes = [IsAuthenticated]
 
-    def put(self, request):
-        user = get_object_or_404(UsArtUser, id=self.request.data['user_id'])
-        pub = get_object_or_404(Publication, id=self.request.data['pub_id'])
-        commission = Commission.objects.get(pub_id__id=self.request.data['pub_id'],
-                                            user_id__id=self.request.data['user_id'])
-        if not request.data['description'] and request.data['status']:
-            data = {
-                'user_id': request.data['user_id'],
-                'pub_id': request.data['pub_id'],
-                'description': commission.description,
-                'status': request.data['status']
-            }
-        elif request.data['description'] and not request.data['status']:
-            data = {
-                'user_id': request.data['user_id'],
-                'pub_id': request.data['pub_id'],
-                'description': request.data['description'],
-                'status': commission.status
-            }
-        elif request.data['description'] and request.data['status']:
-            data = {
-                'user_id': request.data['user_id'],
-                'pub_id': request.data['pub_id'],
-                'description': request.data['description'],
-                'status': request.data['status']
-            }
-        else:
-            return Response(request.data, status.HTTP_304_NOT_MODIFIED)
-        serializer = CommissionListSerializer(commission, data=data)
+    def put(self, request, *args, **kwargs):
+        commission = self.get_object()
+        request.data['pub_id'] = self.kwargs['pub_id']
+        request.data['user_id'] = self.kwargs['user_id']
+        serializer = CommissionListSerializer(commission, data=self.request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    def destroy(self, request):
-        if request.user.is_authenticated:
-            commission = get_object_or_404(Commission, pub_id__id=self.request.data['pub_id'],
-                                           user_id__id=request.data['user_id'])
-            self.perform_destroy(commission)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
+    def get_object(self):
+        commission = Commission.objects.get(pub_id__id=self.kwargs['pub_id'],
+                                            user_id__id=self.kwargs['user_id'])
+        return commission
