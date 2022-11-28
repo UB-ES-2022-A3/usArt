@@ -1,4 +1,4 @@
-import './landingPage.css'
+import './home.css'
 import { BsSearch, BsWindowSidebar } from "react-icons/bs";
 import LINK_FRONTEND from './LINK_FRONTEND';
 import { useState } from 'react';
