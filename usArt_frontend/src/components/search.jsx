@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom"
 import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
 import "./search.css"
+import Footer from './footer';
 
 function Search() {
     const { search, id } = useParams()
@@ -137,37 +138,40 @@ function Search() {
 
 
     return (
-        <div style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
-            <div style={{ paddingTop: "5%" }}>
-                <div className="header-container ">
-                    <h1 style={{ color: "black" }}>Resultados de {search}..</h1>
-                    <p >{cards.length} resultado/s encontrado/s</p>
-                </div>
-                <div className="input-group custom-input">
-                    <input onChange={e => setContent(e.target.value)} type="search" placeholder="Try: Dragon ball drawings" aria-describedby="button-addon1" className="form-control border-0 bg-light" />
-                    <div className="input-group-append">
-                        <button onClick={goSearch} id="button-addon1" type="submit" className="btn btn-link text-primary"><BsSearch /></button>
+        <div>
+            <div style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
+                <div style={{ paddingTop: "5%" }}>
+                    <div className="header-container ">
+                        <h1 style={{ color: "black" }}>Resultados de {search}..</h1>
+                        <p >{cards.length} resultado/s encontrado/s</p>
                     </div>
-                </div>
-                <div className='grid search-grid'>
-                    <div className="box1" id="box1" onClick={selectComision}>
-                        <p >Comisiones </p>
-                        <AiFillWechat className="icons" size='sm' />
+                    <div className="input-group custom-input">
+                        <input onChange={e => setContent(e.target.value)} type="search" placeholder="Try: Dragon ball drawings" aria-describedby="button-addon1" className="form-control border-0 bg-light" />
+                        <div className="input-group-append">
+                            <button onClick={goSearch} id="button-addon1" type="submit" className="btn btn-link text-primary"><BsSearch /></button>
+                        </div>
                     </div>
-                    <div className="box2" id="box2" onClick={selectArt}>
-                        <p style={{ textAlign: "center" }}>Arte </p>
-                        <BsBrushFill className="icons" size='sm' />
+                    <div className='grid search-grid'>
+                        <div className="box1" id="box1" onClick={selectComision}>
+                            <p >Comisiones </p>
+                            <AiFillWechat className="icons" size='sm' />
+                        </div>
+                        <div className="box2" id="box2" onClick={selectArt}>
+                            <p style={{ textAlign: "center" }}>Arte </p>
+                            <BsBrushFill className="icons" size='sm' />
+                        </div>
+                        <div className="box3" id="box3" onClick={selectUsers}>
+                            <p style={{ textAlign: "center" }}>Usuarios </p>
+                            <BsFillPersonFill className="icons" size='sm' />
+                        </div>
                     </div>
-                    <div className="box3" id="box3" onClick={selectUsers}>
-                        <p style={{ textAlign: "center" }}>Usuarios </p>
-                        <BsFillPersonFill className="icons" size='sm' />
-                    </div>
-                </div>
 
-                <div className="grid custom-grid">
-                    {cards.map(RenderCard)}
+                    <div className="grid custom-grid">
+                        {cards.map(RenderCard)}
+                    </div>
                 </div>
             </div>
+            <Footer/>
         </div>)
 
 }
