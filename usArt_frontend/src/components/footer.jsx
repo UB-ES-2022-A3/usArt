@@ -1,4 +1,6 @@
 import React from 'react'
+import LINK_FRONTEND from "./LINK_FRONTEND"
+
 
 function Footer() {
     return (
@@ -24,7 +26,7 @@ function Footer() {
 
                             <div className="col-md-2">
                                 <h6 className="text-uppercase font-weight-bold">
-                                    <a href="http://localhost:3000/termsandconditions" className="text-white" style={{textDecoration: "none"}}>Terms And Conditions</a>
+                                    <a href={LINK_FRONTEND +"/termsandconditions"} className="text-white" style={{textDecoration: "none"}}>Terms And Conditions</a>
                                 </h6>
                             </div>
 
@@ -55,9 +57,9 @@ function Footer() {
                     <section className="mb-2">
                         <div className="row d-flex justify-content-center">
                             <div className="col-lg-8">
-                                <p style={{color: "white"}}>
+                                <p style={{color: "white"}}> 
                                     Privacy is important for us, from the usArt team we recommend reading our terms and services,
-                                    if you have any inquirie contact us at: 
+                                    if you have any inquiry contact us at: 
                                     <br />
                                     <br />
                                     <strong> inquiries@usart.com</strong>
@@ -93,7 +95,7 @@ function Footer() {
                     style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
                 >
                     © 2022 Copyright:
-                    <a className="text-white" href="http://localhost:3000/home"> UsArt</a>
+                    <a className="text-white" href={LINK_FRONTEND +"/home"}> UsArt</a>
                 </div>
 
             </footer>

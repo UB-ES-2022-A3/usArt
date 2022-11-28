@@ -149,7 +149,7 @@ const termsAndConditions = () => {
                 <h2>Contact Information</h2>
 
                 <p>Address: Gran Via de les Corts Catalanes, 585</p>
-                <p>Email: noel2001@outlook.com</p>
+                <p>Email: inquiries@usart.com</p>
             </div>
             <Footer />
         </div>
