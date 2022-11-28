@@ -8,7 +8,7 @@ const mainChat = () => {
             <div className="chatInfo">
                 <span>Jane</span>
                 <div className="chatIcons">
-                    <BsThreeDots/>
+                    <BsThreeDots style={{cursor: "pointer"}}/>
                 </div>      
             </div>
             <Messages className="messages"/>
