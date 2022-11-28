@@ -63,7 +63,6 @@ export default function Explorer() {
       <div className="grid ">
         {cards.map(RenderCard)}
       </div>
-
       <Footer/>
     </div>
     
