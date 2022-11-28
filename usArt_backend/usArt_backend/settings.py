@@ -68,20 +68,10 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("redis://:fes1cQ13JCdHY5amnxuv3MGyrg3Gtf1XNAzCaBuYGow=@usart.redis.cache.windows.net:6379")]
+            "hosts": [("redis://:lUqaQSt9Kbvbdq3vvpSLzzyKt6ZLqaQQ4AzCaA0NT7c=@usart-redis.redis.cache.windows.net:6379")]
         },
     },
 }
-
-"""
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1",6379)]
-        },
-    },
-}"""
 
 
 MIDDLEWARE = [

@@ -2,24 +2,6 @@ import json
 import re
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer
-import base64
-
-
-import os, uuid
-
-
-
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
@@ -42,8 +24,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
-        user = text_data_json["user"]
-        print(bcolors.WARNING + str(self.room_name) + bcolors.ENDC)    
+        user = text_data_json["user"]   
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name, {"type": "chat_message", "message": message,"user":user}
