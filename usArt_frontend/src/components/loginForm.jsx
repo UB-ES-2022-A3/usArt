@@ -6,6 +6,7 @@ import LINK_FRONTEND from "./LINK_FRONTEND";
 import cookie from 'react-cookies';
 import axios, * as others from 'axios';
 import { useContext } from "react";
+
 import AuthContext from "../context/authcontext";
 
 
@@ -65,7 +66,9 @@ function Login() {
             </MDBCol>
           </MDBRow>
         </MDBCardBody>
+        
       </MDBCard>
+      
     </MDBContainer>
     </div>
   );

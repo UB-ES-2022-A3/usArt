@@ -4,6 +4,7 @@ import imageP from '../assets/not-found-image.jpg'
 import imageP2 from '../assets/pincel.jpg'
 import { useState, useEffect } from "react";
 import LINK_BACKEND  from "./LINK_BACKEND";
+import Footer from './footer';
 
 export default function Explorer() {
 
@@ -62,7 +63,10 @@ export default function Explorer() {
       <div className="grid ">
         {cards.map(RenderCard)}
       </div>
-    </div>)
+      <Footer/>
+    </div>
+    
+    )
 }
 
 
