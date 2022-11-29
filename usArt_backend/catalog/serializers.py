@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from catalog.models import Publication
+from catalog.models import Publication, PublicationImage
 from authentication.serializers import UsArtUserSerializer
 
 
@@ -16,3 +16,19 @@ class PublicationListSerializer(serializers.ModelSerializer):
         model = Publication
         fields = ['id', 'title', 'description', 'author', 'price', 'images', 'type']
     
+class PublicationPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Publication
+        fields = ['title', 'description', 'price', 'type']
+
+    def create(self, validated_data):
+        publication = Publication.objects.create(
+            author=validated_data['author'],
+            title=validated_data['title'],
+            description=validated_data['description'],
+            price=validated_data['price'],
+            type=validated_data['type']
+        )
+        for image in validated_data['images']:
+            PublicationImage.objects.create(publication=publication, image=image)
+        return publication
