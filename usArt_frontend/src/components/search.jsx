@@ -20,6 +20,11 @@ function Search() {
         const link = LINK_FRONTEND + "/search/" + content + "/" + option;
         window.location.assign(link)
     }
+    const enterEvent = (event) => {
+        if (event.keyCode === 13) {
+            goSearch()
+        }
+    }
     useEffect(callApi, [])
 
 
@@ -50,7 +55,7 @@ function Search() {
             }
             )
     }
-    
+
 
     function RenderCard(card, index) {
         if (id === "2") {
@@ -61,9 +66,9 @@ function Search() {
                             <img style={{ marginTop: "10px" }} id={index} src={card.photo} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
                         </picture>
                         <div className="card-body ">
-                            <div className='grid' style={{justifyContent:"inherit"}}>
+                            <div className='grid' style={{ justifyContent: "inherit" }}>
                                 <h5 style={{ color: "black" }}><strong>{card.user_name}</strong></h5>
-                                <div className="ratings" style={{marginTop:"-5px"}}>
+                                <div className="ratings" style={{ marginTop: "-5px" }}>
                                     <div className="empty-stars"></div>
                                     <div className="full-stars" style={{ width: "70%" }}></div>
                                 </div>
@@ -83,9 +88,9 @@ function Search() {
                         <img id={index} src={card.images[0]} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
                     </picture>
                     <div className="card-body ">
-                        <h5 style={{ color: "black" }}><strong>{card.price}€</strong></h5>
-                        <h5 style={{ color: "black" }} className="card-title max-text"><strong>{card.title}</strong></h5>
-                        <p className="card-text max-text"><small>{card.author.user_name}</small>  </p>
+                        <h5 className='max' style={{ color: "black" }}><strong>{card.price}€</strong></h5>
+                        <h5 style={{ color: "black" }} className="card-title max-title"><strong>{card.title}</strong></h5>
+                        <p className="card-text max"><small>{card.author.user_name}</small>  </p>
                         <p className="card-text max">{card.description}</p>
                     </div>
 
@@ -146,7 +151,7 @@ function Search() {
                         <p >{cards.length} resultado/s encontrado/s</p>
                     </div>
                     <div className="input-group custom-input">
-                        <input onChange={e => setContent(e.target.value)} type="search" placeholder="Try: Dragon ball drawings" aria-describedby="button-addon1" className="form-control border-0 bg-light" />
+                        <input onKeyDown={(e) => enterEvent(e)}  onChange={e => setContent(e.target.value)} type="search" placeholder="Try: Dragon ball drawings" aria-describedby="button-addon1" className="form-control border-0 bg-light" />
                         <div className="input-group-append">
                             <button onClick={goSearch} id="button-addon1" type="submit" className="btn btn-link text-primary"><BsSearch /></button>
                         </div>
@@ -171,7 +176,7 @@ function Search() {
                     </div>
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </div>)
 
 }
