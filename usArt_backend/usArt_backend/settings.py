@@ -27,20 +27,22 @@ SECRET_KEY = 'django-insecure-m(h-0tjc3h^y!ln5-n#5btp^q*0*stmr7*-y^2)d!!w@kge3j*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net', 'usart-backend-dev.azurewebsites.net']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net', 'usart-backend-dev.azurewebsites.net','usart.redis.cache.windows.net']
 
 
 # Application definition
 AZURE_ACCOUNT_NAME = "usartresources"
 AZURE_ACCOUNT_KEY = "1WPY2BzstRyZjmGymFxgPHAojlfRggM4JtrF2mmbTWSxs4Ca9yQdVb9mNS7tuTvLHBa3ng8Nh1DV+ASt4kToVA=="
-AZURE_CONTAINER = "images"
+AZURE_CONTAINER = "usart"
 AZURE_SSL = True
 
 DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 
 INSTALLED_APPS = [
+    'daphne',
     'api',
+    'chats',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -55,6 +57,22 @@ INSTALLED_APPS = [
     'userprofile.apps.UserprofileConfig',
     'rest_framework.authtoken',
 ]
+
+
+
+THIRD_PARTY_APPS = [
+    'channels',
+]
+ASGI_APPLICATION = "usArt_backend.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis://:lUqaQSt9Kbvbdq3vvpSLzzyKt6ZLqaQQ4AzCaA0NT7c=@usart-redis.redis.cache.windows.net:6379")]
+        },
+    },
+}
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -80,7 +98,8 @@ CORS_ORIGIN_WHITELIST = [
     'http://usart-backend.azurewebsites.net',
     'http://usart-backend-dev.azurewebsites.net',
     'https://usart-backend.azurewebsites.net',
-    'https://usart-backend-dev.azurewebsites.net'
+    'https://usart-backend-dev.azurewebsites.net',
+    'https://usart.redis.cache.windows.net'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -97,7 +116,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://usart.azurewebsites.net',
     'http://usart-dev.azurewebsites.net',
     'https://usart.azurewebsites.net',
-    'https://usart-dev.azurewebsites.net'
+    'https://usart-dev.azurewebsites.net',
+    'https://usart.redis.cache.windows.net'
 ]
 
 ROOT_URLCONF = 'usArt_backend.urls'
