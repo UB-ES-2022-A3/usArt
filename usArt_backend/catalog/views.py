@@ -1,7 +1,11 @@
-from catalog.models import Publication
-from catalog.serializers import PublicationListSerializer
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 
-from rest_framework import filters, generics
+from authentication.models import UsArtUser
+from catalog.models import Publication, Commission
+from catalog.serializers import PublicationListSerializer,CommissionListSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters, generics, status
 import django_filters.rest_framework
 
 
@@ -24,3 +28,17 @@ class PublicationUser(generics.ListAPIView):
 class PublicationDetail(generics.RetrieveAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationListSerializer
+
+
+class CommissionPost(generics.CreateAPIView):
+    queryset = Commission.objects.all()
+    serializer_class = CommissionListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = get_object_or_404(UsArtUser, id=self.request.data['user_id'])
+        pub = get_object_or_404(Publication, id=self.request.data['pub_id'])
+        serialiser = CommissionListSerializer(data=request.data)
+        serialiser.is_valid(raise_exception=True)
+        serialiser.save(user_id=user, pub_id=pub)
+        return Response(data=serialiser.data, status=status.HTTP_201_CREATED)

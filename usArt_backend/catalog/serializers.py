@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from catalog.models import Publication
+from catalog.models import Publication, Commission
 from authentication.serializers import UsArtUserSerializer
 
 
@@ -15,4 +15,10 @@ class PublicationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publication
         fields = ['id', 'title', 'description', 'author', 'price', 'images', 'type']
-    
+
+
+class CommissionListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Commission
+        fields = '__all__'
