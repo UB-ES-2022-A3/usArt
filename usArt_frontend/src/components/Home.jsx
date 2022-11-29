@@ -8,7 +8,7 @@ const Home = () => {
 
   function goSearch() {
     if (content === undefined) return
-    const link = LINK_FRONTEND + "/search/" + content + "/0";
+    const link = LINK_FRONTEND + "/search/" + content;
     window.location.assign(link)
   }
   const enterEvent = (event) => {
