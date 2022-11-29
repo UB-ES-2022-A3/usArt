@@ -165,6 +165,10 @@
     margin: 5px;
 }
 
+.button:disabled, 
+button[disabled]{
+    background-color: #373737;
+}
 .button span {
     cursor: pointer;
     display: inline-block;
@@ -264,4 +268,9 @@
     margin-top: 10px;
 
 }
+
+
+
+
+
 

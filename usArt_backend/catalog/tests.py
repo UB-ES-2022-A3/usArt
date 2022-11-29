@@ -104,14 +104,12 @@ class TestPublicationAPI(APITestCase):
         token = response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
         data = {
-            'user_id': user.id,
             'pub_id': pub.id,
         }
         url = reverse('catalog:commission_post')
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         data = {
-            'user_id': user.id,
             'pub_id': pub.id,
             'description': ''
         }

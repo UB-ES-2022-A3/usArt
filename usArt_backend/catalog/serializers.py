@@ -18,7 +18,7 @@ class PublicationListSerializer(serializers.ModelSerializer):
 
 
 class CommissionListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Commission
         fields = '__all__'
+        extra_kwargs = {"user_id":{"required":False}}
