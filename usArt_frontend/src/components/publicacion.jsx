@@ -3,16 +3,47 @@ import { useEffect } from 'react';
 import { useParams } from "react-router-dom"
 import imageP from '../assets/not-found-image.jpg'
 import "./publicacion.css"
+import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
-
+import { Modal } from 'bootstrap'
+import {
+    MDBContainer,
+    MDBRow,
+    MDBCol,
+    MDBCard,
+    MDBCardBody,
+    MDBInput,
+  }
+    from 'mdb-react-ui-kit';
 function Publicacion(props) {
-
+    const initialValues = { description: ""};
     const { id } = useParams()
     const [card, setCard] = useState([])
     const [author, setAuthor] = useState([])
     const [review, setReview] = useState(0)
+    const [coformValues, setFormValues] = useState(initialValues);
+    const [formErrors, setFormErrors] = useState({});
+    const [isSubmit, setIsSubmit] = useState(false);
+    
+    const handleChange = (e) => {
+        const { description, value } = e.target;
+        setFormValues({ ...coformValues, [description]: value });
+      };
+      
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setFormErrors(validate(coformValues));
+        setIsSubmit(true);
+    };
 
+    const validate = (values) => {
+        const errors = {};
+        if (!values.description) {
+          errors.description = "description is required!";
+        }
+        return errors;
+    };
     useEffect(callApi, [])
 
     function callApi() {
@@ -31,7 +62,6 @@ function Publicacion(props) {
             }
             )
     }
-
 
     if (card.length === 0 || author === undefined) {
         return (
@@ -75,14 +105,23 @@ function Publicacion(props) {
         )
     }
     function LINK_FRONTENDContact() {
-        const link = LINK_FRONTEND + "/message/" + author.id;
-        window.location.assign(link)
+        var coModal = new Modal(document.getElementById('coModal'), {
+            keyboard: false
+          })
+        if (card.type == "CO"){
+            coModal.show()
+        }
+
     }
     function LINK_FRONTENDProfile() {
-
         const link = LINK_FRONTEND + "/profile/" + author.user_name
         window.location.assign(link)
     }
+    function val(e) {
+        var description = e.value;
+        console.log(description)
+
+   }
 
 
     return (
@@ -110,6 +149,23 @@ function Publicacion(props) {
                     <hr></hr>
                     <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
                         <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
+                    </div>
+                </div>
+                <div class="modal fade" id="coModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark">Que servicio quieres adquirir del artista?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><textarea name="comentario" rows="5" cols="60" onKeyup="val(this)"></textarea></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                        </div>
                     </div>
                 </div>
 
