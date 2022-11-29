@@ -43,8 +43,8 @@ function Login() {
   };
 
   return (
-    <div>
-   <MDBContainer style={{ marginTop: "14vmin", paddingBottom: "10vmin" }} className="items-align-center justify-content-center " >
+    <div className="body_register">
+    <MDBContainer className="items-align-center justify-content-center vertical-center " >
       <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '26px' }}>
         <MDBCardBody className='shadow'>
           <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
@@ -71,8 +71,6 @@ function Login() {
       
     </MDBContainer>
     </div>
- 
-    
   );
 }
 

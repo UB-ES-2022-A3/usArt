@@ -24,7 +24,7 @@ export default function Explorer() {
 
   if (cards.length === 0) {
     return (
-        <div className='center'>
+        <div className='center body_register'>
             <div  class="loader">
                 <div className="loader-wheel"></div>
                 <div className="loader-text"></div>
@@ -55,7 +55,7 @@ export default function Explorer() {
 
 
   return (
-    <div>
+    <div style={{overflowX:"hidden"}}className="body_register">
       <div className="row header border">
         <h1>Explore el talento en UsArt</h1>
         <p style={{ color: "white" }}>Miles de personas ofrecen servicios de arte diariamente</p>
