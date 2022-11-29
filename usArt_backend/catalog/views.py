@@ -1,5 +1,6 @@
-from catalog.models import Publication, PublicationImage
+from catalog.models import Publication, PublicationImage, UsArtUser
 from catalog.serializers import PublicationListSerializer, PublicationPostSerializer
+from django.shortcuts import get_object_or_404
 
 from rest_framework import filters, generics, status
 import django_filters.rest_framework
@@ -29,18 +30,9 @@ class PublicationDetail(generics.RetrieveAPIView):
 
 
 class PublicationPosting(generics.CreateAPIView):
-    permission_classes=[IsAuthenticated]
-    def post(self, request):
-        publication_serializer = PublicationPostSerializer(data=request.data)
-        if not publication_serializer.is_valid():
-            return Response(publication_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        res = Publication.objects.create(
-            author=request.user,
-            title=request.data['title'],
-            description=request.data['description'],
-            price=request.data['price'],
-            type=request.data['type']
-        )
-        for im in request.FILES.getlist('images'):
-            PublicationImage.objects.create(publication=res, image=im)
-        return Response(publication_serializer.data, status=status.HTTP_201_CREATED)
+    permission_classes = [IsAuthenticated]
+    serializer_class = PublicationPostSerializer
+
+    def perform_create(self, serializer):
+        author = get_object_or_404(UsArtUser, id=self.request.user.id)
+        serializer.save(author=author, images=self.request.FILES.getlist('images'))
