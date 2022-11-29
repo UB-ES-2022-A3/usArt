@@ -80,3 +80,26 @@ class TestPublicationAPI(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+    def test_post_review_artist(self):
+        self.test_authentication()
+        url = reverse('userprofile:review_artist')
+        author = UsArtUser.objects.get(user_name='test')
+        data = {
+            'reviewed_id': author.id,
+            'stars': 4.0,
+            'review': 'good work',
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_post_review_artist_fail_login(self):
+        url = reverse('userprofile:review_artist')
+        author = UsArtUser.objects.get(user_name='test')
+        data = {
+            'reviewed_id': author.id,
+            'stars': 4.0,
+            'review': 'good work',
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
