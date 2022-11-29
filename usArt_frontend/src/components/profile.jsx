@@ -11,7 +11,13 @@ function Profile() {
     const [prof, setProfile] = useState([])
     const [products, setProducts] = useState([])
 
+    const [radioGender, setRadioProduct] = useState('Products');
+    const handleChange = (event) => {
+        setRadioProduct(event.target.value)
+    }
 
+
+    //#TODO: El fetch es demasiado lento (useEffect debería funcionar (?))
     useEffect(callApi, [])
     useEffect(callApiProducts, [])
 
@@ -28,30 +34,75 @@ function Profile() {
 
     function callApiProducts() {
         fetch(
-            LINK_BACKEND + "/api/catalog/user/administrator")
+            LINK_BACKEND + "/api/catalog/user/Alum")
             .then((res) => res.json())
             .then(data => {
                 setProducts(data);
             }
             )
     }
-    function renderIfRadio() {
 
+    function renderIfRadio() {
+        if (radioGender === 'Products') {
+            //return products.map(RenderMyProducts)
+            return RenderMyProductsMockUp()
+        } else if (radioGender === 'Reviews') {
+
+        } else {
+
+        }
     }
 
-    function RenderMyProducts(product, index) {
+    function RenderMyProducts(product) {
         return (
-
-            <div className='d-flex rounded row' style={{ backgroundColor: "white" }}>
-                <img src={product.photo} className="card-img-top size-img col" alt="Sorry! not available at this time" ></img>
-                <div className='col'>
-                    <h1><strong>{product.price}€</strong></h1>
+            <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + product.id} key={product.id}>
+                <div className='d-flex rounded  p-3 productRow text-center align-items-center justify-content-center' style={{ backgroundColor: "white" }}>
+                    <img src={product.images} className="imageProducts shadow rounded" alt="Sorry! not available at this time" ></img>
+                    <div className='col-3  d-flex  justify-content-center'>
+                        <h1 style={{ color: "black", fontSize: "1em" }}><strong>{product.price}€</strong></h1>
+                    </div>
+                    <div className='col-6  d-flex  justify-content-center'>
+                        <h1 style={{ color: "black", fontSize: "1em" }}>{product.description}</h1>
+                    </div>
                 </div>
-                <div className='col'>
-                    <h1>{product.description}</h1>
-                </div>
+            </a>
+        )
+    }
 
+    function RenderMyProductsMockUp(product) {
+        return (
+            <div>
+                <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/fdfc9d2b-9266-4167-a4e9-bb1361656951"} key={"fdfc9d2b-9266-4167-a4e9-bb1361656951"}>
+                    <div className='d-flex rounded  p-3 productRow text-center align-items-center justify-content-center' style={{ backgroundColor: "white" }}>
+                        <img src={"https://images.theconversation.com/files/45375/original/s7kt4vmq-1396412167.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1000&fit=clip"} className="imageProducts shadow rounded" alt="Sorry! not available at this time" ></img>
+                        <div className='col-3  d-flex  justify-content-center '>
+                            <h1 style={{ color: "black", fontSize: "1em" }}><strong>5€</strong></h1>
+                        </div>
+                        <div className='col-6  d-flex  justify-content-center '>
+                            <h1 style={{ color: "black", fontSize: "1em" }}>Hola soy la descripción del xproducto</h1>
+                        </div>
+                    </div>
+                </a>
+                <div className='d-flex rounded  p-3 productRow text-center align-items-center justify-content-center' style={{ backgroundColor: "white" }}>
+                    <img src={"https://images.theconversation.com/files/45375/original/s7kt4vmq-1396412167.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1000&fit=clip"} className="imageProducts shadow rounded" alt="Sorry! not available at this time" ></img>
+                    <div className='col-3  d-flex  justify-content-center '>
+                        <h1 style={{ color: "black", fontSize: "1em" }}><strong>5€</strong></h1>
+                    </div>
+                    <div className='col-6  d-flex  justify-content-center '>
+                        <h1 style={{ color: "black", fontSize: "1em" }}>Hola soy la descripción del xproducto</h1>
+                    </div>
+                </div>
+                <div className='d-flex rounded  p-3 productRow text-center align-items-center justify-content-center' style={{ backgroundColor: "white" }}>
+                    <img src={"https://images.theconversation.com/files/45375/original/s7kt4vmq-1396412167.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1000&fit=clip"} className="imageProducts shadow rounded" alt="Sorry! not available at this time" ></img>
+                    <div className='col-3  d-flex  justify-content-center '>
+                        <h1 style={{ color: "black", fontSize: "1em" }}><strong>5€</strong></h1>
+                    </div>
+                    <div className='col-6  d-flex  justify-content-center '>
+                        <h1 style={{ color: "black", fontSize: "1em" }}>Hola soy la descripción del xproducto</h1>
+                    </div>
+                </div>
             </div>
+
         )
     }
 
@@ -97,16 +148,15 @@ function Profile() {
                             <div className="card-body  p-4 text-black text-center ">
                                 <div className="mb-5 rounded-top " style={{ backgroundColor: "#f5f5f5" }}>
                                     <div className="btn-group px-4 py-3 ">
-                                        <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="" />
+                                        <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChange} />
                                         <label className="btn btn-outline-dark" htmlFor="radio1">My products</label>
-                                        <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="" />
+                                        <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChange} />
                                         <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
-                                        <input type="radio" className="btn-check" name="options" id="radio3" autoComplete="off" value="" />
+                                        <input type="radio" className="btn-check" name="options" id="radio3" autoComplete="off" value="Purchase" checked={radioGender === 'Purchase'} onChange={handleChange} />
                                         <label className="btn btn-outline-dark" htmlFor="radio3">Purchase History</label>
                                     </div>
                                     <div className="p-4" style={{ backgroundColor: "#f8f9fa" }}>
                                         {renderIfRadio()}
-
                                     </div>
                                 </div>
 
