@@ -161,7 +161,6 @@ function Register() {
 
       </MDBContainer>
 
-      <Footer/>
     </div>
 
 
