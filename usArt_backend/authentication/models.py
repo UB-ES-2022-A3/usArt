@@ -34,7 +34,7 @@ class AccountManager(BaseUserManager):
 
 
 def upload_to_photo(instance, filename):
-    return 'photos/{}'.format(filename)
+    return 'images/{}'.format(filename)
 
 
 class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
@@ -43,7 +43,7 @@ class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
     email = models.EmailField('Correo electronico', unique=True)
     user_name = models.CharField(max_length=150, unique=True)
     description = models.TextField(default="")
-    photo = models.ImageField(default='default.jpg')
+    photo = models.ImageField(upload_to='images/',default='default.jpg')
     is_staff = models.BooleanField(default=False)
     STATUS_CHOICES = [
         ('BAN', 'Banned'),
@@ -61,3 +61,15 @@ class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
 
     def __str__(self):
         return self.user_name
+
+
+
+
+class idChats(models.Model):
+
+    id_sala = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id_1 = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name="user1")
+    id_2 = models.ForeignKey(UsArtUser, on_delete=models.CASCADE,related_name="user2")
+    chat = models.FileField(upload_to='chats/')
+    
+    
