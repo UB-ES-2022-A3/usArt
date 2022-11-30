@@ -106,6 +106,7 @@ function Publicacion(props) {
         console.log(description)
         postPetCom(id, description)
         alert("Petición hecha!")
+        document.getElementById("toOpacity").style.opacity ="1"
 
     }
     function postPetCom(pub_id, description) {
