@@ -12,15 +12,15 @@ import { Modal } from 'bootstrap'
 import AuthContext from "../context/authcontext";
 
 function Publicacion(props) {
-    
+
     let { user, authTokens } = useContext(AuthContext);
     const { id } = useParams()
     const [card, setCard] = useState([])
     const [author, setAuthor] = useState([])
     const [review, setReview] = useState(0)
 
-   
-    var input_textarea = document.querySelector('.content-input');
+
+    let input_textarea = document.querySelector('.content-input');
 
     useEffect(callApi, [])
 
@@ -37,16 +37,16 @@ function Publicacion(props) {
                     setCard(data);
                 }
                 setAuthor(data.author);
-                
+
             }
             )
     }
-    
+
 
     if (card.length === 0 || author === undefined) {
         return (
             <div className='center'>
-                <div  class="loader">
+                <div className="loader">
                     <div className="loader-wheel"></div>
                     <div className="loader-text"></div>
                 </div>
@@ -85,10 +85,12 @@ function Publicacion(props) {
         )
     }
     function LINK_FRONTENDContact() {
-        var coModal = new Modal(document.getElementById('coModal'), {
-            keyboard: false
-          })
-        if (card.type == "CO"){
+            let coModal = new Modal(document.getElementById('coModal'), {
+            keyboard: false,backdrop: 'static'
+        })
+        if (card.type === "CO") {
+            
+            document.getElementById("toOpacity").style.opacity ="0.5";
             coModal.show()
         }
     }
@@ -98,114 +100,116 @@ function Publicacion(props) {
     }
     function updateOutput() {
         var description = input_textarea.value
-        if (description.length ==0){
+        if (description.length === 0) {
             alert("La descripción no puede estar vacia")
         }
         console.log(description)
-        postPetCom(id,description)
+        postPetCom(id, description)
         alert("Petición hecha!")
-        
+
     }
-    function postPetCom(pub_id,description) {
+    function postPetCom(pub_id, description) {
         fetch(LINK_BACKEND + "/api/catalog/user/commission/post/", {
-          method: 'POST',
-          withCredentials: true,
-          credentials: 'include',
-          headers: {
-            'Authorization': 'Bearer ' + authTokens.access,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            'pub_id':pub_id,
-            'description': description
-          }),
+            method: 'POST',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'pub_id': pub_id,
+                'description': description
+            }),
         })
-          .then((res) => res.json())
-          .then(data => {
-            console.log(data)
-          }
-          )
+            .then((res) => res.json())
+            .then(data => {
+                console.log(data)
+            }
+            )
     }
     return (
         <div>
-            <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
-                <div className="grid template"  >
-                    <div className="card card-item">
-                        <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
-                            <picture >
-                                <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
-                            </picture>
-                            <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
-                            <div className="ratings">
-                                <div className="empty-stars"></div>
-                                <div className="full-stars" style={{ width: review }}></div>
+            <div id='toOpacity'>
+                <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
+                    <div className="grid template"  >
+                        <div className="card card-item">
+                            <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
+                                <picture >
+                                    <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
+                                </picture>
+                                <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
+                                <div className="ratings">
+                                    <div className="empty-stars"></div>
+                                    <div className="full-stars" style={{ width: review }}></div>
+                                </div>
+                                <div className="card-body" style={{ paddingTop: "0%" }}>
+                                </div>
                             </div>
-                            <div className="card-body" style={{ paddingTop: "0%" }}>
+                            <hr></hr>
+                            <div style={{ marginLeft: "2%" }}>
+                                <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
+                                <p placeholder="Description not found.." className="card-text">{author.description}</p>
+                            </div>
+                            <hr></hr>
+                            <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
+                                <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
                             </div>
                         </div>
-                        <hr></hr>
-                        <div style={{ marginLeft: "2%" }}>
-                            <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
-                            <p placeholder="Description not found.." className="card-text">{author.description}</p>
-                        </div>
-                        <hr></hr>
-                        <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
-                            <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="coModal" tabindex="-1">
-                    <div class="modal-dialog"style={{ bottom: "0", right: "0", position: "absolute", marginRight: "35%", marginBottom: "19%" }}>
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title text-dark">Que servicio quieres adquirir del artista?</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p><textarea name="comentario" class="content-input" rows="5" cols="60" required ></textarea></p>
-                        </div>
-                        
-                        <div class="modal-footer">
-                            <button class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
-                            <button onClick={updateOutput} class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
-                        </div>
-                        </div>
-                    </div>
-                </div>
+                        <div className="custom-container">
+                            <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
+                                <div className="carousel-indicators">
+                                    {card.images.map(renderButtons)}
+                                </div>
+                                <div className="carousel-inner " >
+                                    {card.images.map(renderCard)}
+                                </div>
+                                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                    <span className="carousel-control-prev-icon " aria-hidden="true"></span>
+                                    <span className="visually-hidden">Previous</span>
+                                </button>
+                                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span className="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            <div className="card-body custom-body ">
+                                <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
+                                    <h1 style={{ color: "black" }}>{card.title}</h1>
+                                </div >
+                                <h4 style={{ color: "black" }}>{card.price}€</h4>
+                                <hr></hr>
+                                <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
 
-                <div className="custom-container">
-                    <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
-                        <div className="carousel-indicators">
-                            {card.images.map(renderButtons)}
-                        </div>
-                        <div className="carousel-inner " >
-                            {card.images.map(renderCard)}
-                        </div>
-                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                            <span className="carousel-control-prev-icon " aria-hidden="true"></span>
-                            <span className="visually-hidden">Previous</span>
-                        </button>
-                        <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span className="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                    <div className="card-body custom-body ">
-                        <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
-                            <h1 style={{ color: "black" }}>{card.title}</h1>
+                            </div>
+                            <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
+                            <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
+                                <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }} disabled={user === null}><span>Contactar </span></button>
+                            </div>
                         </div >
-                        <h4 style={{ color: "black" }}>{card.price}€</h4>
-                        <hr></hr>
-                        <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
 
                     </div>
-                    <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
-                    <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
-                        <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }} disabled={user===null}><span>Contactar </span></button>
-                    </div>
-                </div >
+                </div>
+                <Footer />
             </div>
-            <Footer/>
+            <div className="modal fade" id="coModal" tabIndex="-1">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title text-dark">Que servicio quieres adquirir del artista?</h5>
+                            <button type="button" className="btn-close" onClick={() => document.getElementById("toOpacity").style.opacity ="1"} data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <p><textarea name="comentario" className="content-input" rows="5" cols="60" required ></textarea></p>
+                        </div>
+
+                        <div className="modal-footer">
+                            <button className="button" onClick={() => document.getElementById("toOpacity").style.opacity ="1"} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
+                            <button onClick={updateOutput} className="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
