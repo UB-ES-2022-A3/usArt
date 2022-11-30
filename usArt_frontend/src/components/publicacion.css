@@ -244,6 +244,18 @@ button[disabled]{
 
 }
 
+.modal-dialog {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)!important;
+
+}
+.modal-backdrop{
+    z-index: -1;
+}
+
 .card-item {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     margin-left: 5%;
