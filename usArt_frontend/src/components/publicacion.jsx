@@ -12,6 +12,9 @@ function Publicacion(props) {
     const [card, setCard] = useState([])
     const [author, setAuthor] = useState([])
     const [review, setReview] = useState(0)
+    const [fav, setFavorite] = useState(false)
+    const isFavorite = <button onClick={toggleFavorite} className="button" style={{ verticalAlign: "middle" }}><span> Change (now {"" + fav}) </span></button>
+    const notFavorite = <button onClick={toggleFavorite} className="button" style={{ verticalAlign: "middle" }}><span> Change (now {"" + fav}) </span></button>
 
     useEffect(callApi, [])
 
@@ -32,11 +35,20 @@ function Publicacion(props) {
             )
     }
 
+    function toggleFavorite() {
+        if (fav) {
+            //post backend
+        } else {
+            //delete backend
+        }
+        setFavorite(fav => !fav)
+    }
+
 
     if (card.length === 0 || author === undefined) {
         return (
             <div className='center'>
-                <div  class="loader">
+                <div class="loader">
                     <div className="loader-wheel"></div>
                     <div className="loader-text"></div>
                 </div>
@@ -141,8 +153,13 @@ function Publicacion(props) {
 
                     </div>
                     <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
-                    <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
-                        <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
+                            {fav === true ? isFavorite : notFavorite}
+                        </div>
+                        <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
+                            <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle"}}><span>Contactar </span></button>
+                        </div>
                     </div>
                 </div>
             </div >
