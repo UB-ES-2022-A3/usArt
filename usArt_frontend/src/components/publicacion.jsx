@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { useEffect } from 'react';
 import { useParams } from "react-router-dom"
 import imageP from '../assets/not-found-image.jpg'
 import "./publicacion.css"
+import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
+import { Modal } from 'bootstrap'
+import AuthContext from "../context/authcontext";
 
 function Publicacion(props) {
-
+    
+    let { user, authTokens } = useContext(AuthContext);
     const { id } = useParams()
     const [card, setCard] = useState([])
     const [author, setAuthor] = useState([])
     const [review, setReview] = useState(0)
+
+   
+    var input_textarea = document.querySelector('.content-input');
 
     useEffect(callApi, [])
 
@@ -28,10 +35,11 @@ function Publicacion(props) {
                     setCard(data);
                 }
                 setAuthor(data.author);
+                
             }
             )
     }
-
+    
 
     if (card.length === 0 || author === undefined) {
         return (
@@ -75,16 +83,47 @@ function Publicacion(props) {
         )
     }
     function LINK_FRONTENDContact() {
-        const link = LINK_FRONTEND + "/message/" + author.id;
-        window.location.assign(link)
+        var coModal = new Modal(document.getElementById('coModal'), {
+            keyboard: false
+          })
+        if (card.type == "CO"){
+            coModal.show()
+        }
     }
     function LINK_FRONTENDProfile() {
-
         const link = LINK_FRONTEND + "/profile/" + author.user_name
         window.location.assign(link)
     }
-
-
+    function updateOutput() {
+        var description = input_textarea.value
+        if (description.length ==0){
+            alert("La descripción no puede estar vacia")
+        }
+        console.log(description)
+        postPetCom(id,description)
+        alert("Petición hecha!")
+        
+    }
+    function postPetCom(pub_id,description) {
+        fetch(LINK_BACKEND + "/api/catalog/user/commission/post/", {
+          method: 'POST',
+          withCredentials: true,
+          credentials: 'include',
+          headers: {
+            'Authorization': 'Bearer ' + authTokens.access,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            'pub_id':pub_id,
+            'description': description
+          }),
+        })
+          .then((res) => res.json())
+          .then(data => {
+            console.log(data)
+          }
+          )
+    }
     return (
 
         <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
@@ -110,6 +149,24 @@ function Publicacion(props) {
                     <hr></hr>
                     <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
                         <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
+                    </div>
+                </div>
+                <div class="modal fade" id="coModal" tabindex="-1">
+                    <div class="modal-dialog"style={{ bottom: "0", right: "0", position: "absolute", marginRight: "35%", marginBottom: "19%" }}>
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark">Que servicio quieres adquirir del artista?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><textarea name="comentario" class="content-input" rows="5" cols="60" required ></textarea></p>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
+                            <button onClick={updateOutput} class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
+                        </div>
+                        </div>
                     </div>
                 </div>
 
@@ -141,7 +198,7 @@ function Publicacion(props) {
                     </div>
                     <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
                     <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
-                        <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                        <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }} disabled={user===null}><span>Contactar </span></button>
                     </div>
                 </div>
             </div >

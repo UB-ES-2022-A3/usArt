@@ -36,9 +36,10 @@ class CommissionPost(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        user = get_object_or_404(UsArtUser, id=self.request.data['user_id'])
-        pub = get_object_or_404(Publication, id=self.request.data['pub_id'])
+        
+        pub = get_object_or_404(Publication, id=request.data['pub_id'])
+        print(request.user,pub)
         serialiser = CommissionListSerializer(data=request.data)
         serialiser.is_valid(raise_exception=True)
-        serialiser.save(user_id=user, pub_id=pub)
+        serialiser.save(user_id=request.user, pub_id=pub)
         return Response(data=serialiser.data, status=status.HTTP_201_CREATED)
