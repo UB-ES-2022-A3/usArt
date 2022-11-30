@@ -21,6 +21,8 @@ jobs:
       - name: Environment Test
         env: 
           THISVAR: imhereuwu
+        run: |
+          python ${GITHUB_WORKSPACE}/usArt_backend/environmenttest.py
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
