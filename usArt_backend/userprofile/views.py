@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from catalog.serializers import PublicationListSerializer
 
 from userprofile import serializers
-from userprofile.models import PurchaseHistory
+from userprofile.models import PurchaseHistory, Review
 
 from rest_framework import filters, generics, status
 from rest_framework.response import Response
@@ -58,3 +58,14 @@ class UserProfile(generics.GenericAPIView):
         user.save()
 
         return Response(status=status.HTTP_201_CREATED)
+
+
+class ReviewUser(generics.CreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = serializers.ReviewUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user = get_object_or_404(UsArtUser, id=self.request.user.id)
+        author = get_object_or_404(UsArtUser, id=self.request.data['reviewed_id'])
+        serializer.save(reviewer_id=user, reviewed_id=author)

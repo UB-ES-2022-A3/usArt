@@ -1,7 +1,11 @@
 from authentication.models import UsArtUser
-from rest_framework import serializers
+
+
 from catalog.serializers import PublicationListSerializer
-from userprofile.models import PurchaseHistory
+
+from rest_framework import serializers
+
+from userprofile.models import PurchaseHistory, Review
 
 
 class UsArtUserSerializer(serializers.ModelSerializer):
@@ -37,3 +41,11 @@ class ExternalUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsArtUser
         fields = ('id', 'user_name', 'description', 'photo', 'is_self')
+
+
+class ReviewUserSerializer(serializers.ModelSerializer):
+    reviewed_id = UsArtUserSerializer(read_only=True)
+
+    class Meta:
+        model = Review
+        fields = ['reviewed_id', 'stars', 'review']
