@@ -1,5 +1,8 @@
 name: Python + Selenium CI 
 
+env:
+  ENV: "TEST"
+
 on:
   push:
     branches:
