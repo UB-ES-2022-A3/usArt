@@ -24,7 +24,8 @@ jobs:
           pip install -r ${GITHUB_WORKSPACE}/usArt_backend/requirements.txt
       - name: Coverage report
         run: |
-          coverage run ${GITHUB_WORKSPACE}/usArt_backend/manage.py test
+          cd ./usArt_backend/
+          coverage run manage.py test
           coverage report --fail-under=85
       - name: Django Testing
         run: |
