@@ -158,9 +158,7 @@ function Register() {
             </MDBRow>
           </MDBCardBody>
         </MDBCard>
-
       </MDBContainer>
-
     </div>
 
 
