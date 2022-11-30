@@ -6,6 +6,8 @@ import "./publicacion.css"
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
+import Footer from './footer'
+
 import { Modal } from 'bootstrap'
 import AuthContext from "../context/authcontext";
 
@@ -125,30 +127,31 @@ function Publicacion(props) {
           )
     }
     return (
-
-        <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
-            <div className="grid template"  >
-                <div className="card card-item">
-                    <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
-                        <picture >
-                            <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
-                        </picture>
-                        <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
-                        <div className="ratings">
-                            <div className="empty-stars"></div>
-                            <div className="full-stars" style={{ width: review }}></div>
+        <div>
+            <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
+                <div className="grid template"  >
+                    <div className="card card-item">
+                        <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
+                            <picture >
+                                <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
+                            </picture>
+                            <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
+                            <div className="ratings">
+                                <div className="empty-stars"></div>
+                                <div className="full-stars" style={{ width: review }}></div>
+                            </div>
+                            <div className="card-body" style={{ paddingTop: "0%" }}>
+                            </div>
                         </div>
-                        <div className="card-body" style={{ paddingTop: "0%" }}>
+                        <hr></hr>
+                        <div style={{ marginLeft: "2%" }}>
+                            <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
+                            <p placeholder="Description not found.." className="card-text">{author.description}</p>
                         </div>
-                    </div>
-                    <hr></hr>
-                    <div style={{ marginLeft: "2%" }}>
-                        <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
-                        <p placeholder="Description not found.." className="card-text">{author.description}</p>
-                    </div>
-                    <hr></hr>
-                    <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
-                        <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
+                        <hr></hr>
+                        <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
+                            <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
+                        </div>
                     </div>
                 </div>
                 <div class="modal fade" id="coModal" tabindex="-1">
@@ -200,8 +203,9 @@ function Publicacion(props) {
                     <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
                         <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }} disabled={user===null}><span>Contactar </span></button>
                     </div>
-                </div>
-            </div >
+                </div >
+            </div>
+            <Footer/>
         </div>
     );
 }
