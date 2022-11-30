@@ -45,8 +45,7 @@ class ExternalUserSerializer(serializers.ModelSerializer):
 
 class ReviewUserSerializer(serializers.ModelSerializer):
     reviewed_id = UsArtUserSerializer(read_only=True)
-    reviewer_id = UsArtUserSerializer(read_only=True)
 
     class Meta:
         model = Review
-        fields = ['reviewed_id', 'reviewer_id', 'stars', 'review']
+        fields = ['reviewed_id', 'stars', 'review']
