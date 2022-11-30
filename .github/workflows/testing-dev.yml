@@ -27,6 +27,3 @@ jobs:
           cd ./usArt_backend/
           coverage run manage.py test
           coverage report --fail-under=85
-      - name: Django Testing
-        run: |
-          python ${GITHUB_WORKSPACE}/usArt_backend/manage.py test
