@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useEffect } from 'react';
 import './profile.css';
 import { useParams } from "react-router-dom";
 import LINK_BACKEND from "./LINK_BACKEND"
+import AuthContext from "../context/authcontext";
 import Footer from './footer'
 import empty from '../assets/suchEmpty.png'
 
 function Profile() {
 
     const { username } = useParams();
-    let is_self = false;
+    let { user, authTokens } = useContext(AuthContext);
     const [prof, setProfile] = useState([])
     const [products, setProducts] = useState([])
     const [historialProducts, setHistorialProducts] = useState([])
@@ -18,20 +19,35 @@ function Profile() {
     const handleChange = (event) => {
         setRadioProduct(event.target.value)
     }
-
     useEffect(callApi, [])
     useEffect(callApiProducts, [])
     useEffect(callApiHistorialProducts, [])
 
     function callApi() {
-        fetch(
-            LINK_BACKEND + "/api/userprofile/" + username)
-            .then((res) => res.json())
-            .then(data => {
-                is_self = data.is_self;
-                setProfile(data);
-            }
-            )
+        if (user !== null) {
+            fetch(
+                LINK_BACKEND + "/api/userprofile/" + username, {
+                method: 'GET',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                }
+            })
+                .then((res) => res.json())
+                .then(data => {
+                    setProfile(data);
+                }
+                )
+        } else {
+            fetch(
+                LINK_BACKEND + "/api/userprofile/" + username)
+                .then((res) => res.json())
+                .then(data => {
+                    setProfile(data);
+                }
+                )
+        }
     }
 
     function callApiProducts() {
@@ -55,31 +71,52 @@ function Profile() {
     }
 
     function renderIfRadio() {
-  
-        if (radioGender === 'Products') {    
-            if (products.length != 0){
+
+        if (radioGender === 'Products') {
+            if (products.length != 0) {
                 return products.map(RenderMyProducts)
-            }   else{
+            } else {
                 return RenderEmpty()
             }
         } else if (radioGender === 'Reviews') {
 
         } else {
 
-            if (historialProducts.length === 0 || historialProducts.detail.includes("Not")){
+            if (historialProducts.length === 0 || historialProducts.detail.includes("Not")) {
                 return RenderEmpty()
-            }else{
+            } else {
                 return historialProducts.map(RenderMyHistorialProducts)
             }
         }
     }
     function RenderEmpty() {
-        return(
+        return (
             <div>
                 <img src={empty} className="" alt="Noel" ></img>
-                <p className='py-3' style={{color:"gray"}}>Wow, such empty</p>
+                <p className='py-3' style={{ color: "gray" }}>Wow, such empty</p>
             </div>
         )
+    }
+
+    function RenderPurchaseHistory() {
+
+        if (prof.is_self) {
+            return (<div className="btn-group px-4 py-5 ">
+                <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChange} />
+                <label className="btn btn-outline-dark" htmlFor="radio1">My products</label>
+                <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChange} />
+                <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
+                <input type="radio" className="btn-check" name="options" id="radio3" autoComplete="off" value="Purchase" checked={radioGender === 'Purchase'} onChange={handleChange} />
+                <label className="btn btn-outline-dark" htmlFor="radio3">Purchase History</label>
+            </div>)
+        } else {
+            return (<div className="btn-group px-4 py-5 ">
+                <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChange} />
+                <label className="btn btn-outline-dark" htmlFor="radio1">My products</label>
+                <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChange} />
+                <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
+            </div>)
+        }
     }
 
     //#TODO, En teoria habrá una fecha
@@ -115,6 +152,15 @@ function Profile() {
         )
     }
 
+    function RenderEditProfile() {
+        if (prof.is_self) {
+            return (<button type="button" class="btn btn-outline-dark"
+                style={{ zIndex: "1" }}>
+                Edit profile
+            </button>)
+        }
+    }
+
     return (
         <div>
             <section className="h-100 gradient-custom-2" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -124,10 +170,7 @@ function Profile() {
                             <img src={prof.photo}
                                 alt="Generic placeholder image" className="img-fluid img-thumbnail mt-4 mb-2 imgProfile"
                                 style={{ zIndex: "1" }} />
-                            <button type="button" class="btn btn-outline-dark"
-                                style={{ zIndex: "1" }}>
-                                Edit profile
-                            </button>
+                            {RenderEditProfile()}
 
                         </div>
                         <div className="ms-3" style={{ marginTop: "130px" }}>
@@ -156,14 +199,7 @@ function Profile() {
                         <div className="col-lg-8">
                             <div className="card-body  p-4 text-black text-center ">
                                 <div className="mb-5 rounded-top " style={{ backgroundColor: "#f5f5f5" }}>
-                                    <div className="btn-group px-4 py-5 ">
-                                        <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChange} />
-                                        <label className="btn btn-outline-dark" htmlFor="radio1">My products</label>
-                                        <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChange} />
-                                        <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
-                                        <input type="radio" className="btn-check" name="options" id="radio3" autoComplete="off" value="Purchase" checked={radioGender === 'Purchase'} onChange={handleChange} />
-                                        <label className="btn btn-outline-dark" htmlFor="radio3">Purchase History</label>
-                                    </div>
+                                    {RenderPurchaseHistory()}
                                     <div className="p-4" style={{ backgroundColor: "#f5f5f5" }}>
                                         {renderIfRadio()}
                                     </div>
@@ -177,7 +213,7 @@ function Profile() {
                 </div>
 
             </section>
-            <Footer/>
+            <Footer />
         </div>
 
     );
