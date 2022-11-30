@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import LINK_BACKEND from "./LINK_BACKEND"
 import Footer from './footer'
 
+
 function Profile() {
 
     const { username } = useParams();
@@ -22,31 +23,33 @@ function Profile() {
                 is_self = data.is_self;
                 setProfile(data);
             }
-        )
+            )
+
     }
 
 
     return (
         <div>
-            <section className="h-100 gradient-custom-2" style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <section className="h-100 gradient-custom-2" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <div className="card" style={{ width: "70vw" }}>
                     <div className=" rounded-top text-white d-flex flex-row" style={{ height: "200px", backgroundColor: "#000" }} >
                         <div className="ms-4 mt-5 d-flex flex-column" style={{ width: "150px" }}>
                             <img src={prof.photo}
                                 alt="Generic placeholder image" className="img-fluid img-thumbnail mt-4 mb-2"
                                 style={{ width: "150px", zIndex: "1" }} />
-
                         </div>
                         <div className="ms-3" style={{ marginTop: "130px" }}>
                             <h5>{prof.user_name}</h5>
-
                         </div>
                     </div>
                     <div className="p-4 text-black" style={{ backgroundColor: "#f5f5f5" }}>
-                        <div className="d-flex justify-content-end text-center py-1">
+                        <div style={{ marginTop: "1%", marginLeft: "5px" }} class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                            <div class="btn-group" role="group" aria-label="First group">
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-dark">Rate me!</button>
+                            </div>
                             <div className="ratings">
                                 <div className="empty-stars"></div>
-                                <div className="full-stars" style={{ width: '75%' }}></div>
+                                <div className="full-stars" ></div>
                             </div>
                         </div>
                     </div>
@@ -72,20 +75,32 @@ function Profile() {
                                         <label className="btn btn-dark" htmlFor="radio3">Purchase History</label>
                                     </div>
                                     <div className="p-4" style={{ backgroundColor: "#f8f9fa" }}>
-
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                 </div>
-
             </section>
-            <Footer/>
+
+            <div class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Understood</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <Footer />
         </div>
 
     );
