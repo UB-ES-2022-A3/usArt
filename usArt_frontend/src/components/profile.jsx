@@ -17,8 +17,6 @@ function Profile() {
         setRadioProduct(event.target.value)
     }
 
-
-    //#TODO: El fetch es demasiado lento (useEffect debería funcionar (?))
     useEffect(callApi, [])
     useEffect(callApiProducts, [])
 
