@@ -23,10 +23,10 @@
     min-width: 150px;
 }
 .imageProducts{
-    max-width: 9em;
-    max-height: 9em;
-    min-height: 9em;
-    min-width: 9em;
+    max-width: 9vmax;
+    max-height: 9vmax;
+    min-height: 9vmin;
+    min-width: 9vmin;
 }
 .empty-stars:before,
 .full-stars:before {
