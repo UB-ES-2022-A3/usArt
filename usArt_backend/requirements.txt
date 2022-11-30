@@ -8,7 +8,7 @@ mysqlclient==2.1.1
 django-storages[azure]
 Pillow==9.3.0
 psycopg2-binary==2.9.4
-pycodestyle==2.8.0
+pycodestyle==2.10.0
 PyJWT==2.3.0
 pytz==2022.4
 sqlparse==0.4.3
