@@ -6,6 +6,7 @@ import LINK_FRONTEND from "./LINK_FRONTEND";
 import cookie from 'react-cookies';
 import axios, * as others from 'axios';
 import { useContext } from "react";
+
 import AuthContext from "../context/authcontext";
 
 
@@ -36,13 +37,12 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmit(true);
-    console.log(username);
-    console.log(password);
     username.length > 0 && loginUser(username, password)
   };
 
   return (
-    <MDBContainer style={{ marginTop: "14vmin", paddingBottom: "10vmin" }} className="items-align-center justify-content-center " >
+    <div className="body_register">
+    <MDBContainer className="items-align-center justify-content-center vertical-center " >
       <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '26px' }}>
         <MDBCardBody className='shadow'>
           <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
@@ -64,8 +64,11 @@ function Login() {
             </MDBCol>
           </MDBRow>
         </MDBCardBody>
+        
       </MDBCard>
+      
     </MDBContainer>
+    </div>
   );
 }
 
