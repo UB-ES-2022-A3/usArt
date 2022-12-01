@@ -8,7 +8,6 @@ import Profile from './components/profile';
 import Publicacion from './components/publicacion';
 import Search from './components/search';
 import BuzonTest from './components/buzonChat';
-import ChatTest from './components/chatTest';
 import { AuthProvider } from './context/authcontext';
 import { useContext } from "react";
 import AuthContext from "./context/authcontext";
@@ -53,7 +52,6 @@ function App() {
             <Routes>
               <Route path="/home" element={<Home />}></Route>
               <Route path="/buzon" element={<BuzonTest />}></Route>
-              <Route path="/chat/:id" element={<ChatTest />}></Route>
               <Route path="/explore" element={<Explorer />}></Route>
               <Route path="/join" element={<Register />}></Route>
               <Route path="/login" element={<LogIn />}></Route>
