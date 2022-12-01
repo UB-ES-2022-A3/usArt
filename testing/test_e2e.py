@@ -4,9 +4,9 @@ from selenium.webdriver.chrome.options import Options
 
 
 options = Options()
-options.add_argument('--headless')
-options.add_argument('--disable-gpu')  # Last I checked this was necessary.
-driver = webdriver.Chrome(chrome_options=options)
+# options.add_argument('--headless')
+# options.add_argument('--disable-gpu')  # Last I checked this was necessary.
+driver = webdriver.Chrome(options=options)
 driver.maximize_window()
 
 
@@ -26,8 +26,10 @@ def test_u3_register_user():
     driver.find_element(by=By.ID, value='register_button').click()
 
 
-def test_ur10_login():
+def test_ur10_login_alum():
     driver.get('http://localhost:3000/home')
+
+    driver.implicitly_wait(10)
 
     log_in_button = driver.find_element(by=By.ID, value='button_login')
     log_in_button.click()
@@ -41,8 +43,15 @@ def test_ur10_login():
     sign_in_button.click()
 
 
+def test_ur10_logout():
+    test_ur10_login_alum()
+    driver.implicitly_wait(10)
+
+    driver.find_element(by=By.ID, value='logout_button').click()
+
+
 def test_ur4_send_commission():
-    test_ur10_login()
+    test_ur10_login_alum()
 
     driver.implicitly_wait(10)
     driver.find_element(by=By.ID, value='explore_button').click()
@@ -52,20 +61,23 @@ def test_ur4_send_commission():
     driver.find_element(by=By.XPATH, value='//*[@id="coModal"]//*[@id="modal_review"]').send_keys('Test')
     driver.find_element(by=By.XPATH, value='//*[@id="coModal"]//*[@id="send_button"]').click()
 
-    driver.quit()
+    driver.implicitly_wait(10)
 
 
 def test_ur4_close_modal():
-    test_ur10_login()
-
+    driver.get('http://localhost:3000/home')
     driver.implicitly_wait(10)
-    driver.find_element(by=By.ID, value='explore_button').click()
+
+    driver.find_element(by=By.XPATH, value='//*[@id="explore_button"]').click()
     driver.implicitly_wait(10)
     driver.find_element(by=By.XPATH, value='//*[text()="Cardd\'s League Of Legends Comissions"]').click()
     driver.find_element(by=By.ID, value='contact_button').click()
     driver.find_element(by=By.XPATH, value='//*[@id="coModal"]//*[@id="modal_review"]').send_keys('Test')
     driver.find_element(by=By.XPATH, value='//*[@id="coModal"]//*[@id="close_button"]').click()
 
-    driver.quit()
+
+
+
+
 
 

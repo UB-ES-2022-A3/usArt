@@ -185,7 +185,7 @@ function Publicacion(props) {
                             </div>
                             <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
                             <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
-                                <button onClick={LINK_FRONTENDContact} id="contact_button" className="button" style={{ verticalAlign: "middle" }} disabled={user === null}><span>Contactar </span></button>
+                                <button onClick={LINK_FRONTENDContact} id="contact_button" className="button" style={{ verticalAlign: "middle" }} disabled={user === null}><span>Contactar</span></button>
                             </div>
                         </div >
 
@@ -197,16 +197,16 @@ function Publicacion(props) {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title text-dark">Que servicio quieres adquirir del artista?</h5>
+                            <h5 className="modal-title text-dark" id="modal_title">Que servicio quieres adquirir del artista?</h5>
                             <button type="button" className="btn-close" onClick={() => document.getElementById("toOpacity").style.opacity ="1"} data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <p><textarea name="comentario" className="content-input" rows="5" cols="60" required ></textarea></p>
+                            <p><textarea name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
                         </div>
 
                         <div className="modal-footer">
-                            <button className="button" onClick={() => document.getElementById("toOpacity").style.opacity ="1"} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
-                            <button onClick={updateOutput} className="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
+                            <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity ="1"} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
+                            <button onClick={updateOutput} id="send_button" className="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
                         </div>
                     </div>
                 </div>
