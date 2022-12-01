@@ -56,9 +56,6 @@ function Register() {
     e.preventDefault();
     setFormErrors(validate(formValues, checkValue));
     setIsSubmit(true);
-    console.log(formValues.username)
-    console.log(formValues.password)
-    console.log(formValues.email)
     registerUser(formValues.username, formValues.password, formValues.email)
   };
 

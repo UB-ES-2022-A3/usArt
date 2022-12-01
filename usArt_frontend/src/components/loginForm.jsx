@@ -37,8 +37,6 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmit(true);
-    console.log(username);
-    console.log(password);
     username.length > 0 && loginUser(username, password)
   };
 
