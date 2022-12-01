@@ -31,7 +31,7 @@ class UsArtUserFilterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UsArtUser
-        fields = ('id', 'user_name', 'photo')
+        fields = ('id', 'user_name', 'photo','description')
 
 
 class ExternalUserSerializer(serializers.ModelSerializer):

@@ -130,3 +130,9 @@
     transition: all 0.8s ease;
     -webkit-transition: all 0.8 ease;
 }
+#search-btn:disabled,
+#search-btn[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
