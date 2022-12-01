@@ -42,30 +42,9 @@
     line-height: 26px;
 }
 
-.imgProfile{
-    max-width: 150px;
-    max-height: 150px;
-    min-height: 150px;
-    min-width: 150px;
-}
-.imageProducts{
-    max-width: 9vmax;
-    max-height: 9vmax;
-    min-height: 9vmin;
-    min-width: 9vmin;
-}
-.empty-stars:before,
-.full-stars:before {
-    content: "\2605\2605\2605\2605\2605";
-    font-size: 14pt;
-}
-
-.empty-stars:before {
-    -webkit-text-stroke: 1px #848484;
-}
-
-.full-stars:before {
-    -webkit-text-stroke: 1px orange;
+/* set full star shape for checked label and those that come after it */
+.star-rating input:checked~label:before {
+    content: '\2605';
 }
 
 @-moz-document url-prefix() {
@@ -156,4 +135,16 @@
   border: 1px solid #999999;
   background-color: #cccccc;
   color: #666666;
+}
+.imgProfile{
+    max-width: 150px;
+    max-height: 150px;
+    min-height: 150px;
+    min-width: 150px;
+}
+.imageProducts{
+    max-width: 9vmax;
+    max-height: 9vmax;
+    min-height: 9vmin;
+    min-width: 9vmin;
 }
