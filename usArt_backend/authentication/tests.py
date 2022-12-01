@@ -141,7 +141,7 @@ class TestChatModel(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()["messages"][0]["user"],idTest2.data['user_name'])
+        self.assertEqual(response.json()["messages"][0]["user"],idTest.data['user_name'])
         self.assertEqual(response.json()["messages"][0]["message"],"hola")
 
         
