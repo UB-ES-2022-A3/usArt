@@ -124,7 +124,7 @@ class TestChatModel(APITestCase):
         
         data = {
             "id_sala": sala_id,
-            "user": "user",
+            "user": idTest2.data['user_name'],
             "message": "hola"
         }
         url = reverse("authentication:post_chat")
@@ -139,8 +139,9 @@ class TestChatModel(APITestCase):
                       'id': sala_id})
 
         response = self.client.get(url)
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()["messages"][0]["user"],"test")
+        self.assertEqual(response.json()["messages"][0]["user"],idTest2.data['user_name'])
         self.assertEqual(response.json()["messages"][0]["message"],"hola")
 
         
