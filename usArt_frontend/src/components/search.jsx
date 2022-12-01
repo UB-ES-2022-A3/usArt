@@ -106,14 +106,9 @@ function Search() {
                         <div className="card-body ">
                             <div className='grid' style={{ justifyContent: "inherit" }}>
                                 <h5 style={{ color: "black" }}><strong>{card.user_name}</strong></h5>
-                                <div className="ratings" style={{ marginTop: "-5px" }}>
-                                    <div className="empty-stars"></div>
-                                    <div className="full-stars" style={{ width: "70%" }}></div>
-                                </div>
-                            </div>
-                            <p className="card-text max">{card.description}</p>
+                                <p className="card-text max">{card.description}</p>
+                            </div> 
                         </div>
-
                     </div>
                 </a>
             )

@@ -5,11 +5,12 @@ from django.shortcuts import get_object_or_404
 from catalog.serializers import PublicationListSerializer
 
 from userprofile import serializers
-from userprofile.models import PurchaseHistory
+from userprofile.models import PurchaseHistory, Review
 
 from rest_framework import filters, generics, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.views import APIView
 
 
 class PurchaseHistoryList(generics.ListAPIView):
@@ -58,3 +59,30 @@ class UserProfile(generics.GenericAPIView):
         user.save()
 
         return Response(status=status.HTTP_201_CREATED)
+
+
+class ReviewUser(generics.CreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = serializers.ReviewUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user = get_object_or_404(UsArtUser, id=self.request.user.id)
+        author = get_object_or_404(UsArtUser, id=self.request.data['reviewed_id'])
+        serializer.save(reviewer_id=user, reviewed_id=author)
+
+
+class ReviewUserStars(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, *args, **kwargs):
+        author = get_object_or_404(UsArtUser, user_name=kwargs.get('author'))
+        reviews = Review.objects.filter(reviewed_id=author)
+        result = 0
+        for review in reviews:
+            result += review.stars
+        try:
+            total = result / len(reviews)
+        except:
+            total = 0
+        return Response({'average': total}, status=status.HTTP_200_OK)
