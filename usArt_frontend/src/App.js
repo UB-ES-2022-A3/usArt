@@ -8,6 +8,7 @@ import Profile from './components/profile';
 import Publicacion from './components/publicacion';
 import Search from './components/search';
 import BuzonTest from './components/buzonChat';
+import TermsAndConditions from './components/termsAndConditions';
 import { AuthProvider } from './context/authcontext';
 import { useContext } from "react";
 import AuthContext from "./context/authcontext";
@@ -57,7 +58,8 @@ function App() {
               <Route path="/login" element={<LogIn />}></Route>
               <Route path="/profile/:username" element={<Profile />}></Route>
               <Route path="/publicacion/:id" element={<Publicacion />}></Route>
-              <Route path="/search/:search/:id" element={<Search/>}></Route>
+              <Route path="/search/:search" element={<Search/>}></Route>
+              <Route path="/termsandconditions" element={<TermsAndConditions />}></Route>
             </Routes>
         </div>
       </AuthProvider>

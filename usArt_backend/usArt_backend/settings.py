@@ -143,18 +143,50 @@ WSGI_APPLICATION = 'usArt_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'usartdatabase',
-        'USER': 'usartadmin',
-        'PASSWORD': '4GAg*JFY0!4!72%N',
-        'HOST': 'usart-database.mysql.database.azure.com',
-        'PORT': '3306',
-        'OPTIONS': {}
+if str(os.environ.get('ENV')) == 'PROD':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'usartdatabase',
+            'USER': 'usartadmin',
+            'PASSWORD': '4GAg*JFY0!4!72%N',
+            'HOST': 'usart-database.mysql.database.azure.com',
+            'PORT': '3306',
+            'OPTIONS': {}
+        }
     }
-}
+elif str(os.environ.get('ENV')) == 'DEV':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'usartdatabasedev',
+            'USER': 'usartadmin',
+            'PASSWORD': '4GAg*JFY0!4!72%N',
+            'HOST': 'usart-database.mysql.database.azure.com',
+            'PORT': '3306',
+            'OPTIONS': {}
+        }
+    }
+elif str(os.environ.get('ENV')) == 'TEST':
+    DATABASES = {
+            'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'db.sqlite3',
+            'USER': '',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'usartdatabase',
+            'USER': 'usartadmin',
+            'PASSWORD': '4GAg*JFY0!4!72%N',
+            'HOST': 'usart-database.mysql.database.azure.com',
+            'PORT': '3306',
+            'OPTIONS': {}
+        }
+    }
 
 
 
