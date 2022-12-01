@@ -5,16 +5,20 @@ import imageP from '../assets/not-found-image.jpg'
 import "./publicacion.css"
 import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
+import AuthContext from "../context/authcontext";
+import { useContext } from 'react';
+
 
 function Publicacion(props) {
 
+    let { authTokens } = useContext(AuthContext);
     const { id } = useParams()
     const [card, setCard] = useState([])
     const [author, setAuthor] = useState([])
     const [review, setReview] = useState(0)
     const [fav, setFavorite] = useState(false)
-    const isFavorite = <button onClick={toggleFavorite} className="button" style={{ verticalAlign: "middle" }}><span> Change (now {"" + fav}) </span></button>
-    const notFavorite = <button onClick={toggleFavorite} className="button" style={{ verticalAlign: "middle" }}><span> Change (now {"" + fav}) </span></button>
+    const [heart, setHeart] = useState(<span>&#xf08a;</span>)
+    const [color, setColor] = useState('black')
 
     useEffect(callApi, [])
 
@@ -31,19 +35,71 @@ function Publicacion(props) {
                     setCard(data);
                 }
                 setAuthor(data.author);
-            }
-            )
+            })
+
+        fetch(
+            LINK_BACKEND + "/api/userprofile/get/delete/fav/" + id, {
+            method: 'GET',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+        })
+            .then((res) => res.json())
+            .then(data => {
+                console.log(data["detail"])
+                if (data["detail"] !== "Not found.") {
+                    setFavorite(true)
+                    setHeart(<span>&#xf004;</span>)
+                    setColor('red')
+                }
+            })
+
     }
 
     function toggleFavorite() {
-        if (fav) {
-            //post backend
+        if (!fav) {
+            setFavorite(true)
+            setHeart(<span>&#xf004;</span>)
+            setColor('red')
+            fetch(LINK_BACKEND + "/api/userprofile/fav/", {
+                method: 'POST',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'pub_id': id,
+                }),
+            })
+                .then((res) => res.json())
+                .then(data => {
+                    console.log(data)
+                }
+                )
         } else {
-            //delete backend
+            setFavorite(false)
+            setHeart(<span>&#xf08a;</span>)
+            setColor('black')
+            fetch(
+                LINK_BACKEND + "/api/userprofile/get/delete/fav/" + id, {
+                method: 'DELETE',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(data => {
+                    console.log(data);
+                })
         }
-        setFavorite(fav => !fav)
     }
-
 
     if (card.length === 0 || author === undefined) {
         return (
@@ -155,10 +211,12 @@ function Publicacion(props) {
                     <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
                     <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                         <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
-                            {fav === true ? isFavorite : notFavorite}
+                            <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
+                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                                <i style={{ color: color, width: "30px", height: "30px"}} class='fa'>{heart}</i></button>
                         </div>
                         <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
-                            <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle"}}><span>Contactar </span></button>
+                            <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
                         </div>
                     </div>
                 </div>
