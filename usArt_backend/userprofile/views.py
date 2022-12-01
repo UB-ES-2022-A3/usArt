@@ -54,17 +54,24 @@ class UserList(generics.ListAPIView):
     search_fields = ['user_name']
 
 
-class FavList(generics.CreateAPIView):
+class FavList(generics.ListCreateAPIView):
     queryset = Fav.objects.all()
     serializer_class = serializers.FavSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        request.data['user_id'] = request.user.id
-        user = get_object_or_404(UsArtUser, id=request.data['user_id'])
-        pub = get_object_or_404(Publication, id=request.data['pub_id'])
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user_id=user, pub_id=pub)
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+    def perform_create(self, serializer):
+        pub = Publication.objects.get(id=self.request.data['pub_id'])
+        serializer.save(user_id=self.request.user, pub_id=pub)
 
+    def get_queryset(self):
+        return Fav.objects.filter(user_id=self.request.user)
+
+
+class FavGetDelete(generics.RetrieveDestroyAPIView):
+    queryset = Fav.objects.all()
+    serializer_class = serializers.FavDelGetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        pub = Publication.objects.get(id=self.kwargs['pub_id'])
+        return Fav.objects.get(user_id=self.request.user, pub_id=pub)
