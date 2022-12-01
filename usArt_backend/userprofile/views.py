@@ -54,7 +54,10 @@ class UserProfile(generics.GenericAPIView):
 
     def put(self, request, format=None):
         user=get_object_or_404(UsArtUser, user_name=request.user.user_name)
-        user.photo = request.data.get('photo')
+        if 'photo' in request.data:
+            user.photo = request.data.get('photo')
+        if 'description' in request.data:
+            user.description = request.data['description']
         user.save()
-
+ 
         return Response(status=status.HTTP_201_CREATED)
