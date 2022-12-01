@@ -11,6 +11,7 @@ function Profile() {
     const { username } = useParams();
     const [prof, setProfile] = useState([])
     const [stars, setStars] = useState(0)
+    const [review,setReview] = useState(0)
     const [message, setMessage] = useState('');
     const { user, authTokens } = useContext(AuthContext);
 
@@ -24,6 +25,15 @@ function Profile() {
                 setProfile(data);
             }
             )
+        fetch(
+            LINK_BACKEND + "/api/userprofile/review-artist/" + username)
+            .then((res) => res.json())
+            .then(data => {
+
+                setReview(data.average / 5 * 100 + "%");
+            }
+            )
+            
 
     }
     const handleMessageChange = event => {
@@ -76,7 +86,7 @@ function Profile() {
                                 {is_self()}
                                 <div className="ratings">
                                     <div className="empty-stars"></div>
-                                    <div className="full-stars" ></div>
+                                    <div className="full-stars"  style={{ width: review }} ></div>
                                 </div>
                             </div>
                         </div>

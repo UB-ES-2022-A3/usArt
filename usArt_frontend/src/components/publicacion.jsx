@@ -22,23 +22,29 @@ function Publicacion(props) {
             LINK_BACKEND + "/api/catalog/" + id)
             .then((res) => res.json())
             .then(data => {
-                setReview(data.review / 5 * 100 + "%");
                 setCard(data);
-                console.log(data);
                 if (data.images.length === 0) {
                     data.images.push(imageP)
                     setCard(data);
                 }
                 setAuthor(data.author);
+                fetch(
+                    LINK_BACKEND + "/api/userprofile/review-artist/" + data.author.user_name)
+                    .then((res) => res.json())
+                    .then(data => {
+                        setReview(data.average / 5 * 100 + "%");
+                    }
+                    )
             }
             )
+            
     }
 
 
     if (card.length === 0 || author === undefined) {
         return (
             <div className='center'>
-                <div  class="loader">
+                <div  className="loader">
                     <div className="loader-wheel"></div>
                     <div className="loader-text"></div>
                 </div>

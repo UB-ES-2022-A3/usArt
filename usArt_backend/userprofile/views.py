@@ -81,5 +81,8 @@ class ReviewUserStars(APIView):
         result = 0
         for review in reviews:
             result += review.stars
-        total = result / len(reviews)
+        try:
+            total = result / len(reviews)
+        except:
+            total = 0
         return Response({'average': total}, status=status.HTTP_200_OK)
