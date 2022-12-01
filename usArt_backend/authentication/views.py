@@ -23,17 +23,36 @@ class UsArtUserDetail(generics.RetrieveAPIView):
     queryset = UsArtUser.objects.all()
     serializer_class = UsArtUserSerializer()
 
+class ChatsActivos(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = idChats.objects.all()
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+    def get(self, request):
+        criterion1 = Q(id_1=request.user.id)
+        criterion2 = Q(id_2=request.user.id)
+        
+        try:
+            response = idChats.objects.filter(criterion1 | criterion2)
+            chats = []
+            for c in response:
+                if c.id_2.id == request.user.id:
+                    chats.append({'user':{
+                            'id':c.id_1.id,
+                            'user_name': c.id_1.user_name,
+                            'photo': c.id_1.photo.url
+                        } ,'id_sala': c.id_sala})
+                elif c.id_1.id  == request.user.id:
+                    chats.append({'user':{
+                            'id':c.id_2.id,
+                            'user_name': c.id_2.user_name,
+                            'photo': c.id_2.photo.url
+                        } ,'id_sala': c.id_sala})
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({'chats':chats}, status=status.HTTP_200_OK)
+        except:
+            return Response({'message':'No hay chats'}, status=status.HTTP_204_NO_CONTENT)
+
 
 
 class SalaChat(generics.RetrieveAPIView):
@@ -75,12 +94,11 @@ class ChatPost(generics.ListCreateAPIView):
     queryset = idChats.objects.all()
 
     def post(self, request):
-
         id_sala = request.data["id_sala"]
 
         response = get_object_or_404(idChats, id_sala=id_sala)
 
-        dic = {"user":request.data["user"],"message":request.data["message"],"time":datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}
+        dic = {"user":request.user.user_name,"message":request.data["message"],"time":datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}
 
         text = json.dumps(dic)
 
@@ -103,7 +121,7 @@ class ChatPost(generics.ListCreateAPIView):
        
         response.chat.save(str(response.id_sala)+'.txt',myfile)
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(dic, status=status.HTTP_201_CREATED)
 
 class ChatHistory(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
@@ -127,9 +145,3 @@ class ChatHistory(generics.RetrieveAPIView):
         
 
         return JsonResponse({'messages':lines},status=status.HTTP_200_OK)
-
-
-# e21496d5-b4a7-40ac-bd65-72989e852b6a user
-
-
-# e1669ca3-ee12-424c-bdb1-fbe74958483e jordi

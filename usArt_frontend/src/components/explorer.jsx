@@ -4,6 +4,7 @@ import imageP from '../assets/not-found-image.jpg'
 import imageP2 from '../assets/pincel.jpg'
 import { useState, useEffect } from "react";
 import LINK_BACKEND  from "./LINK_BACKEND";
+import Footer from './footer';
 
 export default function Explorer() {
 
@@ -23,7 +24,7 @@ export default function Explorer() {
 
   if (cards.length === 0) {
     return (
-        <div className='center'>
+        <div className='center body_register'>
             <div  class="loader">
                 <div className="loader-wheel"></div>
                 <div className="loader-text"></div>
@@ -40,8 +41,8 @@ export default function Explorer() {
             <img id={index} src={card.images[0]} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
           </picture>
           <div className="card-body ">
-            <h5 style={{ color: "black" }}><strong>{card.price}€</strong></h5>
-            <h5 style={{ color: "black" }} className="card-title max-text"><strong>{card.title}</strong></h5>
+            <h5 className="max" style={{ color: "black" }}><strong>{card.price}€</strong></h5>
+            <h5 style={{ color: "black" }} className="card-title max-title"><strong>{card.title}</strong></h5>
             <p className="card-text max-text"><small>{card.author.user_name}</small>  </p>
             <p className="card-text max">{card.description}</p>
           </div>
@@ -54,7 +55,7 @@ export default function Explorer() {
 
 
   return (
-    <div>
+    <div style={{overflowX:"hidden"}}className="body_register">
       <div className="row header border">
         <h1>Explore el talento en UsArt</h1>
         <p style={{ color: "white" }}>Miles de personas ofrecen servicios de arte diariamente</p>
@@ -62,7 +63,10 @@ export default function Explorer() {
       <div className="grid ">
         {cards.map(RenderCard)}
       </div>
-    </div>)
+      <Footer/>
+    </div>
+    
+    )
 }
 
 

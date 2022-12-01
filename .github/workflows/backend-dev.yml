@@ -12,6 +12,7 @@ name: Build and deploy Python app to Development
 env:
   AZURE_WEBAPP_NAME: usart-backend-dev   # set this to your application's name
   PYTHON_VERSION: '3.10'               # set this to the Python version to use
+  ENV: "DEV"
 
 on:
   push:

@@ -5,6 +5,8 @@ import imageP from '../assets/not-found-image.jpg'
 import "./publicacion.css"
 import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
+import Footer from './footer'
+
 
 function Publicacion(props) {
 
@@ -86,65 +88,67 @@ function Publicacion(props) {
 
 
     return (
-
-        <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
-            <div className="grid template"  >
-                <div className="card card-item">
-                    <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
-                        <picture >
-                            <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
-                        </picture>
-                        <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
-                        <div className="ratings">
-                            <div className="empty-stars"></div>
-                            <div className="full-stars" style={{ width: review }}></div>
+        <div>
+            <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
+                <div className="grid template"  >
+                    <div className="card card-item">
+                        <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
+                            <picture >
+                                <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
+                            </picture>
+                            <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
+                            <div className="ratings">
+                                <div className="empty-stars"></div>
+                                <div className="full-stars" style={{ width: review }}></div>
+                            </div>
+                            <div className="card-body" style={{ paddingTop: "0%" }}>
+                            </div>
                         </div>
-                        <div className="card-body" style={{ paddingTop: "0%" }}>
-                        </div>
-                    </div>
-                    <hr></hr>
-                    <div style={{ marginLeft: "2%" }}>
-                        <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
-                        <p placeholder="Description not found.." className="card-text">{author.description}</p>
-                    </div>
-                    <hr></hr>
-                    <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
-                        <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
-                    </div>
-                </div>
-
-                <div className="custom-container">
-                    <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
-                        <div className="carousel-indicators">
-                            {card.images.map(renderButtons)}
-                        </div>
-                        <div className="carousel-inner " >
-                            {card.images.map(renderCard)}
-                        </div>
-                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                            <span className="carousel-control-prev-icon " aria-hidden="true"></span>
-                            <span className="visually-hidden">Previous</span>
-                        </button>
-                        <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span className="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                    <div className="card-body custom-body ">
-                        <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
-                            <h1 style={{ color: "black" }}>{card.title}</h1>
-                        </div >
-                        <h4 style={{ color: "black" }}>{card.price}€</h4>
                         <hr></hr>
-                        <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
+                        <div style={{ marginLeft: "2%" }}>
+                            <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
+                            <p placeholder="Description not found.." className="card-text">{author.description}</p>
+                        </div>
+                        <hr></hr>
+                        <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
+                            <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
+                        </div>
+                    </div>
 
+                    <div className="custom-container">
+                        <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
+                            <div className="carousel-indicators">
+                                {card.images.map(renderButtons)}
+                            </div>
+                            <div className="carousel-inner " >
+                                {card.images.map(renderCard)}
+                            </div>
+                            <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <span className="carousel-control-prev-icon " aria-hidden="true"></span>
+                                <span className="visually-hidden">Previous</span>
+                            </button>
+                            <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                        <div className="card-body custom-body ">
+                            <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
+                                <h1 style={{ color: "black" }}>{card.title}</h1>
+                            </div >
+                            <h4 style={{ color: "black" }}>{card.price}€</h4>
+                            <hr></hr>
+                            <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
+
+                        </div>
+                        <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
+                        <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
+                            <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                        </div>
                     </div>
-                    <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
-                    <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
-                        <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
-                    </div>
-                </div>
-            </div >
+                </div >
+            </div>
+            <Footer/>
         </div>
     );
 }

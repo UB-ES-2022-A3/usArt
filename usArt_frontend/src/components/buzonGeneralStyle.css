@@ -1,24 +1,33 @@
-.containerC{
+.containerC {
+    border: 1px solid;
+    border-color: white;
+    min-width: 80%;
+    min-height: 86%;
+    max-height: 86%;
+    display: flex;
     
-    max-width: 1600px;
-    overflow: hidden;
-    margin-left: 150px;
-    
-    
+}
+
+.center-chat {
+    min-height: 85vh;
+    max-height: 85vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 /*Aquí lo del sidebar*/
 
-.sidebar{
-    flex:2; 
+.sidebar {
+    flex: 2;
     background-color: #000f0e;
     border-right: 1px solid gray;
 }
 
 
 
-.sidebar .navbar{
-    
+.sidebar .navbar {
+
     height: 80px;
     text-align: center;
     background-color: #000f0e;
@@ -30,24 +39,24 @@
     border-bottom: 1px solid gray;
 }
 
-.sidebar .selectGoP{
+.sidebar .selectGoP {
     margin-top: 20px;
-    
+
 }
 
-.sidebar .search{
+.sidebar .search {
     border-bottom: 1px solid gray;
 }
 
-.sidebar .search .searchForm{
+.sidebar .search .searchForm {
     padding: 10px;
-    
+
 
 }
 
 
 
-.sidebar .search .userChat{
+.sidebar .search .userChat {
     padding: 10px;
     display: flex;
     align-items: center;
@@ -57,13 +66,13 @@
 
 }
 
-.sidebar .search .userChat:hover{
+.sidebar .search .userChat:hover {
     background-color: #263636;
     transition: 0.1s;
 
 }
 
-.sidebar .chats .userChat{
+.sidebar .chats .userChat {
     padding: 10px;
     display: flex;
     padding-top: 20px;
@@ -73,19 +82,19 @@
 
 }
 
-.sidebar .chats .userChat .userChatInfo .chatsFirstName{
+.sidebar .chats .userChat .userChatInfo .chatsFirstName {
     font-size: 18px;
-    font-weight: 500; 
- 
+    font-weight: 500;
+
 }
 
-.sidebar .chats .userChat .userChatInfo .chatsMessage{
+.sidebar .chats .userChat .userChatInfo .chatsMessage {
     font-size: 14px;
     color: lightgray;
 }
 
 
-.sidebar .chats .userChat:hover{
+.sidebar .chats .userChat:hover {
     background-color: #263636;
     transition: 0.1s;
 
@@ -94,13 +103,13 @@
 /*Aquí lo del chat*/
 
 
-.chat{
-    flex:7;
+.chat {
+    flex: 7;
     background-color: #263636;
-    
+
 }
 
-.chat .chatInfo{
+.chat .chatInfo {
     height: 80px;
     border-bottom: 1px solid gray;
     background-color: #263636;
@@ -114,46 +123,66 @@
 }
 
 
-.chat .owner{
+.chat .owner {
     flex-direction: row-reverse !important;
 
 }
-.chat .owner p{
+
+.chat .owner p {
     border-radius: 10px 0px 10px 10px !important;
+    line-break: anywhere;
+    width: 10vw;
 }
 
-.chat .messages{
+.chat .otherside {
+    flex-direction: row !important;
+
+}
+
+.chat .otherside p {
+    border-radius: 0px 10px 10px 10px !important;
+    line-break: anywhere;
+    width: 10vw;
+}
+
+.messages {
+    overflow-y: scroll;
+}
+
+.chat .messages {
     background-color: #263636;
     padding: 10px;
     height: calc(100% - 160px);
-   
+
 
 }
-.chat .messages .message{
+
+.chat .messages .message {
     display: flex;
     gap: 20px;
     margin-bottom: 20px;
     flex-direction: column;
 
-   
+
 }
 
 
-.chat .messages .message .messageContent{
+.chat .messages .message .messageContent {
     max-width: 80%;
     display: flex;
-    
-    gap:10px;
-    
+
+    gap: 10px;
+
 }
 
-.chat .messages .message .messageContent p{
+.chat .messages .message .messageContent p {
     background-color: white;
     padding: 10px 20px;
     max-width: max-content;
     border-radius: 0px 10px 10px 10px;
 }
-.chat .inputMessage{
+
+.chat .inputMessage {
     height: 80px;
     padding: 10px;
     background-color: #556b6b;
@@ -161,21 +190,52 @@
     align-items: center;
     justify-content: space-between;
 }
-.chat .send{
+
+.chat .send {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.chat .inputMessage .textInput::placeholder{
-    color:rgb(255, 255, 255);
-    
+
+.chat .inputMessage .textInput::placeholder {
+    color: rgb(255, 255, 255);
+
 }
 
-.chat .send .buttonSend{
+.chat .send .buttonSend {
     border: none;
     padding: 10px 15px;
     color: white;
     background-color: #000f0e;
-    
 
+
+}
+
+#scrollbar-2::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+#scrollbar-2::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+
+#scrollbar-2::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #000f0e;
+}
+
+.chats{
+    overflow-y: scroll;
+}
+.chats {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+.chats::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
 }
