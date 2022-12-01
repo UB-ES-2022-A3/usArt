@@ -98,6 +98,15 @@ function Publicacion(props) {
         const link = LINK_FRONTEND + "/profile/" + author.user_name
         window.location.assign(link)
     }
+    function Nameaux(){
+        let name = ""
+        if (card.type=="CO"){
+            name = "Contactar"
+        }else{
+            name = "Comprar"
+        }
+        return name
+    }
     function updateOutput() {
         var description = input_textarea.value
         if (description.length === 0) {
