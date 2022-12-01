@@ -34,7 +34,7 @@ class AccountManager(BaseUserManager):
 
 
 def upload_to_photo(instance, filename):
-    return 'photos/{}'.format(filename)
+    return 'images/{}'.format(filename)
 
 
 class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
@@ -43,7 +43,7 @@ class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
     email = models.EmailField('Correo electronico', unique=True)
     user_name = models.CharField(max_length=150, unique=True)
     description = models.TextField(default="")
-    photo = models.ImageField(upload_to=upload_to_photo, default='photos/default.jpg')
+    photo = models.ImageField(upload_to='images/',default='default.jpg')
     is_staff = models.BooleanField(default=False)
     STATUS_CHOICES = [
         ('BAN', 'Banned'),

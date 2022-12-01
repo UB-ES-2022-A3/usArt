@@ -9,6 +9,9 @@ from userprofile import serializers
 from userprofile.models import PurchaseHistory
 
 from rest_framework import filters, generics, status
+
+from rest_framework.response import Response
+
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -58,3 +61,14 @@ class UserList(generics.ListAPIView):
     serializer_class = serializers.UsArtUserFilterSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ['user_name']
+
+
+class UserProfile(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, format=None):
+        user=get_object_or_404(UsArtUser, user_name=request.user.user_name)
+        user.photo = request.data.get('photo')
+        user.save()
+
+        return Response(status=status.HTTP_201_CREATED)

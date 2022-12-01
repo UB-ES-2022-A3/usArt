@@ -89,3 +89,30 @@ class TestPublicationAPI(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+    def test_commission_post(self):
+        user = UsArtUser.objects.get(user_name='test')
+        pub = Publication.objects.get(title='Title test 3')
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test2',
+            'password': 'test'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        data = {
+            'pub_id': pub.id,
+        }
+        url = reverse('catalog:commission_post')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        data = {
+            'pub_id': pub.id,
+            'description': ''
+        }
+        url = reverse('catalog:commission_post')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
