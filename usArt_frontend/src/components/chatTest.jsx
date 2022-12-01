@@ -14,14 +14,14 @@ export default function ChatTets() {
   const [message, setMessage] = useState("")
   let { user, authTokens } = useContext(AuthContext);
   const [socketUrl, setSocketUrl] = useState('');
-  const {id} = useParams()
+  const { id } = useParams()
   const [messageHistory, setMessageHistory] = useState([]);
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
 
   useEffect(callApi, [])
 
   function callApi() {
-    fetch(LINK_BACKEND + "/auth/chats/"+id, {
+    fetch(LINK_BACKEND + "/auth/chats/" + id, {
       method: 'GET',
       withCredentials: true,
       credentials: 'include',
@@ -51,9 +51,10 @@ export default function ChatTets() {
 
 
   const handleClickSendMessage = useCallback(() => {
-    let m = ' {"message":"'+ message + '","user":"'+user.username+'"}';
+    let m = ' {"message":"' + message + '","user":"' + user.username + '"}';
     sendMessage(m);
   });
+  
   if (user === null) {
     return <h1>Debes registrarte :/ !</h1>
   }
