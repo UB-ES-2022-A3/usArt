@@ -164,43 +164,43 @@ function BuzonChat() {
             value={msg}
             onKeyDown={(e) => enterEvent(e)} />
           <div className="send">
-            <BsFillImageFill className="" size={35} style={{ color: "black", marginRight: "10px" }} />
             <button className='buttonSend  ' style={{ marginRight: "10px" }} onClick={handleClickSendMessage} disabled={readyState !== ReadyState.OPEN}>Send</button>
           </div>
         </div>
       </div>)
     }
     return (<div className='chat'>
-      <span>no chats :c</span>
     </div>)
   }
 
 
   return (
-    <div className='containerC d-flex shadow-lg rounded d-flex  justify-content-center border'>
-      <div className='sidebar border-right-0'>
-        <div className='navbar '>
-          <h2 className='ml-4 logo'> Inbox</h2>
-        </div>
+    <div className='center-chat'>
+      <div className='containerC'>
+        <div className='sidebar border-right-0'>
+          <div className='navbar '>
+            <h2 className='ml-4 logo'> Inbox</h2>
+          </div>
 
-        <div className='selectGoP flex text-center pt-1 pb-4'>
-          <div class="btn-group " role="group" aria-label="Basic radio toggle button group btn-dark">
-            <input type="radio" class="btn-check " name="btnradio" id="btnradio1" autocomplete="off" />
-            <label class="btn btn-light " for="btnradio1">General</label>
+          <div className='selectGoP flex text-center pt-1 pb-4'>
+            <div class="btn-group " role="group" aria-label="Basic radio toggle button group btn-dark">
+              <input type="radio" class="btn-check " name="btnradio" id="btnradio1" autocomplete="off" />
+              <label class="btn btn-light " for="btnradio1">General</label>
 
-            <input type="radio" class="btn-check  " name="btnradio" id="btnradio2" autocomplete="off" />
-            <label class="btn btn-light" for="btnradio2">Pending</label>
+              <input type="radio" class="btn-check  " name="btnradio" id="btnradio2" autocomplete="off" />
+              <label class="btn btn-light" for="btnradio2">Pending</label>
+            </div>
+          </div>
+
+          <div className="chats">
+            {userList.map(renderChats)}
           </div>
         </div>
 
-        <div className="chats">
-          {userList.map(renderChats)}
-        </div>
+
+        {mainChat()}
+
       </div>
-
-
-      {mainChat()}
-
     </div>
 
   )
