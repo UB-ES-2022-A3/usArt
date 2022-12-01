@@ -41,10 +41,19 @@ class ExternalUserSerializer(serializers.ModelSerializer):
 
 
 class FavSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Fav
+        fields = ['pub_id']
+
+    def create(self, validated_data):
+        return Fav.objects.create(user_id=validated_data['user_id'], pub_id=validated_data['pub_id'])
+
+
+class FavDelGetSerializer(serializers.ModelSerializer):
     user_id = UsArtUserSerializer(read_only=True)
     pub_id = PublicationListSerializer(read_only=True)
 
     class Meta:
         model = Fav
         fields = ['user_id', 'pub_id']
-
