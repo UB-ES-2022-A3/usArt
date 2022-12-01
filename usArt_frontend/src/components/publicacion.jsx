@@ -184,7 +184,7 @@ function Publicacion(props) {
                             </div>
                             <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
                             <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
-                                <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }} disabled={user === null}><span>Contactar </span></button>
+                                <button onClick={LINK_FRONTENDContact} id="contact_button" className="button" style={{ verticalAlign: "middle" }} disabled={user === null}><span>Contactar </span></button>
                             </div>
                         </div >
 
