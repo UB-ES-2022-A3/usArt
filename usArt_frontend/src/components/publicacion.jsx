@@ -88,10 +88,15 @@ function Publicacion(props) {
             let coModal = new Modal(document.getElementById('coModal'), {
             keyboard: false,backdrop: 'static'
         })
+        
         if (card.type === "CO") {
             
             document.getElementById("toOpacity").style.opacity ="0.5";
             coModal.show()
+        }else{
+            document.getElementById("toOpacity").style.opacity ="0.5";
+            const link = LINK_FRONTEND + "/compra/"+id 
+            window.location.assign(link)
         }
     }
     function LINK_FRONTENDProfile() {
@@ -104,6 +109,7 @@ function Publicacion(props) {
             name = "Contactar"
         }else{
             name = "Comprar"
+            
         }
         return name
     }
@@ -116,6 +122,19 @@ function Publicacion(props) {
         postPetCom(id, description)
         alert("Petición hecha!")
         document.getElementById("toOpacity").style.opacity ="1"
+
+    }
+    function updateOutputA() {
+        var description = input_textarea.value
+        if (description.length === 0) {
+            alert("La descripción no puede estar vacia")
+        }else{
+            console.log(description)
+            postPetCom(id, description)
+            alert("Petición hecha!")
+            document.getElementById("toOpacity").style.opacity ="1"
+        }
+        
 
     }
     function postPetCom(pub_id, description) {
@@ -194,7 +213,7 @@ function Publicacion(props) {
                             </div>
                             <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
                             <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
-                                <button onClick={LINK_FRONTENDContact} id="contact_button" className="button" style={{ verticalAlign: "middle" }} disabled={user === null}><span>Contactar </span></button>
+                                <button onClick={LINK_FRONTENDContact} id="contact_button" className="button" style={{ verticalAlign: "middle" }} ><span>{Nameaux()} </span></button>
                             </div>
                         </div >
 
@@ -221,6 +240,7 @@ function Publicacion(props) {
                 </div>
             </div>
         </div>
+        
     );
 }
 

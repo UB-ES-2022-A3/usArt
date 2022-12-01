@@ -13,7 +13,7 @@ urlpatterns = [
     path('purchases/', PurchaseHistoryList.as_view(), name='user_purchases'),
     path('users/', UserList.as_view(), name='users_list'),
 
-    path('purchases/<str:pk>', PurchaseHistoryDetail.as_view(), name='user_purchase_detail')
+    path('purchases/<str:pk>', PurchaseHistoryDetail.as_view(), name='user_purchase_detail'),
 
     path('update/', UserProfile.as_view(), name='update_profile')
 
