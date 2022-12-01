@@ -4,9 +4,10 @@ from selenium.webdriver.chrome.options import Options
 
 
 options = Options()
-# options.add_argument('--headless')
-# options.add_argument('--disable-gpu')  # Last I checked this was necessary.
+options.add_argument('--headless')
+options.add_argument('--disable-gpu')  # Last I checked this was necessary.
 driver = webdriver.Chrome(chrome_options=options)
+driver.maximize_window()
 
 
 def test_u3_register_user():
@@ -40,16 +41,31 @@ def test_ur10_login():
     sign_in_button.click()
 
 
-def test_ur4():
+def test_ur4_send_commission():
     test_ur10_login()
 
     driver.implicitly_wait(10)
     driver.find_element(by=By.ID, value='explore_button').click()
     driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[text()="Boyfriends Comic Book Issue 1!"]').click()
-    driver.find_element(by=By.ID, value="contact_button").click()
+    driver.find_element(by=By.XPATH, value='//*[text()="Cardd\'s League Of Legends Comissions"]').click()
+    driver.find_element(by=By.ID, value='contact_button').click()
+    driver.find_element(by=By.XPATH, value='//*[@id="coModal"]//*[@id="modal_review"]').send_keys('Test')
+    driver.find_element(by=By.XPATH, value='//*[@id="coModal"]//*[@id="send_button"]').click()
 
-    # contact_button = driver.find_element(by=By.ID, value='contact_button')
-    # contact_button.click()
+    driver.quit()
+
+
+def test_ur4_close_modal():
+    test_ur10_login()
+
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.ID, value='explore_button').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[text()="Cardd\'s League Of Legends Comissions"]').click()
+    driver.find_element(by=By.ID, value='contact_button').click()
+    driver.find_element(by=By.XPATH, value='//*[@id="coModal"]//*[@id="modal_review"]').send_keys('Test')
+    driver.find_element(by=By.XPATH, value='//*[@id="coModal"]//*[@id="close_button"]').click()
+
+    driver.quit()
 
 
