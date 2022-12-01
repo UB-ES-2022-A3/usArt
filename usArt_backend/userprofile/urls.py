@@ -9,6 +9,6 @@ urlpatterns = [
     path('<str:user_name>', UserDetail.as_view(), name='user_details'),
     path('purchases/', PurchaseHistoryList.as_view(), name='user_purchases'),
     path('users/', UserList.as_view(), name='users_list'),
-    path('addfav/', FavList.as_view(), name='post_user_fav'),
+    path('fav/', FavList.as_view(), name='post_user_fav'),
     path("get/delete/fav/<str:pub_id>", FavGetDelete.as_view(), name='get_delete_fav')
 ]
