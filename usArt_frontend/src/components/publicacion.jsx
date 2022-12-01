@@ -114,7 +114,7 @@ function Publicacion(props) {
         return name
     }
     function updateOutput() {
-        var description = input_textarea.value
+        let description = input_textarea.value
         if (description.length === 0) {
             alert("La descripción no puede estar vacia")
         }
@@ -125,7 +125,7 @@ function Publicacion(props) {
 
     }
     function updateOutputA() {
-        var description = input_textarea.value
+        let description = input_textarea.value
         if (description.length === 0) {
             alert("La descripción no puede estar vacia")
         }else{
