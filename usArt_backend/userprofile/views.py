@@ -74,4 +74,4 @@ class FavGetDelete(generics.RetrieveDestroyAPIView):
 
     def get_object(self):
         pub = Publication.objects.get(id=self.kwargs['pub_id'])
-        return Fav.objects.get(user_id=self.request.user, pub_id=pub)
+        return get_object_or_404(Fav, user_id=self.request.user, pub_id=pub)
