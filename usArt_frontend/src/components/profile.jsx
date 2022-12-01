@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import './profile.css';
 import { useParams } from "react-router-dom";
 import LINK_BACKEND from "./LINK_BACKEND"
+import Footer from './footer'
 
 function Profile() {
 
@@ -14,7 +15,7 @@ function Profile() {
 
     function callApi() {
         fetch(
-            LINK_BACKEND + "/userprofile/" + username)
+            LINK_BACKEND + "/api/userprofile/" + username)
             .then((res) => res.json())
             .then(data => {
                 console.log(data)
@@ -31,7 +32,7 @@ function Profile() {
                 <div className="card" style={{ width: "70vw" }}>
                     <div className=" rounded-top text-white d-flex flex-row" style={{ height: "200px", backgroundColor: "#000" }} >
                         <div className="ms-4 mt-5 d-flex flex-column" style={{ width: "150px" }}>
-                            <img src={LINK_BACKEND + prof.photo}
+                            <img src={prof.photo}
                                 alt="Generic placeholder image" className="img-fluid img-thumbnail mt-4 mb-2"
                                 style={{ width: "150px", zIndex: "1" }} />
 
@@ -84,6 +85,7 @@ function Profile() {
                 </div>
 
             </section>
+            <Footer/>
         </div>
 
     );
