@@ -37,6 +37,7 @@ function BuzonChat() {
   function createchat(theuser) {
     setActiveUser(theuser.user);
     setIdSala(theuser.id_sala);
+    console.log(LINK_RESOURCES + '/chats/?id=' + theuser.id_sala)
     setSocketUrl(LINK_RESOURCES + '/chats/?id=' + theuser.id_sala)
     fetch(LINK_BACKEND + "/auth/chatsHistory/" + theuser.id_sala, {
       method: 'GET',
