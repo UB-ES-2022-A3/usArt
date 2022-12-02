@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-
+from datetime import timedelta
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,12 +27,22 @@ SECRET_KEY = 'django-insecure-m(h-0tjc3h^y!ln5-n#5btp^q*0*stmr7*-y^2)d!!w@kge3j*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net', 'usart-backend-dev.azurewebsites.net','usart.redis.cache.windows.net', '169.254.132.3', '*']
 
 
 # Application definition
+AZURE_ACCOUNT_NAME = "usartresources"
+AZURE_ACCOUNT_KEY = "1WPY2BzstRyZjmGymFxgPHAojlfRggM4JtrF2mmbTWSxs4Ca9yQdVb9mNS7tuTvLHBa3ng8Nh1DV+ASt4kToVA=="
+AZURE_CONTAINER = "usart"
+AZURE_SSL = True
+
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 
 INSTALLED_APPS = [
+    'daphne',
+    'api',
+    'chats',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,11 +51,28 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'authentication.apps.AuthenticationConfig',
     'catalog.apps.CatalogConfig',
     'userprofile.apps.UserprofileConfig',
     'rest_framework.authtoken',
 ]
+
+
+
+THIRD_PARTY_APPS = [
+    'channels',
+]
+ASGI_APPLICATION = "usArt_backend.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis://:lUqaQSt9Kbvbdq3vvpSLzzyKt6ZLqaQQ4AzCaA0NT7c=@usart-redis.redis.cache.windows.net:6379")]
+        },
+    },
+}
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -59,9 +86,38 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CORS_ORIGIN_ALLOW_ALL=True
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8000'
+    'http://localhost:8000',
+    'http://localhost:3000',
+    'http://usart.azurewebsites.net',
+    'http://usart-dev.azurewebsites.net',
+    'https://usart.azurewebsites.net',
+    'https://usart-dev.azurewebsites.net',
+    'http://usart-backend.azurewebsites.net',
+    'http://usart-backend-dev.azurewebsites.net',
+    'https://usart-backend.azurewebsites.net',
+    'https://usart-backend-dev.azurewebsites.net',
+    'https://usart.redis.cache.windows.net'
+]
+
+CORS_ALLOW_CREDENTIALS = True
+ACCESS_CONTROL_ALLOW_CREDENTIALS = True
+ACCESS_CONTROL_ALLOW_METHODS = '*'
+ACCESS_CONTROL_ALLOW_HEADERS = '*'
+
+CSRF_COOKIE_PATH = '/'
+CSRF_COOKIE_SAMESITE = 'Strict'  
+CSRF_COOKIE_SECURE = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    'http://usart.azurewebsites.net',
+    'http://usart-dev.azurewebsites.net',
+    'https://usart.azurewebsites.net',
+    'https://usart-dev.azurewebsites.net',
+    'https://usart.redis.cache.windows.net'
 ]
 
 ROOT_URLCONF = 'usArt_backend.urls'
@@ -87,19 +143,51 @@ WSGI_APPLICATION = 'usArt_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'usart-database',
-        'USER': 'serveradmin@usart-database-server',
-        'PASSWORD': 'UsArtAdmin1234',
-        'HOST': 'usart-database-server.postgres.database.azure.com',
-        'PORT': '5432',
-        'OPTIONS': {'sslmode': 'require'},
-    
+if str(os.environ.get('ENV')) == 'PROD':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'usartdatabase',
+            'USER': 'usartadmin',
+            'PASSWORD': '4GAg*JFY0!4!72%N',
+            'HOST': 'usart-database.mysql.database.azure.com',
+            'PORT': '3306',
+            'OPTIONS': {}
+        }
     }
-}
+elif str(os.environ.get('ENV')) == 'DEV':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'usartdatabasedev',
+            'USER': 'usartadmin',
+            'PASSWORD': '4GAg*JFY0!4!72%N',
+            'HOST': 'usart-database.mysql.database.azure.com',
+            'PORT': '3306',
+            'OPTIONS': {}
+        }
+    }
+elif str(os.environ.get('ENV')) == 'TEST':
+    DATABASES = {
+            'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'db.sqlite3',
+            'USER': '',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'usartdatabasedev',
+            'USER': 'usartadmin',
+            'PASSWORD': '4GAg*JFY0!4!72%N',
+            'HOST': 'usart-database.mysql.database.azure.com',
+            'PORT': '3306',
+            'OPTIONS': {}
+        }
+    }
+
 
 
 # Password validation
@@ -121,6 +209,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer'
     ]
@@ -153,3 +244,35 @@ AUTH_USER_MODEL = 'authentication.UsArtUser'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}

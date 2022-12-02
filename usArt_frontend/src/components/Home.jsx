@@ -1,4 +1,4 @@
-import './landingPage.css'
+import './home.css'
 import { BsSearch, BsWindowSidebar } from "react-icons/bs";
 import LINK_FRONTEND from './LINK_FRONTEND';
 import { useState } from 'react';
@@ -7,11 +7,15 @@ const Home = () => {
   const [content, setContent] = useState();
 
   function goSearch() {
-    if (content===undefined) return
-    const link = LINK_FRONTEND + "/search/" + content+"/0";
+    if (content === undefined) return
+    const link = LINK_FRONTEND + "/search/" + content;
     window.location.assign(link)
   }
-  
+  const enterEvent = (event) => {
+    if (event.keyCode === 13) {
+      goSearch()
+    }
+  }
 
   return (
     <div name='home' >
@@ -27,7 +31,7 @@ const Home = () => {
                 <form action="" />
                 <div className="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
                   <div className="input-group">
-                    <input onChange={e => setContent(e.target.value)} type="search" placeholder="Try: Dragon ball drawings" aria-describedby="button-addon1" className="form-control border-0 bg-light" />
+                    <input onKeyDown={(e) => enterEvent(e)} onChange={e => setContent(e.target.value)} type="search" placeholder="Try: Dragon ball drawings" aria-describedby="button-addon1" className="form-control border-0 bg-light" />
                     <div className="input-group-append">
                       <button onClick={goSearch} id="button-addon1" type="submit" className="btn btn-link text-primary"><BsSearch /></button>
                     </div>

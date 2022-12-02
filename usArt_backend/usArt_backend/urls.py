@@ -16,13 +16,16 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework.authtoken import views
+from django.urls import path, include,re_path
+from chats.consumers import ChatConsumer
+
 
 urlpatterns = [
-    path('catalog/', include('catalog.urls')),
+    path('api/catalog/', include('catalog.urls', namespace='catalog')),
     path('admin/', admin.site.urls),
     path('auth/', include('authentication.urls')),
-    path('userprofile/', include('userprofile.urls')),
-    path('api-token-auth/', views.obtain_auth_token)
+    path('api/userprofile/', include('userprofile.urls', namespace='userprofile')),
+    path('api/', include("api.urls", namespace='api')),
+    path("chats/", ChatConsumer.as_asgi())
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

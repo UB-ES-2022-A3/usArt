@@ -1,41 +1,49 @@
+from rest_framework.response import Response
+
 from authentication.models import UsArtUser
-from django.http import JsonResponse
+
 from django.shortcuts import get_object_or_404
-from userprofile.models import PurchaseHistory
-from userprofile.serializers import PurchaseHistorySerializer, PublicationSerializer, UsArtUserSerializer, ExternalUserSerializer, UsArtUserFilterSerializer
-from rest_framework import generics
-from rest_framework.permissions import BasePermission, SAFE_METHODS
-from django.db.models import Q
 
-# Create your views here.
-def PurchaseHistory_list(request, username):
-    #if (request.user.id == userid):
-    #if (request.user.user == user):
-    user_name = UsArtUser.objects.get(user_name = username)
-    if (request.user.is_authenticated and request.user == user_name):
-        if (request.method == 'GET'):
-            # Agafem la llista de DB
-            #full_history = PurchaseHistory.objects.filter(user_id = userid)
-            full_history = PurchaseHistory.objects.filter(user = user_name)
-            # La convertim a diccionari
-            serializer = PurchaseHistorySerializer(full_history, many=True)
-            return JsonResponse(serializer.data, safe=False)
+from catalog.models import Publication
+from userprofile import serializers
+from userprofile.models import PurchaseHistory, Review
 
-        elif (request.method == 'POST'):
-            pass
+from rest_framework import filters, generics, status
 
-        elif (request.method == 'PUT'):
-            pass
+from rest_framework.response import Response
 
-        elif (request.method == 'DELETE'):
-            pass
-    else:
-        return JsonResponse({"Not logged in":"Not logged in"})
-        
+
+from rest_framework.permissions import IsAuthenticated
+
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.views import APIView
+
+import base64
+import io
+from django.core.files.images import ImageFile
+
+class PurchaseHistoryList(generics.ListCreateAPIView):
+    serializer_class = serializers.PurchaseHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return PurchaseHistory.objects.filter(user_id=self.request.user)
+
+    def post(self, request):
+        user = get_object_or_404(UsArtUser, id=request.user.id)
+        publication = get_object_or_404(Publication, id=request.data['pub_id'])
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user_id=user, pub_id=publication)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
 
 class PurchaseHistoryDetail(generics.RetrieveAPIView):
-    queryset = PurchaseHistory.objects.all()
-    serializer_class = PublicationSerializer
+    serializer_class = serializers.PurchaseHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return PurchaseHistory.objects.filter(user_id=self.request.user)
 
 
 class UserDetail(generics.RetrieveAPIView):
@@ -49,17 +57,67 @@ class UserDetail(generics.RetrieveAPIView):
     def get_serializer(self, *args, **kwargs):
         user = UsArtUser.objects.get(user_name=self.kwargs['user_name'])
         if not self.request.user.is_authenticated:
-            return ExternalUserSerializer(user)
-        
-        if (self.request.user.user_name == self.kwargs['user_name']):
-            return UsArtUserSerializer(user)
-        
-        return ExternalUserSerializer(user)
+            return serializers.ExternalUserSerializer(user)
+        if self.request.user.user_name == self.kwargs['user_name']:
+            return serializers.UsArtUserSerializer(user)
+        return serializers.ExternalUserSerializer(user)
 
-def items_search(request, keywords):
-    if (request.method == 'GET'):
-        items = UsArtUser.objects.filter(user_name__icontains = keywords)
-        serializer = UsArtUserFilterSerializer(items, many=True)
-        return JsonResponse(serializer.data, safe=False)
-    
+
+class UserList(generics.ListAPIView):
+    queryset = UsArtUser.objects.all()
+    serializer_class = serializers.UsArtUserFilterSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ['user_name']
+
+
+class UserProfile(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, format=None):
+        user=get_object_or_404(UsArtUser, user_name=request.user.user_name)
+        if 'photo' in request.data:
+            imlist = request.data['photo'].split(",")
+            imageStr = imlist[1] #remove data:image/png;base64,
+            extension = imlist[0].split(';')[0].split('/')[1]
+            image_64_decode = base64.b64decode(imageStr)
+            im = ImageFile(io.BytesIO(image_64_decode), name= str(user.id)+'.' + extension)
+            user.photo = im
+        if 'description' in request.data:
+            user.description = request.data['description']
+        user.save()
+ 
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class ReviewUser(generics.CreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = serializers.ReviewUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user = get_object_or_404(UsArtUser, id=self.request.user.id)
+        author = get_object_or_404(UsArtUser, id=self.request.data['reviewed_id'])
+        serializer.save(reviewer_id=user, reviewed_id=author)
+
+
+class ReviewUserStars(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, *args, **kwargs):
+        author = get_object_or_404(UsArtUser, user_name=kwargs.get('author'))
+        reviews = Review.objects.filter(reviewed_id=author)
+        result = 0
+        for review in reviews:
+            result += review.stars
+        try:
+            total = result / len(reviews)
+        except:
+            total = 0
+        return Response({'average': total}, status=status.HTTP_200_OK)
+
+class ReviewList(generics.ListAPIView):
+    serializer_class = serializers.ReviewerUserSerializer
+
+    def get_queryset(self):
+        return Review.objects.filter(reviewed_id__user_name=self.kwargs['author'])
         

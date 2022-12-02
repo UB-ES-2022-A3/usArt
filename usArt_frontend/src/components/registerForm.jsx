@@ -1,11 +1,13 @@
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 import LINK_BACKEND from "./LINK_BACKEND";
 import LINK_FRONTEND from "./LINK_FRONTEND";
+import AuthContext from "../context/authcontext";
 import { Modal } from 'bootstrap'
 import './register.css'
+import Footer from './footer';
 
 
 
@@ -24,34 +26,13 @@ import {
 
 function Register() {
 
-  function registerUser(credentials) {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    };
-    let path = LINK_BACKEND + "/auth/register/" + credentials.email + "&" + credentials.username + "&" + credentials.password;
-    fetch(
-      path, requestOptions)
-      .then((res) => {
-        if (res["status"] !== 200) {
-          setServerError(res["statusText"])
-        } else {
-          return res.json();
-        }
-      }
-      )
-      .then(data => {
-        setUsername(data.id);
-      })
-  }
-
-
-
-
   const initialValues = { username: "", email: "", password: "", passwordRepeat: "" };
   let initialValue = false;
+  const { registerUser } = useContext(AuthContext);
 
-  const [username, setUsername] = useState();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [formValues, setFormValues] = useState(initialValues);
   const [checkValue, setCheckValue] = useState(initialValue);
   const [formErrors, setFormErrors] = useState({});
@@ -75,13 +56,12 @@ function Register() {
     e.preventDefault();
     setFormErrors(validate(formValues, checkValue));
     setIsSubmit(true);
-
+    registerUser(formValues.username, formValues.password, formValues.email)
   };
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      registerUser(formValues);
-      window.location.assign(LINK_FRONTEND + "/home")
+      //window.location.assign(LINK_FRONTEND + "/home")
     }
   }, [formErrors]);
   const validate = (values, checkValue) => {
@@ -121,15 +101,14 @@ function Register() {
   };
 
   return (
-    <div>
-
-      <MDBContainer style={{ marginTop: "14vmin", paddingBottom: "10vmin" }} className="items-align-center justify-content-center " >
+    <div className='body_register'>
+      <MDBContainer className="vertical-center " >
         <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '25px' }}>
           <MDBCardBody className='shadow'>
             <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
             <MDBRow>
               <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
-                <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Sign up.</p>
+                <p id="title_signup" className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Sign up.</p>
                 <form className="w-50 text-center align-items-center" onSubmit={handleSubmit}>
                   <div className="">
                     <MDBInput label='Username' name="username" id='form1' type='text' placeholder="Username" className='w-100 shadow-sm ' value={formValues.username} onChange={handleChange} />
@@ -150,19 +129,19 @@ function Register() {
 
                   <div className="form-check  text-center align-items-center justify-content-center">
                     <input className="form-check-input d-inline-block px-1 " name="checkboxTerms" type="checkbox" id="flexCheckDefault" value={formValues.checkboxTerms} onChange={handleCheck} />
-                    <label className="form-check-label px-3 " for="flexCheckDefault" >
-                      I agree to <a href='https://www.termsofusegenerator.net/'>Terms of Use</a> and <a href='https://www.termsofusegenerator.net/'>Privacy Policy </a>of UsArt
+                    <label className="form-check-label px-3 " htmlFor="flexCheckDefault" >
+                      I agree to <a href={LINK_FRONTEND +"/termsandconditions"}>Terms of Use</a> and <a href={LINK_FRONTEND +"/termsandconditions"}>Privacy Policy </a>of UsArt
                     </label>
                   </div>
                   <p className='text-danger'>{formErrors.check}</p>
 
                   <div className="form-check  text-center align-items-center justify-content-center py-3">
                     <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault2"/>
-                      <label className="form-check-label px-3 " for="flexCheckDefault2">
+                      <label className="form-check-label px-3 " htmlFor="flexCheckDefault2">
                        I agree recieving emails about usArt services
                       </label>
                   </div>
-                  <button type="button" onClick={handleSubmit} class="btn btn-primary shadow mb-3 mt-3">Register</button>
+                  <button id='register_button' type="button" onClick={handleSubmit} className="btn btn-primary shadow mb-3 mt-3">Register</button>
                 </form>
                 <p className='text-danger'>{serverError}</p>
 
@@ -175,8 +154,9 @@ function Register() {
             </MDBRow>
           </MDBCardBody>
         </MDBCard>
-
       </MDBContainer>
+
+  
     </div>
 
 

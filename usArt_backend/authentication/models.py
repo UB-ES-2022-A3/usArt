@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+import uuid
 
 # Create your models here.
 
@@ -33,18 +34,25 @@ class AccountManager(BaseUserManager):
 
 
 def upload_to_photo(instance, filename):
-    return 'photos/{}'.format(filename)
+    return 'images/{}'.format(filename)
 
 
 class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField('Correo electronico', unique=True)
     user_name = models.CharField(max_length=150, unique=True)
     description = models.TextField(default="")
-    photo = models.ImageField(upload_to=upload_to_photo, default='photos/default.jpg')
-    is_artist = models.BooleanField(default=False)
+    photo = models.ImageField(upload_to='images/',default='default.jpg')
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    STATUS_CHOICES = [
+        ('BAN', 'Banned'),
+        ('ALO', 'Allowed')
+    ]
+    status = models.CharField(choices=STATUS_CHOICES, default='ALO', max_length=3)
+    ban_date = models.DateTimeField(null=True)
+    unban_date = models.DateTimeField(null=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
     objects = AccountManager()
 
     USERNAME_FIELD = 'user_name'
@@ -53,3 +61,15 @@ class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
 
     def __str__(self):
         return self.user_name
+
+
+
+
+class idChats(models.Model):
+
+    id_sala = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id_1 = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name="user1")
+    id_2 = models.ForeignKey(UsArtUser, on_delete=models.CASCADE,related_name="user2")
+    chat = models.FileField(upload_to='chats/')
+    
+    

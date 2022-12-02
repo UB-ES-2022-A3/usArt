@@ -4,7 +4,6 @@
 }
 
 .custom-input {
-  margin-inline-start: 10%;
   width: 30vw;
   background-color: white;
   border-radius: 10px;
@@ -13,9 +12,16 @@
 }
 
 .custom-grid {
-  margin-top: 2%;
-  margin-inline-start: 9%;
-  justify-content: inherit;
+  
+  justify-content: center;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 30vw);
+  grid-template-rows: repeat(2, 5vh);
+  margin-inline-start: 10%;
+  grid-gap: 5px;
 }
 
 @media only screen and (max-width: 1280px) {
@@ -23,7 +29,11 @@
   .search-grid {
     justify-content: inherit;
   }
+  .input-grid{
+    justify-content: inherit;
+  }
 }
+
 @media only screen and (max-width:955px) {
   .custom-input {
     margin-inline-start: 10%;
@@ -34,6 +44,7 @@
     justify-content: inherit;
   }
 }
+
 @media only screen and (max-width:650px) {
   .custom-grid {
     justify-content: center;
@@ -41,37 +52,67 @@
 
 }
 
+.button-filters {
+  color: #74767e;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+  background-color: #efeff0;
+  padding: 3px 12px;
+  border: none;
+  border-radius: 50px;
+}
+
+.remove-icon {
+  position: relative;
+  color: #95979d;
+  font-size: 18px;
+  margin-left: 5px;
+}
+
 .search-grid {
   display: grid;
   justify-items: center;
   align-items: center;
-  grid-template-columns: 85px 85px 85px;
-  margin-top: 2%;
-  margin-inline-start: 10%;
-  grid-gap: 20px;
+  grid-template-columns: repeat(3, 60px);
+  grid-gap: 5px;
 
 }
 
 .search-card {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
-.search-card:hover{
+
+.search-card:hover {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
+
+.icons {
+  font-size: 35px;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 
 .box1,
 .box2,
 .box3 {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  border-radius: 10px;
+  contain: content;
 
+  height: 50px;
+  width: 50px;
+  border-radius: 100%
 }
 
 .box1:hover,
 .box1.active {
   z-index: 2;
-
-  border-radius: 10px;
+  content: "Comisiones";
+  border-radius: 100%;
   transform: scale(1.1);
 
 
@@ -81,8 +122,8 @@
 .box2:hover,
 .box2.active {
   z-index: 2;
-  border-radius: 10px;
-
+  border-radius: 100%;
+  content: "Arte";
   transform: scale(1.1);
 
   cursor: pointer
@@ -91,12 +132,13 @@
 .box3:hover,
 .box3.active {
   z-index: 2;
-  border-radius: 10px;
-
+  border-radius: 100%;
+  content: "Autores";
   transform: scale(1.1);
 
   cursor: pointer
 }
+
 .loader {
   width: 60px;
 }
@@ -157,6 +199,7 @@
   margin: 0;
 
 }
+
 .ratings {
   position: relative;
   vertical-align: middle;
@@ -192,7 +235,7 @@
 
 @-moz-document url-prefix() {
   .full-stars {
-      color: #ECBE24;
+    color: #ECBE24;
   }
 }
 
