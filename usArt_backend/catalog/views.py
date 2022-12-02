@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import filters, generics, status
 import django_filters.rest_framework
+
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
@@ -35,4 +36,4 @@ class PublicationPosting(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         author = get_object_or_404(UsArtUser, id=self.request.user.id)
-        serializer.save(author=author, images=self.request.FILES.getlist('images'))
+        serializer.save(author=author, images=self.request.data['images'])
