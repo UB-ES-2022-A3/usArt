@@ -69,7 +69,7 @@ function LoggedNavBar() {
                   <a  className="nav-link underL px-3" href="/buzon">Buzon</a>
                 </li>
                 <li className="nav-item px-3">
-                  <a  className="nav-link underL px-3" href={"/profile/"+user.username}>Mi perfil</a>
+                  <a  className="nav-link underL px-3" href={"/profile/"+user.username+"/default"}>Mi perfil</a>
                 </li>
                 <li className="nav-item px-3 ">
                   <a  className="nav-link underL px-3" href="/home" id="logout_button" onClick={logoutUser}>Log Out</a>

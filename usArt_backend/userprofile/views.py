@@ -1,29 +1,49 @@
+from rest_framework.response import Response
+
 from authentication.models import UsArtUser
 
 from django.shortcuts import get_object_or_404
 
-from catalog.serializers import PublicationListSerializer
-
+from catalog.models import Publication
 from userprofile import serializers
 from userprofile.models import PurchaseHistory, Review
 
 from rest_framework import filters, generics, status
+
 from rest_framework.response import Response
+
+
+from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
+import base64
+import io
+from django.core.files.images import ImageFile
 
-class PurchaseHistoryList(generics.ListAPIView):
+class PurchaseHistoryList(generics.ListCreateAPIView):
     serializer_class = serializers.PurchaseHistorySerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return PurchaseHistory.objects.filter(user_id=self.request.user)
 
+    def post(self, request):
+        user = get_object_or_404(UsArtUser, id=request.user.id)
+        publication = get_object_or_404(Publication, id=request.data['pub_id'])
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user_id=user, pub_id=publication)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
 
 class PurchaseHistoryDetail(generics.RetrieveAPIView):
-    queryset = PurchaseHistory.objects.all()
-    serializer_class = PublicationListSerializer
+    serializer_class = serializers.PurchaseHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return PurchaseHistory.objects.filter(user_id=self.request.user)
 
 
 class UserDetail(generics.RetrieveAPIView):
@@ -55,9 +75,17 @@ class UserProfile(generics.GenericAPIView):
 
     def put(self, request, format=None):
         user=get_object_or_404(UsArtUser, user_name=request.user.user_name)
-        user.photo = request.data.get('photo')
+        if 'photo' in request.data:
+            imlist = request.data['photo'].split(",")
+            imageStr = imlist[1] #remove data:image/png;base64,
+            extension = imlist[0].split(';')[0].split('/')[1]
+            image_64_decode = base64.b64decode(imageStr)
+            im = ImageFile(io.BytesIO(image_64_decode), name= str(user.id)+'.' + extension)
+            user.photo = im
+        if 'description' in request.data:
+            user.description = request.data['description']
         user.save()
-
+ 
         return Response(status=status.HTTP_201_CREATED)
 
 

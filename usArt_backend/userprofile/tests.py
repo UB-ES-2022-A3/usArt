@@ -13,7 +13,8 @@ class TestPublicationModel(TestCase):
     @classmethod
     def setUpTestData(cls):
         user = UsArtUser.objects.create_user(email='test@test.com', user_name='test', password='test')
-        publication = Publication.objects.create(title='Title test', description='Description test', author_id=user.id, price=5.0)
+        publication = Publication.objects.create(title='Title test', description='Description test', author_id=user.id,
+                                                 price=5.0)
         PurchaseHistory.objects.create(pub_id=publication, price=publication.price, user_id=user)
 
     def test_publication_content(self):
@@ -38,6 +39,28 @@ class TestPublicationAPI(APITestCase):
     def test_publication_content(self):
         purchase = PurchaseHistory.objects.get(price=5.0)
         self.assertEqual(purchase.price, 5.0)
+
+    def test_update_profile(self):
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test2',
+            'password': 'test2'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        url = reverse('userprofile:update_profile')
+        response = self.client.put(url, {'description' : 'a new description'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        url = reverse('userprofile:user_details', kwargs={'user_name': 'test2'})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['description'], 'a new description')
+    
 
     def test_authentication(self):
         url_post_login = reverse('api:token_obtain_pair')
@@ -123,3 +146,46 @@ class TestPublicationAPI(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['average'], 3.0)
+
+    def test_get_purchase_detail(self):
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test2',
+            'password': 'test2'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        purchase = PurchaseHistory.objects.get(price=5.0)
+        url = reverse('userprofile:user_purchase_detail', kwargs={"pk": purchase.id})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_post_purchase(self):
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test2',
+            'password': 'test2'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        url = reverse('userprofile:user_purchases')
+        user = UsArtUser.objects.get(user_name='test2')
+        pub = Publication.objects.get(title='Title test')
+        data = {
+            'pub_id': pub.id,
+            'price': 100.0,
+            'user_id': user.id,
+        }
+        response = self.client.post(url, data=data, format='json')
+        purchase_id = response.data['id']
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        purchase = PurchaseHistory.objects.get(id=purchase_id)
+        url = reverse('userprofile:user_purchase_detail', kwargs={"pk": purchase.id})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

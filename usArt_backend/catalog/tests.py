@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-
 from authentication.models import UsArtUser
 from catalog.models import Publication, Commission
 
@@ -28,6 +27,7 @@ class TestPublicationModel(TestCase):
         commission = Commission.objects.get(description='Description test')
 
         self.assertEqual(f'{commission.description}', 'Description test')
+
 
 
 class TestPublicationAPI(APITestCase):
@@ -63,9 +63,6 @@ class TestPublicationAPI(APITestCase):
         response = self.client.get(url, format='json')
         # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_post_publication(self):
-        pass
 
     def test_delete_publication(self):
         pass

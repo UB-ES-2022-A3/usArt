@@ -7,6 +7,7 @@ import Explorer from './components/explorer';
 import Profile from './components/profile';
 import Publicacion from './components/publicacion';
 import Search from './components/search';
+import Compra from './components/compra';
 import BuzonTest from './components/buzonChat';
 import TermsAndConditions from './components/termsAndConditions';
 import { AuthProvider } from './context/authcontext';
@@ -56,10 +57,11 @@ function App() {
               <Route path="/explore" element={<Explorer />}></Route>
               <Route path="/join" element={<Register />}></Route>
               <Route path="/login" element={<LogIn />}></Route>
-              <Route path="/profile/:username" element={<Profile />}></Route>
+              <Route path="/profile/:username/:edit" element={<Profile />}></Route>
               <Route path="/publicacion/:id" element={<Publicacion />}></Route>
               <Route path="/search/:search" element={<Search/>}></Route>
               <Route path="/termsandconditions" element={<TermsAndConditions />}></Route>
+              <Route path="/compra/:id" element={<Compra/>}></Route>
             </Routes>
         </div>
       </AuthProvider>
