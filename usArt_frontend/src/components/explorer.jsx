@@ -35,14 +35,14 @@ export default function Explorer() {
   function RenderCard(card, index) {
     return (
 
-      <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + card.id} key={card.id}>
+      <a id="card_container" style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + card.id} key={card.id}>
         <div className="card custom ">
           <picture >
             <img id={index} src={card.images[0]} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
           </picture>
           <div className="card-body ">
             <h5 className="max" style={{ color: "black" }}><strong>{card.price}€</strong></h5>
-            <h5 style={{ color: "black" }} className="card-title max-title"><strong>{card.title}</strong></h5>
+            <h5 id="card_title" style={{ color: "black" }} className="card-title max-title"><strong>{card.title}</strong></h5>
             <p className="card-text max-text"><small>{card.author.user_name}</small>  </p>
             <p className="card-text max">{card.description}</p>
           </div>

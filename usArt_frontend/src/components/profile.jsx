@@ -201,6 +201,7 @@ function Profile() {
 
         document.getElementById("profileOpacity").style.opacity = "1";
     }
+
     function is_self() {
         if (user == null) return
         if (username === user.username) {

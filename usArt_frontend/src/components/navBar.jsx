@@ -29,10 +29,10 @@ function NoLoggedNavBar() {
                   <a  className="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
                 </li>
                 <li className="nav-item px-3">
-                  <a  className="nav-link underL px-3" href="/login">Log in</a>
+                  <a id="button_login" className="nav-link underL px-3" href="/login">Log in</a>
                 </li>
                 <li className="nav-item px-3">
-                  <a className="nav-link  px-3 landingNoRegisterJoin" href="/join">Join</a>
+                  <a id="button_join" className="nav-link  px-3 landingNoRegisterJoin" href="/join">Join</a>
                 </li>
               </ul>
           </div>
@@ -63,7 +63,7 @@ function LoggedNavBar() {
           <div className="offcanvas-body">
               <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 " style={{zIndex:"2"}}>
                 <li className="nav-item px-3">
-                  <a  className="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
+                  <a id="explore_button" className="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
                 </li>
                 <li className="nav-item px-3">
                   <a  className="nav-link underL px-3" href="/buzon">Buzon</a>
@@ -72,7 +72,7 @@ function LoggedNavBar() {
                   <a  className="nav-link underL px-3" href={"/profile/"+user.username}>Mi perfil</a>
                 </li>
                 <li className="nav-item px-3 ">
-                  <a  className="nav-link underL px-3" href="/home" onClick={logoutUser}>Log Out</a>
+                  <a  className="nav-link underL px-3" href="/home" id="logout_button" onClick={logoutUser}>Log Out</a>
                 </li>
               </ul>
           </div>

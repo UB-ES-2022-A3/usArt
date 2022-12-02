@@ -66,6 +66,7 @@ class Bid(models.Model):
 
 
 class Commission(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     pub_id = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='publication')
     user_id = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name='commission')
     description = models.TextField(blank=False)
@@ -78,8 +79,3 @@ class Commission(models.Model):
         ('DO', 'Done')
     ]
     status = models.CharField(choices=STATUS_CHOICES, max_length=2, default='PD')
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['pub_id', 'user_id'], name='unique_publication_user_commission_combination')
-        ]

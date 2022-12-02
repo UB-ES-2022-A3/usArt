@@ -55,7 +55,7 @@ function Login() {
               <div className="d-flex flex-row align-items-center mb-4 text-center ">
                 <MDBInput label='Password' id='form3' type='password' placeholder="Password" className='shadow-sm' onChange={e => setPassword(e.target.value)} />
               </div>
-              <button type="button" onClick={handleSubmit} className="btn btn-primary shadow mb-3 mt-3">Login</button>
+              <button id='login_button' type="button" onClick={handleSubmit} className="btn btn-primary shadow mb-3 mt-3">Login</button>
               <p className='text-danger mb-5'>{formErrors}</p>
               Don't have an account? <a href='/join' className='mb-3'><strong>Sign up</strong></a>
             </MDBCol>
