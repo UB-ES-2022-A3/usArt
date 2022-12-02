@@ -8,6 +8,7 @@ import Profile from './components/profile';
 import Publicacion from './components/publicacion';
 import Search from './components/search';
 import Compra from './components/compra';
+import Details from './components/purchaseDetails';
 import TermsAndConditions from './components/termsAndConditions';
 import { AuthProvider } from './context/authcontext';
 import { useContext } from "react";
@@ -60,6 +61,7 @@ function App() {
               <Route path="/search/:search" element={<Search/>}></Route>
               <Route path="/termsandconditions" element={<TermsAndConditions />}></Route>
               <Route path="/compra/:id" element={<Compra/>}></Route>
+              <Route path="/purchasedetails/:id" element={<Details/>}></Route>
             </Routes>
         </div>
       </AuthProvider>
