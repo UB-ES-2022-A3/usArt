@@ -8,7 +8,7 @@ import { useState, useEffect, useCallback, useContext, useRef } from "react";
 import AuthContext from "../context/authcontext";
 import LINK_BACKEND from "./LINK_BACKEND";
 import LINK_RESOURCES from "./LINK_RESOURCES";
-
+import Pusher from 'pusher-js'
 function BuzonChat() {
   let { user, authTokens } = useContext(AuthContext);
   const [activeUser, setActiveUser] = useState();
@@ -20,20 +20,49 @@ function BuzonChat() {
   const [renderList, setRenderList] = useState([]);
   const [messageHistory, setMessageHistory] = useState([]);
   const [msg, setMsg] = useState("")
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+  const [lastMessage, setlastMessage] = useState()
   const bottomRef = useRef(null);
-
+  const [pusher, setPusher] = useState();
+  const [channel, setChannel] = useState()
   useEffect(callApi, []);
 
+  const [c, setC] = useState(0)
+
+
   useEffect(() => {
-    if (lastMessage !== null) {
-      setMessageHistory([...messageHistory, JSON.parse(lastMessage.data)]);
+    if (lastMessage != null) {
+      setMessageHistory([...messageHistory, JSON.parse(lastMessage)]);
+      document.getElementById("lastMessage").innerHTML = JSON.parse(lastMessage).message
     }
   }, [lastMessage]);
 
+
+  useEffect(() => {
+    if (idSala == null) return
+  
+    setPusher(new Pusher("464bf9750a028fa769ca", { cluster: "eu", }));
+  }, [idSala]);
+
+  useEffect(() => {
+    if (pusher == null) return
+    setChannel(pusher.subscribe(idSala));
+  }, [pusher]);
+
+  useEffect(() => {
+    if (channel == null) return
+    console.log("channel creado");
+    channel.bind('my-event', saveChat);
+  }, [channel]);
+
+  const saveChat = (data) => {
+    
+    if (c === 0) setlastMessage(JSON.stringify(data))
+  };
+ 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messageHistory]);
+
 
   function createchat(theuser) {
 
@@ -102,7 +131,7 @@ function BuzonChat() {
       }
       )
   }
-
+  
   function renderChats(user) {
 
     if (document.getElementById("btnradio1").checked) {
@@ -110,7 +139,7 @@ function BuzonChat() {
         <img src={user.user.photo} alt="" style={{ height: "50px", width: "50px", objectFit: "cover", borderRadius: "50%" }} />
         <div className="userChatInfo">
           <span className='chatsFirstName'>{user.user.user_name}</span>
-          <p className='chatsMessage'>Hello, how are you?</p>
+          <p id="lastMessage" className='chatsMessage'>No new messages</p>
         </div>
       </div>)
     } if (document.getElementById("btnradio2").checked) {
@@ -129,7 +158,7 @@ function BuzonChat() {
   function message(message) {
     if (activeUser == undefined || meUser == undefined) return
     if (document.getElementById("btnradio2").checked) {
-      
+
       return (<div className="message otherside">
         <div className="messageContent">
           <img src={activeUser.user_id.photo} alt="" style={{ height: "40px", width: "40px", borderRadius: "50%", objectFit: "cover" }} />
@@ -181,12 +210,11 @@ function BuzonChat() {
       .then((res) => res.json())
       .then(data => {
         setMsg("")
-        sendMessage(JSON.stringify(data));
       }
       )
   });
   function pendingComisions() {
-    if (user == undefined ) return
+    if (user == undefined) return
     fetch(
       LINK_BACKEND + "/api/catalog/user/commissions/list/", {
       method: 'GET',
@@ -203,7 +231,6 @@ function BuzonChat() {
         setActiveUser()
         setMeUser()
         setRenderList(data)
-        console.log(data)
 
       }
       )
@@ -211,7 +238,7 @@ function BuzonChat() {
 
   }
   function postComission() {//TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-  
+
     fetch(
       LINK_BACKEND + "/api/catalog/user/commission/" + activeUser.pub_id + "&" + activeUser.user_id.id, {
       method: 'PUT',
@@ -236,7 +263,7 @@ function BuzonChat() {
         })
           .then((res) => res.json())
           .then(data => {
-             
+
           }
           )
         pendingComisions()
@@ -258,8 +285,8 @@ function BuzonChat() {
         pendingComisions()
         return res.json()
       })
-      
-      
+
+
   }
   function generalChat() {
     callApi();
@@ -295,7 +322,7 @@ function BuzonChat() {
                   onKeyDown={(e) => enterEvent(e)} />
               </div>
               <button className='buttonSend' style={{ marginRight: "10px" }}
-                onClick={handleClickSendMessage} disabled={readyState !== ReadyState.OPEN}>Send</button>
+                onClick={handleClickSendMessage} >Send</button>
             </div>}
         </div>
       </div >)
