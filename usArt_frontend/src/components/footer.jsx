@@ -4,7 +4,7 @@ import LINK_FRONTEND from "./LINK_FRONTEND"
 
 function Footer() {
     return (
-        <div>
+        <div style={{marginTop:"13em"}}>
             <footer className="text-center text-white" style={{ backgroundColor: "#263636" }}>
                 <div className="container">
                     <section className="mt-5">
