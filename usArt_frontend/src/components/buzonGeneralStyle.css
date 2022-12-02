@@ -131,7 +131,7 @@
 .chat .owner p {
     border-radius: 10px 0px 10px 10px !important;
     line-break: anywhere;
-    width: 35vw;
+    width: 10vw;
 }
 
 .chat .otherside {
@@ -170,6 +170,7 @@
 .chat .messages .message .messageContent {
     max-width: 80%;
     display: flex;
+
     gap: 10px;
 
 }
