@@ -56,9 +56,6 @@ function Register() {
     e.preventDefault();
     setFormErrors(validate(formValues, checkValue));
     setIsSubmit(true);
-    console.log(formValues.username)
-    console.log(formValues.password)
-    console.log(formValues.email)
     registerUser(formValues.username, formValues.password, formValues.email)
   };
 
@@ -111,7 +108,7 @@ function Register() {
             <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
             <MDBRow>
               <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
-                <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Sign up.</p>
+                <p id="title_signup" className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Sign up.</p>
                 <form className="w-50 text-center align-items-center" onSubmit={handleSubmit}>
                   <div className="">
                     <MDBInput label='Username' name="username" id='form1' type='text' placeholder="Username" className='w-100 shadow-sm ' value={formValues.username} onChange={handleChange} />
@@ -144,7 +141,7 @@ function Register() {
                        I agree recieving emails about usArt services
                       </label>
                   </div>
-                  <button type="button" onClick={handleSubmit} className="btn btn-primary shadow mb-3 mt-3">Register</button>
+                  <button id='register_button' type="button" onClick={handleSubmit} className="btn btn-primary shadow mb-3 mt-3">Register</button>
                 </form>
                 <p className='text-danger'>{serverError}</p>
 
