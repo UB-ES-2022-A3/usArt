@@ -42,9 +42,7 @@ jobs:
       - name: Run servers
         run: |
           cd ./usArt_backend/
-          screen
-          python manage.py runserver
-          screen -d
+          python manage.py runserver &
       - name: Run Tests
         run: |
           cd ${GITHUB_WORKSPACE}/testing
