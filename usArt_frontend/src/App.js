@@ -56,7 +56,7 @@ function App() {
               <Route path="/explore" element={<Explorer />}></Route>
               <Route path="/join" element={<Register />}></Route>
               <Route path="/login" element={<LogIn />}></Route>
-              <Route path="/profile/:username" element={<Profile />}></Route>
+              <Route path="/profile/:username/:edit" element={<Profile />}></Route>
               <Route path="/publicacion/:id" element={<Publicacion />}></Route>
               <Route path="/search/:search" element={<Search/>}></Route>
               <Route path="/termsandconditions" element={<TermsAndConditions />}></Route>

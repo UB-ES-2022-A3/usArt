@@ -6,10 +6,11 @@ import LINK_BACKEND from "./LINK_BACKEND"
 import AuthContext from "../context/authcontext";
 import Footer from './footer'
 import empty from '../assets/suchEmpty.png'
-import { Modal } from "bootstrap"
+import LINK_FRONTEND from './LINK_FRONTEND';
+
 function Profile() {
 
-    const { username } = useParams();
+    const { username, edit } = useParams();
     let { user, authTokens } = useContext(AuthContext);
     const [prof, setProfile] = useState([])
     const [products, setProducts] = useState([])
@@ -17,15 +18,42 @@ function Profile() {
     const [stars, setStars] = useState(0)
     const [review, setReview] = useState(0)
     const [message, setMessage] = useState('');
-
-
+    const [components, setComponents] = useState([]);
     const [radioGender, setRadioProduct] = useState('Products');
+    const [data, setData] = useState("")
+
     const handleChange = (event) => {
         setRadioProduct(event.target.value)
     }
     useEffect(callApi, [])
     useEffect(callApiProducts, [])
     useEffect(callApiHistorialProducts, [])
+
+    //----------------------------------------------------------------------------
+
+
+    const initialImagesValues = { data: null, loading: false };
+    const [stateImages, setStateImages] = useState(initialImagesValues);
+
+    const handleFileChange = (event) => {
+
+        const { target } = event;
+        const { files } = target;
+        if (files && files[0]) {
+            var reader = new FileReader();
+            reader.onloadstart = () => setStateImages({ loading: true });
+            reader.onload = event => {
+                setData(event.target.result)
+                setStateImages({
+                    data: event.target.result,
+                    loading: false
+                });
+            };
+
+            reader.readAsDataURL(files[0]);
+        }
+    }
+    //---------------------------------------------------------------------------------
 
     function callApi() {
         if (user !== null) {
@@ -41,6 +69,7 @@ function Profile() {
                 .then((res) => res.json())
                 .then(data => {
                     setProfile(data);
+
                 }
                 )
 
@@ -51,6 +80,7 @@ function Profile() {
                 .then(data => {
                     setProfile(data);
                 }
+
                 )
         }
         takeReview()
@@ -161,14 +191,11 @@ function Profile() {
         setMessage(event.target.value);
     };
     function takeReview() {
-        console.log("review")
         fetch(
             LINK_BACKEND + "/api/userprofile/review-artist/" + username)
             .then((res) => res.json())
             .then(data => {
-                console.log(data)
                 setReview(data.average / 5 * 100 + "%");
-                console.log(data.average / 5 * 100 + "%")
             }
             )
     }
@@ -201,13 +228,148 @@ function Profile() {
 
         document.getElementById("profileOpacity").style.opacity = "1";
     }
-    function is_self() {
-        if (user == null) return
-        if (username === user.username) {
+
+
+    function handleEditClick() {
+        const link = LINK_FRONTEND + "/profile/" + username + "/edit";
+        window.location.assign(link)
+
+    }
+
+
+
+    function save() {
+        const selectedFile = document.getElementById('file-input').files[0];
+        const re = new RegExp('image\/(.+)');
+        if (!re.test(selectedFile.type)) {
+            alert("Needs to be an image!")
             return
         }
-        return <button type="button" data-bs-toggle="modal" onClick={() => document.getElementById("profileOpacity").style.opacity = "0.5"} data-bs-target="#staticBackdrop" class="btn btn-dark">Rate me!</button>
 
+        let des = document.getElementById("description");
+        let borderDes = document.getElementById("borderDes");
+
+
+        des.contentEditable = 'false';
+        borderDes.style.border = "none"
+        borderDes.style.borderRadius = "0.375rem"
+
+        let description = des.textContent;
+        fetch(LINK_BACKEND + "/api/userprofile/update/", {
+            method: 'PUT',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'description': description,
+                'photo': data
+            }),
+        })
+            .then((res) => {
+                if (res.status === 500) {
+                    alert("Load again the image")
+                } else {
+                    const link = LINK_FRONTEND + "/profile/" + username + "/default";
+                    window.location.assign(link)
+                }
+                return res.json()
+            })
+            .then(data => {
+
+            }
+            )
+
+
+
+
+    }
+    function is_other() {
+        if (user == null) return
+        if (username !== user.username) {
+            return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal" onClick={() => document.getElementById("profileOpacity").style.opacity = "0.5"} data-bs-target="#staticBackdrop" class="btn btn-dark">Rate me!</button>
+        }
+    }
+
+    function buttonsTogether() {
+
+        if (user == null) return
+        if (username === user.username) {
+            if (edit !== "edit") {
+                return <button onClick={handleEditClick} id="editButton" style={{ width: "150px", borderRadius: "0.375em" }} type="button" class="btn btn-outline-dark">
+                    Edit profile
+                </button>
+            }
+
+            return ([<button onClick={save} id="saveBtn" style={{ width: "150px", borderRadius: "0.375em" }} type="button" class="btn btn-outline-dark">
+                Save
+            </button>, <div style={{ marginLeft: "5px", border: "black" }} class="file-input">
+                <input
+                    type="file"
+                    name="file-input"
+                    id="file-input"
+                    class="file-input__input"
+                    accept="image/*"
+                    capture="camera"
+                    onChange={handleFileChange}
+                />
+                <label class="file-input__label" for="file-input">
+                    <svg
+                        aria-hidden="true"
+                        focusable="false"
+                        data-prefix="fas"
+                        data-icon="upload"
+                        accept="image/*"
+                        class="svg-inline--fa fa-upload fa-w-16"
+                        role="img"
+                        capture="camera"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+
+                    >
+                        <path
+                            fill="currentColor"
+                            d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"
+                        ></path>
+                    </svg>
+                    <span>Upload new picture </span></label
+                >
+            </div>])
+        }
+    }
+    function generateAbout() {
+        if (user == null | username == null) {
+            return
+        }
+        else if (username === user.username) {
+            if (edit === "edit") {
+                return (
+                    <div className="card-body p-4 text-black">
+                        <div className="mb-1">
+                            <p className="lead fw-normal mb-1">About</p>
+                            <div id="borderDes" className="p-4 rounded-top" style={{ backgroundColor: "#f5f5f5", border: "solid", borderRadius: "0.375rem" }}>
+                                <p id="description" style={{ outline: "0px solid transparent" }} contentEditable={true} className="font-italic mb-1">{prof.description}</p>
+
+                            </div>
+                        </div>
+                    </div>)
+            } else {
+                return (
+                    <div className="card-body p-4 text-black">
+                        <div className="mb-1">
+                            <p className="lead fw-normal mb-1">About</p>
+                            <div id="borderDes" className="p-4 rounded-top" style={{ backgroundColor: "#f5f5f5" }}>
+                                <p id="description" className="font-italic mb-1">{prof.description}</p>
+
+                            </div>
+                        </div>
+                    </div>)
+
+
+            }
+        }
     }
     return (
         <div >
@@ -216,7 +378,7 @@ function Profile() {
                     <div className="card" style={{ width: "70vw" }}>
                         <div className=" rounded-top text-white d-flex flex-row" style={{ height: "200px", backgroundColor: "#000" }} >
                             <div className="ms-4 mt-5 d-flex flex-column" style={{ width: "150px" }}>
-                                <img src={prof.photo}
+                                <img src={prof.photo} id="profilePhoto"
                                     alt="Profile" className="img-fluid img-thumbnail mt-4 mb-2"
                                     style={{ width: "150px", zIndex: "1" }} />
                             </div>
@@ -225,23 +387,21 @@ function Profile() {
                             </div>
                         </div>
                         <div className="p-4 text-black" style={{ backgroundColor: "#f5f5f5" }}>
-                            <div style={{ marginTop: "1%", marginLeft: "5px", justifyContent: "right", display: "flex" }}  >
-                                {is_self()}
-                                <div className="ratings">
-                                    <div className="empty-stars"></div>
-                                    <div className="full-stars" style={{ width: review }} ></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="card-body p-4 text-black">
-                            <div className="mb-1">
-                                <p className="lead fw-normal mb-1">About</p>
-                                <div className="p-4 rounded-top" style={{ backgroundColor: "#f5f5f5" }}>
-                                    <p className="font-italic mb-1">{prof.description}</p>
+                            <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group" role="group" aria-label="First group" >
+                                    {buttonsTogether()}
 
                                 </div>
+                                <div class="input-group" id='input-group' >
+                                    {is_other()}
+                                    <div style={{ marginLeft: "25px" }} className="ratings">
+                                        <div className="empty-stars"></div>
+                                        <div className="full-stars" style={{ width: review }} ></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        {generateAbout()}
                         <div className="row d-flex justify-content-center " >
                             <div className="col-lg-8">
                                 <div className="card-body  p-4 text-black text-center ">
@@ -288,7 +448,7 @@ function Profile() {
                             </div>
                         </div>
                         <div className='modal-footer custom-footer'>
-                            <button id="search-btn" onClick={sendReview} disabled={stars == 0 | message.length == 0} data-bs-dismiss="modal" aria-label="Close" className='btn2'>Rate</button>
+                            <button id="search-btn" onClick={sendReview} disabled={stars === 0 | message.length === 0} data-bs-dismiss="modal" aria-label="Close" className='btn2'>Rate</button>
                         </div>
                     </div>
                 </div>
