@@ -53,5 +53,6 @@ jobs:
           cd ${GITHUB_WORKSPACE}/usArt_frontend/
           npm start &
       - name: Run E2E Tests
+        run: |
           cd ${GITHUB_WORKSPACE}/testing
           pytest test_e2e.py
