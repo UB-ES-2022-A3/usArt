@@ -86,3 +86,10 @@ class ReviewUserStars(APIView):
         except:
             total = 0
         return Response({'average': total}, status=status.HTTP_200_OK)
+
+class ReviewList(generics.ListAPIView):
+    serializer_class = serializers.ReviewerUserSerializer
+
+    def get_queryset(self):
+        return Review.objects.filter(reviewed_id__user_name=self.kwargs['author'])
+        
