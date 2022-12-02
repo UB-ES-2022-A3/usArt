@@ -6,8 +6,7 @@ from selenium.webdriver.chrome.options import Options
 
 chrome_options = Options()
 chrome_options.add_argument('--headless')
-driver_path = ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
-driver = webdriver.Chrome(driver_path, chrome_options=chrome_options)
+driver = webdriver.Chrome(chrome_options=chrome_options)
 
 
 def test_u3_register_user():
