@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-
 from authentication.models import UsArtUser
 from catalog.models import Publication
 
@@ -54,34 +53,6 @@ class TestPublicationAPI(APITestCase):
         response = self.client.get(url, format='json')
         # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_post_publication(self):
-        url_post_login = reverse('api:token_obtain_pair')
-        login_data = {
-            'user_name': 'test',
-            'password': 'test'
-        }
-        response = self.client.post(url_post_login, login_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue('access' in response.data)
-        token = response.data['access']
-        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
-
-        publication = {
-            'title' : 'publication',
-            'description' : 'description test',
-            'price' : 5.0,
-            'type' : 'CO'
-        }
-        url = reverse('catalog:post_publication')
-
-        response = self.client.post(url, publication, format='json')
-
-        dc = response.json()
-        self.assertEqual(dc['title'], 'publication',)
-        self.assertEqual(dc['description'], 'description test')
-        self.assertEqual(dc['type'], 'CO')
-        self.assertEqual(dc['price'], 5.0)
 
     def test_delete_publication(self):
         pass

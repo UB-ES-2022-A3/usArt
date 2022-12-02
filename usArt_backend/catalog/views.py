@@ -41,7 +41,6 @@ class CommissionPost(generics.CreateAPIView):
     def post(self, request):
         
         pub = get_object_or_404(Publication, id=request.data['pub_id'])
-        print(request.user,pub)
         serialiser = CommissionListSerializer(data=request.data)
         serialiser.is_valid(raise_exception=True)
         serialiser.save(user_id=request.user, pub_id=pub)
