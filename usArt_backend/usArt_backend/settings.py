@@ -179,7 +179,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'usartdatabase',
+            'NAME': 'usartdatabasedev',
             'USER': 'usartadmin',
             'PASSWORD': '4GAg*JFY0!4!72%N',
             'HOST': 'usart-database.mysql.database.azure.com',
