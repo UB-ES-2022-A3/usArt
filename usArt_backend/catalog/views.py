@@ -1,6 +1,6 @@
 from catalog.models import Publication, Commission
 from authentication.models import UsArtUser
-from catalog.serializers import PublicationListSerializer,CommissionListSerializer
+from catalog.serializers import PublicationListSerializer,CommissionListSerializer,ArtistCommissionListSerializer
 from rest_framework import filters, generics, status
 
 from authentication.models import UsArtUser
@@ -41,7 +41,12 @@ class CommissionPost(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        
+        pub = get_object_or_404(Publication, id=request.data['pub_id'])
+        print(request.user,pub)
+        serialiser = CommissionListSerializer(data=request.data)
+        serialiser.is_valid(raise_exception=True)
+        serialiser.save(user_id=request.user, pub_id=pub)
+        return Response(data=serialiser.data, status=status.HTTP_201_CREATED)
 
 
 class CommissionList(generics.ListAPIView):
@@ -73,9 +78,13 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
                                             user_id__id=self.kwargs['user_id'])
         return commission
 
-        pub = get_object_or_404(Publication, id=request.data['pub_id'])
-        print(request.user,pub)
-        serialiser = CommissionListSerializer(data=request.data)
-        serialiser.is_valid(raise_exception=True)
-        serialiser.save(user_id=request.user, pub_id=pub)
-        return Response(data=serialiser.data, status=status.HTTP_201_CREATED)
+        
+
+class ArtistCommissionList(generics.ListAPIView):
+    queryset = Commission.objects.all()
+    serializer_class = ArtistCommissionListSerializer
+
+    def get_queryset(self):
+        
+        commissions = Commission.objects.filter(pub_id__author=self.request.user)
+        return commissions

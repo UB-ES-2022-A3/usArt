@@ -24,3 +24,11 @@ class CommissionListSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'description': {'required': False},"user_id":{"required":False}}
         #extra_kwargs = {"user_id":{"required":False}}
+
+class ArtistCommissionListSerializer(serializers.ModelSerializer):
+    user_id = UsArtUserSerializer(read_only=True)
+    class Meta:
+        model = Commission
+        fields = '__all__'
+        extra_kwargs = {'description': {'required': False},"user_id":{"required":False}}
+        #extra_kwargs = {"user_id":{"required":False}}
