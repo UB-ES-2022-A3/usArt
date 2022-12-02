@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useEffect } from 'react';
 import { useParams } from "react-router-dom"
 import imageP from '../assets/not-found-image.jpg'
@@ -44,7 +44,7 @@ function Publicacion(props) {
                     )
             }
             )
-            
+
     }
 
 
@@ -90,17 +90,17 @@ function Publicacion(props) {
         )
     }
     function LINK_FRONTENDContact() {
-            let coModal = new Modal(document.getElementById('coModal'), {
-            keyboard: false,backdrop: 'static'
+        let coModal = new Modal(document.getElementById('coModal'), {
+            keyboard: false, backdrop: 'static'
         })
-        
+
         if (card.type === "CO") {
-            
-            document.getElementById("toOpacity").style.opacity ="0.5";
+
+            document.getElementById("toOpacity").style.opacity = "0.5";
             coModal.show()
-        }else{
-            document.getElementById("toOpacity").style.opacity ="0.5";
-            const link = LINK_FRONTEND + "/compra/"+id 
+        } else {
+            document.getElementById("toOpacity").style.opacity = "0.5";
+            const link = LINK_FRONTEND + "/compra/" + id
             window.location.assign(link)
         }
     }
@@ -108,13 +108,13 @@ function Publicacion(props) {
         const link = LINK_FRONTEND + "/profile/" + author.user_name
         window.location.assign(link)
     }
-    function Nameaux(){
+    function Nameaux() {
         let name = ""
-        if (card.type=="CO"){
+        if (card.type == "CO") {
             name = "Contactar"
-        }else{
+        } else {
             name = "Comprar"
-            
+
         }
         return name
     }
@@ -126,20 +126,20 @@ function Publicacion(props) {
         console.log(description)
         postPetCom(id, description)
         alert("Petición hecha!")
-        document.getElementById("toOpacity").style.opacity ="1"
+        document.getElementById("toOpacity").style.opacity = "1"
 
     }
     function updateOutputA() {
         let description = input_textarea.value
         if (description.length === 0) {
             alert("La descripción no puede estar vacia")
-        }else{
+        } else {
             console.log(description)
             postPetCom(id, description)
             alert("Petición hecha!")
-            document.getElementById("toOpacity").style.opacity ="1"
+            document.getElementById("toOpacity").style.opacity = "1"
         }
-        
+
 
     }
     function postPetCom(pub_id, description) {
@@ -219,35 +219,35 @@ function Publicacion(props) {
                             <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
                             <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
 
-                                <button onClick={LINK_FRONTENDContact} id="contact_button" className="button" style={{ verticalAlign: "middle" }}  disabled={user === null}><span>{Nameaux()} </span></button>
+                                <button onClick={LINK_FRONTENDContact} id="contact_button" className="button" style={{ verticalAlign: "middle" }} disabled={user === null}><span>{Nameaux()} </span></button>
 
 
-                        </div >
+                            </div >
 
+                        </div>
                     </div>
+                    <Footer />
                 </div>
-                <Footer />
-            </div>
-            <div className="modal fade" id="coModal" tabIndex="-1">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title text-dark" id="modal_title">Que servicio quieres adquirir del artista?</h5>
-                            <button type="button" className="btn-close" onClick={() => document.getElementById("toOpacity").style.opacity ="1"} data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <p><textarea name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
-                        </div>
+                <div className="modal fade" id="coModal" tabIndex="-1">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title text-dark" id="modal_title">Que servicio quieres adquirir del artista?</h5>
+                                <button type="button" className="btn-close" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                <p><textarea name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
+                            </div>
 
-                        <div className="modal-footer">
-                            <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity ="1"} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
-                            <button onClick={updateOutput} id="send_button" className="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
+                            <div className="modal-footer">
+                                <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
+                                <button onClick={updateOutput} id="send_button" className="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
     );
 }
 
