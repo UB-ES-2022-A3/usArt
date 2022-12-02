@@ -15,6 +15,7 @@ function Profile() {
     const [prof, setProfile] = useState([])
     const [products, setProducts] = useState([])
     const [historialProducts, setHistorialProducts] = useState([])
+    const [reviews, setReviews] = useState([])
     const [stars, setStars] = useState(0)
     const [review, setReview] = useState(0)
     const [message, setMessage] = useState('');
@@ -28,6 +29,7 @@ function Profile() {
     useEffect(callApi, [])
     useEffect(callApiProducts, [])
     useEffect(callApiHistorialProducts, [])
+    useEffect(callApiReviews, [])
 
     //----------------------------------------------------------------------------
 
@@ -97,14 +99,33 @@ function Profile() {
     }
 
     function callApiHistorialProducts() {
+        if (user == null) return
         fetch(
-            LINK_BACKEND + "/api/userprofile/purchases")
-            .then((res) => res.json())
-            .then(data => {
-                setHistorialProducts(data);
-            }
-            )
+            LINK_BACKEND + "/api/userprofile/purchases/", {
+                method: 'GET',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                }
+            })
+                .then((res) => res.json())
+                .then(data => {
+                    setHistorialProducts(data);
+                }
+                )
     }
+
+    function callApiReviews() {
+        fetch(
+            LINK_BACKEND + "/api/userprofile/review-list/" + username)
+                .then((res) => res.json())
+                .then(data => {
+                    setReviews(data);
+                }
+                )
+    }
+
     function renderIfRadio() {
 
         if (radioGender === 'Products') {
@@ -114,10 +135,14 @@ function Profile() {
                 return RenderEmpty()
             }
         } else if (radioGender === 'Reviews') {
-
+            if(reviews.length !== 0){
+                return reviews.map(RenderReviews)
+            } else {
+                return RenderEmpty()
+            }
         } else {
 
-            if (historialProducts.length === 0 || historialProducts.detail.includes("Not")) {
+            if (historialProducts.length === 0) {
                 return RenderEmpty()
             } else {
                 return historialProducts.map(RenderMyHistorialProducts)
@@ -159,12 +184,15 @@ function Profile() {
         return (
             <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + product.id} key={product.id}>
                 <div className='d-flex rounded  p-3 productRow text-center align-items-center justify-content-center' style={{ backgroundColor: "white" }}>
-                    <img src={product.images[0]} className="imageProducts shadow rounded" alt="Sorry! not available at this time" ></img>
+                    <img src={product.pub_id.images[0]} className="imageProducts shadow rounded" alt="Sorry! not available at this time" ></img>
                     <div className='col-3  d-flex  justify-content-center'>
                         <h1 style={{ color: "black", fontSize: "1em" }}><strong>{product.price}€</strong></h1>
                     </div>
-                    <div className='col-6  d-flex  justify-content-center'>
-                        <h1 style={{ color: "black", fontSize: "1em" }}>{product.description}</h1>
+                    <div className='col-4  d-flex  justify-content-center'>
+                        <h1 style={{ color: "black", fontSize: "1em" }}>{product.pub_id.description}</h1>
+                    </div>
+                    <div className='col-2  d-flex  justify-content-center'>
+                        <h1 style={{ color: "black", fontSize: "1em" }}>{product.date}</h1>
                     </div>
                 </div>
             </a>
@@ -181,6 +209,32 @@ function Profile() {
                     </div>
                     <div className='col-6  d-flex  justify-content-center'>
                         <h1 style={{ color: "black", fontSize: "1em" }}>{product.description}</h1>
+                    </div>
+                </div>
+            </a>
+        )
+    }
+
+    function RenderReviews(review) {
+        return (
+            <a style={{ margin: "1%", textDecoration: 'none' }}>
+                <div className='d-flex rounded  p-3 productRow text-center align-items-center justify-content-center' style={{ backgroundColor: "white" }}>
+                    <img src={review.reviewer_id.photo} className="imageUsers shadow rounded col-2" alt="Sorry! not available at this time" ></img>
+                    <div className='reviewContainer col-10  d-flex  justify-content-center'>
+                        <div className='grid' style={{justifyContent: 'center'}}>
+                            <div className='row-2'>
+                                <h3 style={{color: "black"}}>
+                                    <strong>{review.reviewer_id.user_name}</strong>
+                                </h3>
+                                <div className="ratings">
+                                    <div className="empty-stars"></div>
+                                    <div className="full-stars" style={{ width: review.stars / 5 * 100 + "%" }} ></div>
+                                </div>
+                            </div>
+                            <div className='row-8 review-row'>
+                                <p style={{ color: "black", fontSize: "1em"}}>{review.review}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </a>
@@ -228,6 +282,7 @@ function Profile() {
 
         document.getElementById("profileOpacity").style.opacity = "1";
     }
+
 
 
     function handleEditClick() {
@@ -318,6 +373,7 @@ function Profile() {
 
     function buttonsTogether() {
 
+
         if (user == null) return
         if (username === user.username) {
             if (edit !== "edit") {
@@ -403,7 +459,7 @@ function Profile() {
                             <div className="ms-4 mt-5 d-flex flex-column" style={{ width: "150px" }}>
                                 <img src={prof.photo} id="profilePhoto"
                                     alt="Profile" className="img-fluid img-thumbnail mt-4 mb-2"
-                                    style={{ width: "150px", zIndex: "1" }} />
+                                    style={{ minWidth: "150px", minHeight: "150px", maxWidth: "150px", maxHeight: "150px", zIndex: "1" }} />
                             </div>
                             <div className="ms-3" style={{ marginTop: "130px" }}>
                                 <h5>{prof.user_name}</h5>
