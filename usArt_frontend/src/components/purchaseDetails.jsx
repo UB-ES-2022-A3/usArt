@@ -24,8 +24,7 @@ import {
     MDBInput,
 }
     from 'mdb-react-ui-kit';
-import { CardPlugin } from 'bootstrap-vue';
-import Publicacion from './publicacion';
+
 
 
 
