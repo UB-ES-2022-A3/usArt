@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from catalog.models import Publication, Commission, PublicationImage
+
 from authentication.serializers import UsArtUserSerializer
 import base64
 import io
@@ -40,8 +41,19 @@ class PublicationPostSerializer(serializers.ModelSerializer):
         return publication
 
 class CommissionListSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Commission
         fields = '__all__'
-        extra_kwargs = {"user_id":{"required":False}}
-    
+        extra_kwargs = {'description': {'required': False},"user_id":{"required":False}}
+        #extra_kwargs = {"user_id":{"required":False}}
+
+class ArtistCommissionListSerializer(serializers.ModelSerializer):
+    user_id = UsArtUserSerializer(read_only=True)
+    class Meta:
+        model = Commission
+        fields = '__all__'
+
+        extra_kwargs = {'description': {'required': False},"user_id":{"required":False}}
+        #extra_kwargs = {"user_id":{"required":False}}
+

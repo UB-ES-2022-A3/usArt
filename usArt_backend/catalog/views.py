@@ -1,11 +1,20 @@
+
+from rest_framework import filters, generics, status
 from rest_framework.generics import get_object_or_404
 from catalog.models import Publication, PublicationImage, UsArtUser, Commission
-from catalog.serializers import PublicationListSerializer, PublicationPostSerializer,CommissionListSerializer
+from catalog.serializers import PublicationListSerializer, PublicationPostSerializer,CommissionListSerializer,ArtistCommissionListSerializer
 from django.shortcuts import get_object_or_404
+from authentication.models import UsArtUser
+
 
 from authentication.models import UsArtUser
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import filters, generics, status
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+
+
+
+
 import django_filters.rest_framework
 
 from rest_framework.response import Response
@@ -38,14 +47,60 @@ class CommissionPost(generics.CreateAPIView):
     serializer_class = CommissionListSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        
+    def put(self, request):
         pub = get_object_or_404(Publication, id=request.data['pub_id'])
-        serialiser = CommissionListSerializer(data=request.data)
+        com = Commission.objects.filter(pub_id = request.data['pub_id'],user_id=request.user.id)
+        if len(com) == 0:
+            serialiser = CommissionListSerializer(data=request.data)
+        else:
+            serialiser = CommissionListSerializer(com[0], data=request.data)
         serialiser.is_valid(raise_exception=True)
         serialiser.save(user_id=request.user, pub_id=pub)
         return Response(data=serialiser.data, status=status.HTTP_201_CREATED)
 
+
+
+class CommissionList(generics.ListAPIView):
+    queryset = Commission.objects.all()
+    serializer_class = CommissionListSerializer
+
+    def get_queryset(self):
+        pub_id = self.kwargs['pub_id']
+        commissions = Commission.objects.filter(pub_id__author=self.request.user, pub_id__id=pub_id)
+        return commissions
+
+
+class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Commission.objects.all()
+    serializer_class = CommissionListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        commission = self.get_object()
+        print(commission)
+        request.data['pub_id'] = self.kwargs['pub_id']
+        request.data['user_id'] = self.kwargs['user_id']
+        serializer = CommissionListSerializer(commission, data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def get_object(self):
+        commission = Commission.objects.get(pub_id__id=self.kwargs['pub_id'],
+                                            user_id__id=self.kwargs['user_id'])
+        print(commission)
+        return commission
+
+        
+
+class ArtistCommissionList(generics.ListAPIView):
+    queryset = Commission.objects.all()
+    serializer_class = ArtistCommissionListSerializer
+
+    def get_queryset(self):
+        
+        commissions = Commission.objects.filter(pub_id__author=self.request.user,status="PD")
+        return commissions
 
 
 class PublicationPosting(generics.CreateAPIView):
@@ -55,3 +110,4 @@ class PublicationPosting(generics.CreateAPIView):
     def perform_create(self, serializer):
         author = get_object_or_404(UsArtUser, id=self.request.user.id)
         serializer.save(author=author, images=self.request.data['images'])
+

@@ -17,6 +17,7 @@ function BuzonChat() {
   const [socketUrl, setSocketUrl] = useState('');
   const { id } = useParams()
   const [userList, setUserList] = useState([]);
+  const [renderList, setRenderList] = useState([]);
   const [messageHistory, setMessageHistory] = useState([]);
   const [msg, setMsg] = useState("")
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
@@ -35,9 +36,27 @@ function BuzonChat() {
   }, [messageHistory]);
 
   function createchat(theuser) {
+
+    if (document.getElementById("btnradio2").checked) {
+      setMessageHistory([theuser.description])
+      setActiveUser(theuser)
+      fetch(LINK_BACKEND + "/api/userprofile/" + user.username, {
+        method: 'GET',
+        withCredentials: true,
+        credentials: 'include',
+        headers: {
+          'Authorization': 'Bearer ' + authTokens.access,
+        }
+      })
+        .then((res) => res.json())
+        .then(data => {
+          setMeUser(data)
+        }
+        )
+      return
+    }
     setActiveUser(theuser.user);
     setIdSala(theuser.id_sala);
-    console.log(LINK_RESOURCES + '/chats/?id=' + theuser.id_sala)
     setSocketUrl(LINK_RESOURCES + '/chats/?id=' + theuser.id_sala)
     fetch(LINK_BACKEND + "/auth/chatsHistory/" + theuser.id_sala, {
       method: 'GET',
@@ -79,22 +98,45 @@ function BuzonChat() {
       .then((res) => res.json())
       .then(data => {
         setUserList(data.chats)
+        setRenderList(data.chats)
       }
       )
   }
 
   function renderChats(user) {
-    return (<div className='userChat' onClick={() => createchat(user)}>
-      <img src={user.user.photo} alt="" style={{ height: "50px", width: "50px", objectFit: "cover", borderRadius: "50%" }} />
-      <div className="userChatInfo">
-        <span className='chatsFirstName'>{user.user.user_name}</span>
-        <p className='chatsMessage'>Hello, how are you?</p>
-      </div>
-    </div>)
+
+    if (document.getElementById("btnradio1").checked) {
+      return (<div className='userChat' onClick={() => createchat(user)}>
+        <img src={user.user.photo} alt="" style={{ height: "50px", width: "50px", objectFit: "cover", borderRadius: "50%" }} />
+        <div className="userChatInfo">
+          <span className='chatsFirstName'>{user.user.user_name}</span>
+          <p className='chatsMessage'>Hello, how are you?</p>
+        </div>
+      </div>)
+    } if (document.getElementById("btnradio2").checked) {
+      return (
+        <div className='userChat' onClick={() => createchat(user)}>
+          <img src={user.user_id.photo} alt="" style={{ height: "50px", width: "50px", objectFit: "cover", borderRadius: "50%" }} />
+          <div className="userChatInfo">
+            <span className='chatsFirstName'>{user.user_id.user_name}</span>
+            <p className='chatsMessage'>Wants a comission from you</p>
+
+          </div>
+        </div>)
+    }
   }
 
   function message(message) {
     if (activeUser == undefined || meUser == undefined) return
+    if (document.getElementById("btnradio2").checked) {
+      
+      return (<div className="message otherside">
+        <div className="messageContent">
+          <img src={activeUser.user_id.photo} alt="" style={{ height: "40px", width: "40px", borderRadius: "50%", objectFit: "cover" }} />
+          <p className='shadow-lg'>{message}</p>
+        </div>
+      </div>)
+    }
     if (message.user === activeUser.user_name) {
       return (<div className="message otherside">
         <div className="messageContent">
@@ -143,11 +185,90 @@ function BuzonChat() {
       }
       )
   });
+  function pendingComisions() {
+    if (user == undefined ) return
+    fetch(
+      LINK_BACKEND + "/api/catalog/user/commissions/list/", {
+      method: 'GET',
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Authorization': 'Bearer ' + authTokens.access,
+        'Content-Type': 'application/json',
+      }
+    })
+      .then((res) => res.json())
+      .then(data => {
+        document.getElementById("btnradio1").checked = false;
+        setActiveUser()
+        setMeUser()
+        setRenderList(data)
+        console.log(data)
+
+      }
+      )
+
+
+  }
+  function postComission() {//TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+  
+    fetch(
+      LINK_BACKEND + "/api/catalog/user/commission/" + activeUser.pub_id + "&" + activeUser.user_id.id, {
+      method: 'PUT',
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Authorization': 'Bearer ' + authTokens.access,
+        'Content-Type': 'application/json',
+      }, body: JSON.stringify({ "status": "AC" })
+    })
+      .then((res) => res.json())
+      .then(data => {
+        setActiveUser()
+        setMeUser()
+        fetch(LINK_BACKEND + "/auth/chats/" + activeUser.user_id.id, {
+          method: 'GET',
+          withCredentials: true,
+          credentials: 'include',
+          headers: {
+            'Authorization': 'Bearer ' + authTokens.access,
+          }
+        })
+          .then((res) => res.json())
+          .then(data => {
+             
+          }
+          )
+        pendingComisions()
+      }
+      )
+  }
+  function deleteComission() { //TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+    fetch(
+      LINK_BACKEND + "/api/catalog/user/commission/" + activeUser.pub_id + "&" + activeUser.user_id.id, {
+      method: 'DELETE',
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Authorization': 'Bearer ' + authTokens.access,
+        'Content-Type': 'application/json',
+      }
+    })
+      .then((res) => {
+        pendingComisions()
+        return res.json()
+      })
+      
+      
+  }
+  function generalChat() {
+    callApi();
+  }
 
   function mainChat() {
     if (activeUser != undefined) {
       return (<div className='chat'><div className="chatInfo">
-        <span>{activeUser.user_name}</span>
+        <span>{activeUser.user_name == undefined ? activeUser.user_id.user_name : activeUser.user_name}</span>
         <div className="chatIcons">
           <BsThreeDots style={{ cursor: "pointer" }} />
         </div>
@@ -157,18 +278,27 @@ function BuzonChat() {
           <div ref={bottomRef}></div>
         </div>
 
-        <div className="inputMessage ">
-          <input type="text" className='textInput'
-            placeholder='Type something...'
-            style={{ width: "100%", border: "none", outline: "none", fontSize: "18px", color: "black", backgroundColor: "#556b6b" }}
-            onChange={handleChange}
-            value={msg}
-            onKeyDown={(e) => enterEvent(e)} />
-          <div className="send">
-            <button className='buttonSend  ' style={{ marginRight: "10px" }} onClick={handleClickSendMessage} disabled={readyState !== ReadyState.OPEN}>Send</button>
-          </div>
+        <div>
+          {activeUser.user_name == undefined ?
+            <div className="inputMessage " style={{ justifyContent: 'end' }}>
+              <div className="send">
+                <button href="#" onClick={postComission} class="accept">ACCEPT <span class="fa fa-check"></span></button>
+                <button href="#" onClick={deleteComission} class="deny">DENY <span class="fa fa-close"></span></button>
+              </div> </div> :
+            <div className="inputMessage " >
+              <div className="send">
+                <input type="text" className='textInput'
+                  placeholder='Type something...'
+                  style={{ width: "100%", border: "none", outline: "none", fontSize: "18px", color: "black", backgroundColor: "#556b6b" }}
+                  onChange={handleChange}
+                  value={msg}
+                  onKeyDown={(e) => enterEvent(e)} />
+              </div>
+              <button className='buttonSend' style={{ marginRight: "10px" }}
+                onClick={handleClickSendMessage} disabled={readyState !== ReadyState.OPEN}>Send</button>
+            </div>}
         </div>
-      </div>)
+      </div >)
     }
     return (<div className='chat'>
     </div>)
@@ -185,22 +315,19 @@ function BuzonChat() {
 
           <div className='selectGoP flex text-center pt-1 pb-4'>
             <div class="btn-group " role="group" aria-label="Basic radio toggle button group btn-dark">
-              <input type="radio" class="btn-check " name="btnradio" id="btnradio1" autocomplete="off" />
+              <input type="radio" onClick={generalChat} defaultChecked={true} class="btn-check " name="btnradio" id="btnradio1" autocomplete="off" />
               <label class="btn btn-light " for="btnradio1">General</label>
 
-              <input type="radio" class="btn-check  " name="btnradio" id="btnradio2" autocomplete="off" />
+              <input type="radio" class="btn-check" onClick={pendingComisions} name="btnradio" id="btnradio2" autocomplete="off" />
               <label class="btn btn-light" for="btnradio2">Pending</label>
             </div>
           </div>
 
           <div className="chats">
-            {userList.map(renderChats)}
+            {renderList.map(renderChats)}
           </div>
         </div>
-
-
         {mainChat()}
-
       </div>
     </div>
 

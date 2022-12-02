@@ -207,8 +207,12 @@
     padding: 10px 15px;
     color: white;
     background-color: #000f0e;
-
-
+}
+.buttonSend{
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    background-color: #000f0e;
 }
 
 #scrollbar-2::-webkit-scrollbar-track {
@@ -239,3 +243,26 @@
 .chats::-webkit-scrollbar { 
     display: none;  /* Safari and Chrome */
 }
+.accept {
+    
+   
+    box-shadow: 0 4px 0 0 #2EA62E;
+    background: #6FE76F;
+    height: fit-content
+  }
+  .accept:hover {
+    background: #6FE76F;
+    box-shadow: 0 4px 0 0 #7ED37E;
+  }
+  .deny {
+    color: #FFF;
+    background: tomato;
+    
+    box-shadow: 0 4px 0 0 #CB4949;
+  }
+  .deny:hover {
+    background: rgb(255, 147, 128);
+    box-shadow: 0 4px 0 0 #EF8282;
+  }
+  /*<button href="#" class="accept">ACCEPT <span class="fa fa-check"></span></button>
+            <button href="#" class="deny">DENY <span class="fa fa-close"></span></button>*/
