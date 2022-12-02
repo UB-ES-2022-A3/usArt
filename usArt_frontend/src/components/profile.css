@@ -148,3 +148,19 @@
     min-height: 9vmin;
     min-width: 9vmin;
 }
+
+.imageUsers{
+    max-width: 9vmax;
+    max-height: 9vmax;
+    min-height: 9vmin;
+    min-width: 9vmin;
+}
+
+.reviewContainer{
+    line-break: auto;
+}
+
+.review-row{
+    text-align: left!important;
+    margin-left: 5%;
+}

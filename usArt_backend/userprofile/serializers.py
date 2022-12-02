@@ -50,3 +50,9 @@ class ReviewUserSerializer(serializers.ModelSerializer):
         model = Review
         fields = ['reviewed_id', 'stars', 'review']
 
+class ReviewerUserSerializer(serializers.ModelSerializer):
+    reviewer_id = UsArtUserSerializer(read_only=True)
+
+    class Meta:
+        model = Review
+        fields = ['reviewer_id', 'stars', 'review']
