@@ -42,8 +42,10 @@ class PurchaseHistoryDetail(generics.RetrieveAPIView):
     serializer_class = serializers.PurchaseHistorySerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return PurchaseHistory.objects.filter(user_id=self.request.user)
+    def get_object(self):
+        id = self.kwargs["id"]
+        return get_object_or_404(PurchaseHistory,id = id)
+        
 
 
 class UserDetail(generics.RetrieveAPIView):
