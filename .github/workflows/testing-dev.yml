@@ -40,7 +40,5 @@ jobs:
         run: |
           cd ./usArt_backend/
           python manage.py runserver &
-      - name: Run Tests
-        run: |
           cd ${GITHUB_WORKSPACE}/testing
           pytest test_e2e.py
