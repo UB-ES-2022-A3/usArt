@@ -6,6 +6,7 @@ import LINK_FRONTEND from "./LINK_FRONTEND";
 import cookie from 'react-cookies';
 import axios, * as others from 'axios';
 import { useContext } from "react";
+
 import AuthContext from "../context/authcontext";
 
 
@@ -42,7 +43,8 @@ function Login() {
   };
 
   return (
-    <MDBContainer style={{ marginTop: "14vmin", paddingBottom: "10vmin" }} className="items-align-center justify-content-center " >
+    <div className="body_register">
+    <MDBContainer className="items-align-center justify-content-center vertical-center " >
       <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '26px' }}>
         <MDBCardBody className='shadow'>
           <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
@@ -55,7 +57,7 @@ function Login() {
               <div className="d-flex flex-row align-items-center mb-4 text-center ">
                 <MDBInput label='Password' id='form3' type='password' placeholder="Password" className='shadow-sm' onChange={e => setPassword(e.target.value)} />
               </div>
-              <button type="button" onClick={handleSubmit} className="btn btn-primary shadow mb-3 mt-3">Login</button>
+              <button id='login_button' type="button" onClick={handleSubmit} className="btn btn-primary shadow mb-3 mt-3">Login</button>
               <p className='text-danger mb-5'>{formErrors}</p>
               Don't have an account? <a href='/join' className='mb-3'><strong>Sign up</strong></a>
             </MDBCol>
@@ -64,8 +66,11 @@ function Login() {
             </MDBCol>
           </MDBRow>
         </MDBCardBody>
+        
       </MDBCard>
+      
     </MDBContainer>
+    </div>
   );
 }
 
