@@ -94,7 +94,7 @@ function Publicacion(props) {
             keyboard: false,backdrop: 'static'
         })
         if (card.type === "CO") {
-            
+            console.log("estoy")
             document.getElementById("toOpacity").style.opacity ="0.5";
             coModal.show()
         }

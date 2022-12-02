@@ -129,7 +129,7 @@ function BuzonChat() {
   function message(message) {
     if (activeUser == undefined || meUser == undefined) return
     if (document.getElementById("btnradio2").checked) {
-      console.log("si")
+      
       return (<div className="message otherside">
         <div className="messageContent">
           <img src={activeUser.user_id.photo} alt="" style={{ height: "40px", width: "40px", borderRadius: "50%", objectFit: "cover" }} />
@@ -186,7 +186,7 @@ function BuzonChat() {
       )
   });
   function pendingComisions() {
-    
+    if (user == undefined ) return
     fetch(
       LINK_BACKEND + "/api/catalog/user/commissions/list/", {
       method: 'GET',
@@ -203,34 +203,50 @@ function BuzonChat() {
         setActiveUser()
         setMeUser()
         setRenderList(data)
+        console.log(data)
+
       }
       )
 
+
   }
   function postComission() {//TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-    console.log(activeUser)
+  
     fetch(
-      LINK_BACKEND + "/api/catalog/'user/commission/"+activeUser.pub_id+"&"+activeUser.user_id.id, {
-      method: 'POST',
+      LINK_BACKEND + "/api/catalog/user/commission/" + activeUser.pub_id + "&" + activeUser.user_id.id, {
+      method: 'PUT',
       withCredentials: true,
       credentials: 'include',
       headers: {
         'Authorization': 'Bearer ' + authTokens.access,
         'Content-Type': 'application/json',
-      }
+      }, body: JSON.stringify({ "status": "AC" })
     })
       .then((res) => res.json())
       .then(data => {
         setActiveUser()
         setMeUser()
+        fetch(LINK_BACKEND + "/auth/chats/" + activeUser.user_id.id, {
+          method: 'GET',
+          withCredentials: true,
+          credentials: 'include',
+          headers: {
+            'Authorization': 'Bearer ' + authTokens.access,
+          }
+        })
+          .then((res) => res.json())
+          .then(data => {
+             
+          }
+          )
         pendingComisions()
       }
       )
   }
   function deleteComission() { //TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
     fetch(
-      LINK_BACKEND + "/api/catalog/user/commissions/list/", {
-      method: 'GET',
+      LINK_BACKEND + "/api/catalog/user/commission/" + activeUser.pub_id + "&" + activeUser.user_id.id, {
+      method: 'DELETE',
       withCredentials: true,
       credentials: 'include',
       headers: {
@@ -238,14 +254,12 @@ function BuzonChat() {
         'Content-Type': 'application/json',
       }
     })
-      .then((res) => res.json())
-      .then(data => {
-        document.getElementById("btnradio1").checked = false;
-        setActiveUser()
-        setMeUser()
-        setRenderList(data)
-      }
-      )
+      .then((res) => {
+        pendingComisions()
+        return res.json()
+      })
+      
+      
   }
   function generalChat() {
     callApi();
