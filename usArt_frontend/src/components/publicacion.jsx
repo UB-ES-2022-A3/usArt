@@ -243,9 +243,7 @@ function Publicacion(props) {
                             <button type="button" className="btn-close" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-
                             <p><textarea name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
-
                         </div>
 
                         <div className="modal-footer">

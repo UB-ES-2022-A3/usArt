@@ -159,7 +159,7 @@ class TestPublicationAPI(APITestCase):
         token = response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
         purchase = PurchaseHistory.objects.get(price=5.0)
-        url = reverse('userprofile:user_purchase_detail', kwargs={"id": purchase.id})
+        url = reverse('userprofile:user_purchase_detail', kwargs={"pk": purchase.id})
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -186,6 +186,6 @@ class TestPublicationAPI(APITestCase):
         purchase_id = response.data['id']
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         purchase = PurchaseHistory.objects.get(id=purchase_id)
-        url = reverse('userprofile:user_purchase_detail', kwargs={"id": purchase.id})
+        url = reverse('userprofile:user_purchase_detail', kwargs={"pk": purchase.id})
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)

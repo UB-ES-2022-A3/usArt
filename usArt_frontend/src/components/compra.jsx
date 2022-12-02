@@ -94,19 +94,16 @@ function Compra(props) {
                         'ccv': ccv
                     })
                 })
+                    .then((res) => {
 
-                    .then(function(response){ 
-                        if (response.status === 201){
-                            return response.json();
-                        }else{
-                            alert("No se ha podido realizar la compra")
+                        if (res.status !== 201) {
+                            setServerError(res.statusText);
+                            return
                         }
-                             })
-                    .then(function(data) {
-                        const items = data;
-                        console.log(items.id)
-                        const link = LINK_FRONTEND + "/purchasedetails/"+items.id
-
+                        return res.json()
+                    })
+                    .then(data => {
+                        const link = LINK_FRONTEND + "/purchaseDetails/"+ data.id ;
                         window.location.assign(link)
 
                     }

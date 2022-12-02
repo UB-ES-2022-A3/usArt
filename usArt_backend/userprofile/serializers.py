@@ -23,7 +23,7 @@ class PurchaseHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PurchaseHistory
-        fields = ('id','pub_id','price','user_id','date')
+        fields = '__all__'
 
 
 class UsArtUserFilterSerializer(serializers.ModelSerializer):
