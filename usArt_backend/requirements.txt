@@ -25,3 +25,4 @@ flake8==6.0.0
 python-dotenv==0.21.0
 tqdm==4.64.1
 webdriver-manager==3.8.5
+pusher==3.3.0
