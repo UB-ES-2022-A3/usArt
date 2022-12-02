@@ -100,7 +100,10 @@ function Publicacion(props) {
         }
     }
     function LINK_FRONTENDProfile() {
-        const link = LINK_FRONTEND + "/profile/" + author.user_name
+
+
+        const link = LINK_FRONTEND + "/profile/" + author.user_name+"/default"
+
         window.location.assign(link)
     }
     function updateOutput() {

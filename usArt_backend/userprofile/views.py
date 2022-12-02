@@ -12,6 +12,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
+import base64
+import io
+from django.core.files.images import ImageFile
 
 class PurchaseHistoryList(generics.ListAPIView):
     serializer_class = serializers.PurchaseHistorySerializer
@@ -55,9 +58,17 @@ class UserProfile(generics.GenericAPIView):
 
     def put(self, request, format=None):
         user=get_object_or_404(UsArtUser, user_name=request.user.user_name)
-        user.photo = request.data.get('photo')
+        if 'photo' in request.data:
+            imlist = request.data['photo'].split(",")
+            imageStr = imlist[1] #remove data:image/png;base64,
+            extension = imlist[0].split(';')[0].split('/')[1]
+            image_64_decode = base64.b64decode(imageStr)
+            im = ImageFile(io.BytesIO(image_64_decode), name= str(user.id)+'.' + extension)
+            user.photo = im
+        if 'description' in request.data:
+            user.description = request.data['description']
         user.save()
-
+ 
         return Response(status=status.HTTP_201_CREATED)
 
 
