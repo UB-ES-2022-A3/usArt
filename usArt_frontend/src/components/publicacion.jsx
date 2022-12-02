@@ -109,7 +109,7 @@ function Publicacion(props) {
     function LINK_FRONTENDProfile() {
 
 
-        const link = LINK_FRONTEND + "/profile/" + author.user_name+"/default"
+        const link = LINK_FRONTEND + "/profile/" + author.user_name + "/default"
 
         window.location.assign(link)
     }
@@ -149,7 +149,7 @@ function Publicacion(props) {
     }
     function postPetCom(pub_id, description) {
         fetch(LINK_BACKEND + "/api/catalog/user/commission/post/", {
-            method: 'POST',
+            method: 'PUT',
             withCredentials: true,
             credentials: 'include',
             headers: {
@@ -233,21 +233,22 @@ function Publicacion(props) {
                     </div>
                     <Footer />
                 </div>
-                <div className="modal fade" id="coModal" tabIndex="-1">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title text-dark" id="modal_title">Que servicio quieres adquirir del artista?</h5>
-                                <button type="button" className="btn-close" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                <p><textarea name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
-                            </div>
 
-                            <div className="modal-footer">
-                                <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
-                                <button onClick={updateOutput} id="send_button" className="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
-                            </div>
+            </div>
+            <div className="modal fade" id="coModal" tabIndex="-1">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title text-dark" id="modal_title">Que servicio quieres adquirir del artista?</h5>
+                            <button type="button" className="btn-close" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <p><textarea name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
+                        </div>
+
+                        <div className="modal-footer">
+                            <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
+                            <button onClick={updateOutput} id="send_button" className="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
                         </div>
                     </div>
                 </div>

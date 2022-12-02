@@ -47,9 +47,13 @@ class CommissionPost(generics.CreateAPIView):
     serializer_class = CommissionListSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def put(self, request):
         pub = get_object_or_404(Publication, id=request.data['pub_id'])
-        serialiser = CommissionListSerializer(data=request.data)
+        com = Commission.objects.filter(pub_id = request.data['pub_id'],user_id=request.user.id)
+        if len(com) == 0:
+            serialiser = CommissionListSerializer(data=request.data)
+        else:
+            serialiser = CommissionListSerializer(com[0], data=request.data)
         serialiser.is_valid(raise_exception=True)
         serialiser.save(user_id=request.user, pub_id=pub)
         return Response(data=serialiser.data, status=status.HTTP_201_CREATED)
@@ -73,6 +77,7 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, *args, **kwargs):
         commission = self.get_object()
+        print(commission)
         request.data['pub_id'] = self.kwargs['pub_id']
         request.data['user_id'] = self.kwargs['user_id']
         serializer = CommissionListSerializer(commission, data=self.request.data)
@@ -83,6 +88,7 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         commission = Commission.objects.get(pub_id__id=self.kwargs['pub_id'],
                                             user_id__id=self.kwargs['user_id'])
+        print(commission)
         return commission
 
         
