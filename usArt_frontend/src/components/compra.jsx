@@ -101,18 +101,19 @@ function Compra(props) {
                         'ccv': ccv
                     })
                 })
-                    .then((res) => {
-                        console.log(res)
-                        if (res.status!==201){
-                            alert("No se ha podido realizar la compra")
+                    .then(function(response){ 
+                        if (response.status === 201){
+                            return response.json();
                         }else{
-                            const link = LINK_FRONTEND + "/purchaseDetails"
-                            window.location.assign(link)
+                            alert("No se ha podido realizar la compra")
                         }
-                        res.json()})
-                    .then(data => {
-                        console.log(data)
-                        
+                             })
+                    .then(function(data) {
+                        const items = data;
+                        console.log(items.id)
+                        const link = LINK_FRONTEND + "/purchasedetails/"+items.id
+                        window.location.assign(link)
+
                     }
                     )
                     
