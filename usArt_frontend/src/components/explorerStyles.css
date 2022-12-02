@@ -1,151 +1,171 @@
 .grid {
+  min-height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  margin-inline-start: 2%;
+  margin-inline-end: 2%;
+
+}
+.grid-explorer{
+  justify-content: center;
+}
+
+@media only screen and (max-width: 1280px) {
+  .grid {
     min-height: 100%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    align-items: center;
-    margin-inline-start: 2%;
-    margin-inline-end: 2%;
+    justify-content: center;
+  }
 
 }
 
-@media only screen and (max-width: 1280px) {
-    .grid {
-        min-height: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        justify-content: center;
-    }
-
-}
-
-a,p {
-    color: black;
+a,
+p {
+  color: black;
 }
 
 
 .size-img {
-    object-fit: scale-down;
-    max-height: 150px;
-    border-radius: 20px 20px 0 0;
+  object-fit: scale-down;
+  max-height: 150px;
+  border-radius: 20px 20px 0 0;
 }
 
 .max {
-    margin-top: -5%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
+  margin-top: -5%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 
+}
+
+.max-title {
+  margin-top: -5%;
+  margin-bottom: 5%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .header {
+  margin-bottom: 2%;
+  background-image: url("https://discover.fiverr.com/wp-content/uploads/disover-main-banner-korshenboym-noresize-1.jpg");
+  background-size: cover;
+  height: 25vh;
+  color: white;
+  align-items: center;
+  padding: 3% 2%;
+  background-repeat: repeat;
+
+}
+
+@media only screen and (max-width: 1280px) {
+  .header {
     margin-bottom: 2%;
     background-image: url("https://discover.fiverr.com/wp-content/uploads/disover-main-banner-korshenboym-noresize-1.jpg");
     background-size: cover;
-    height: 25vh;
     color: white;
     align-items: center;
-    padding: 3% 2%;
+    padding: 5% 2%;
+    height: fit-content;
     background-repeat: repeat;
 
-}
-@media only screen and (max-width: 1280px) {
-    .header {
-        margin-bottom: 2%;
-        background-image: url("https://discover.fiverr.com/wp-content/uploads/disover-main-banner-korshenboym-noresize-1.jpg");
-        background-size: cover;
-        color: white;
-        align-items: center;
-        padding: 5% 2%;
-        height: fit-content;
-        background-repeat: repeat;
-    
-    }
+  }
 }
 
 .custom {
-    margin-left: 2%;
-    margin-top: 2%;
-    margin-bottom: 2%;
+  margin-left: 2%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  cursor: pointer;
 
-    transition: all 0.2s ease;
-    cursor: pointer;
-
-    border-radius: 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.0.8);
-    border-style: solid;
-    border-width: 2px;
-    width: 250px;
-    height: 300px;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.0.8);
+  border-style: solid;
+  border-width: 2px;
+  width: 250px;
+  height: 300px;
 }
 
 
 
 .custom:hover {
-    z-index: 2;
-    box-shadow: none;
-    transform: scale(1.03);
-    box-shadow: 0 2px 12px 0 rgba(255, 255, 255, 0.8);
+  z-index: 2;
+  box-shadow: none;
+  transform: scale(1.03);
+  box-shadow: 0 2px 12px 0 rgba(255, 255, 255, 0.8);
 
 
 }
 
 
 .loader {
-    width: 60px;
-  }
-  
-  .loader-wheel {
-    animation: spin 1s infinite linear;
-    border: 2px solid rgba(30, 30, 30, 0.5);
-    border-left: 4px solid #fff;
-    border-radius: 50%;
-    height: 50px;
-    margin-bottom: 10px;
-    width: 50px;
-  }
-  
-  .loader-text {
-    color: #fff;
-    font-family: arial, sans-serif;
-  }
-  
-  .loader-text:after {
-    content: 'Loading';
-    animation: load 2s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  
-  @keyframes load {
-    0% {
-      content: 'Loading';
-    }
-    33% {
-      content: 'Loading.';
-    }
-    67% {
-      content: 'Loading..';
-    }
-    100% {
-      content: 'Loading...';
-    }
-  }
-  .center{  
-    align-items: center;
-    display: flex;
-    height: 80%;
-    justify-content: center;
-    margin: 0;
+  width: 60px;
+}
 
+.loader-wheel {
+  animation: spin 1s infinite linear;
+  border: 2px solid rgba(30, 30, 30, 0.5);
+  border-left: 4px solid #fff;
+  border-radius: 50%;
+  height: 50px;
+  margin-bottom: 10px;
+  width: 50px;
+}
+
+.loader-text {
+  color: #fff;
+  font-family: arial, sans-serif;
+}
+
+.loader-text:after {
+  content: 'Loading';
+  animation: load 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load {
+  0% {
+    content: 'Loading';
+  }
+
+  33% {
+    content: 'Loading.';
+  }
+
+  67% {
+    content: 'Loading..';
+  }
+
+  100% {
+    content: 'Loading...';
+  }
+}
+
+.center {
+  align-items: center;
+  display: flex;
+  height: 80%;
+  justify-content: center;
+  margin: 0;
+
+}

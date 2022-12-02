@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from catalog.models import Publication, PublicationImage
+from catalog.models import Publication, Commission, PublicationImage
 from authentication.serializers import UsArtUserSerializer
 import base64
 import io
@@ -22,7 +22,6 @@ class PublicationPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publication
         fields = ['title', 'description', 'price', 'type']
-
     def create(self, validated_data):
         publication = Publication.objects.create(
             author=validated_data['author'],
@@ -39,3 +38,10 @@ class PublicationPostSerializer(serializers.ModelSerializer):
             im = ImageFile(io.BytesIO(image_64_decode), name= str(publication.id)+'_'+str(i)+'.' + extension)
             PublicationImage.objects.create(publication=publication, image=im)
         return publication
+
+class CommissionListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Commission
+        fields = '__all__'
+        extra_kwargs = {"user_id":{"required":False}}
+    

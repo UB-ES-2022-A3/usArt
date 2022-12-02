@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-m(h-0tjc3h^y!ln5-n#5btp^q*0*stmr7*-y^2)d!!w@kge3j*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net', 'usart-backend-dev.azurewebsites.net']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net', 'usart-backend-dev.azurewebsites.net','usart.redis.cache.windows.net', '169.254.132.3', '*']
 
 
 # Application definition
@@ -40,7 +40,9 @@ DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 
 INSTALLED_APPS = [
+    'daphne',
     'api',
+    'chats',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -55,6 +57,22 @@ INSTALLED_APPS = [
     'userprofile.apps.UserprofileConfig',
     'rest_framework.authtoken',
 ]
+
+
+
+THIRD_PARTY_APPS = [
+    'channels',
+]
+ASGI_APPLICATION = "usArt_backend.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis://:lUqaQSt9Kbvbdq3vvpSLzzyKt6ZLqaQQ4AzCaA0NT7c=@usart-redis.redis.cache.windows.net:6379")]
+        },
+    },
+}
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -80,7 +98,8 @@ CORS_ORIGIN_WHITELIST = [
     'http://usart-backend.azurewebsites.net',
     'http://usart-backend-dev.azurewebsites.net',
     'https://usart-backend.azurewebsites.net',
-    'https://usart-backend-dev.azurewebsites.net'
+    'https://usart-backend-dev.azurewebsites.net',
+    'https://usart.redis.cache.windows.net'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -97,7 +116,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://usart.azurewebsites.net',
     'http://usart-dev.azurewebsites.net',
     'https://usart.azurewebsites.net',
-    'https://usart-dev.azurewebsites.net'
+    'https://usart-dev.azurewebsites.net',
+    'https://usart.redis.cache.windows.net'
 ]
 
 ROOT_URLCONF = 'usArt_backend.urls'
@@ -123,18 +143,50 @@ WSGI_APPLICATION = 'usArt_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'usartdatabase',
-        'USER': 'usartadmin',
-        'PASSWORD': '4GAg*JFY0!4!72%N',
-        'HOST': 'usart-database.mysql.database.azure.com',
-        'PORT': '3306',
-        'OPTIONS': {}
+if str(os.environ.get('ENV')) == 'PROD':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'usartdatabase',
+            'USER': 'usartadmin',
+            'PASSWORD': '4GAg*JFY0!4!72%N',
+            'HOST': 'usart-database.mysql.database.azure.com',
+            'PORT': '3306',
+            'OPTIONS': {}
+        }
     }
-}
+elif str(os.environ.get('ENV')) == 'DEV':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'usartdatabasedev',
+            'USER': 'usartadmin',
+            'PASSWORD': '4GAg*JFY0!4!72%N',
+            'HOST': 'usart-database.mysql.database.azure.com',
+            'PORT': '3306',
+            'OPTIONS': {}
+        }
+    }
+elif str(os.environ.get('ENV')) == 'TEST':
+    DATABASES = {
+            'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'db.sqlite3',
+            'USER': '',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'usartdatabase',
+            'USER': 'usartadmin',
+            'PASSWORD': '4GAg*JFY0!4!72%N',
+            'HOST': 'usart-database.mysql.database.azure.com',
+            'PORT': '3306',
+            'OPTIONS': {}
+        }
+    }
 
 
 
@@ -194,7 +246,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
