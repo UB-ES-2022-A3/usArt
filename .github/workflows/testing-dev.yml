@@ -36,9 +36,22 @@ jobs:
           export DISPLAY=:99
           chromedriver --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: usArt_frontend/package-lock.json
+      - name: npm install, build, and test
+        run: |
+          cd usArt_frontend
+          npm install
       - name: Run servers
         run: |
-          cd ./usArt_backend/
+          cd ${GITHUB_WORKSPACE}/usArt_backend/
           python manage.py runserver &
+          cd ${GITHUB_WORKSPACE}/usArt_frontend/
+          npm start &
+      - name: Run E2E Tests
           cd ${GITHUB_WORKSPACE}/testing
           pytest test_e2e.py
