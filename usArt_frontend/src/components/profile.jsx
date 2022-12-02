@@ -241,47 +241,70 @@ function Profile() {
     function save() {
         const selectedFile = document.getElementById('file-input').files[0];
         const re = new RegExp('image\/(.+)');
-        if (!re.test(selectedFile.type)) {
-            alert("Needs to be an image!")
-            return
-        }
+        if (selectedFile == undefined) {
 
-        let des = document.getElementById("description");
-        let borderDes = document.getElementById("borderDes");
-
-
-        des.contentEditable = 'false';
-        borderDes.style.border = "none"
-        borderDes.style.borderRadius = "0.375rem"
-
-        let description = des.textContent;
-        fetch(LINK_BACKEND + "/api/userprofile/update/", {
-            method: 'PUT',
-            withCredentials: true,
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Bearer ' + authTokens.access,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                'description': description,
-                'photo': data
-            }),
-        })
-            .then((res) => {
-                if (res.status === 500) {
-                    alert("Load again the image")
-                } else {
-                    const link = LINK_FRONTEND + "/profile/" + username + "/default";
-                    window.location.assign(link)
-                }
-                return res.json()
+            let des = document.getElementById("description");
+            let description = des.textContent;
+            fetch(LINK_BACKEND + "/api/userprofile/update/", {
+                method: 'PUT',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'description': description
+                }),
             })
-            .then(data => {
+                .then((res) => {
+                    if (res.status === 500) {
+                        alert("Load again the image")
+                    } else {
+                        const link = LINK_FRONTEND + "/profile/" + username + "/default";
+                        window.location.assign(link)
+                    }
+                    return res.json()
+                })
+                .then(data => {
 
+                }
+                )
+        }
+        else {
+            if (!re.test(selectedFile.type)) {
+                alert("Needs to be an image!")
+                return
             }
-            )
+            let des = document.getElementById("description");
+            let description = des.textContent;
+            fetch(LINK_BACKEND + "/api/userprofile/update/", {
+                method: 'PUT',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'description': description,
+                    'photo': data
+                }),
+            })
+                .then((res) => {
+                    if (res.status === 500) {
+                        alert("Load again the image")
+                    } else {
+                        const link = LINK_FRONTEND + "/profile/" + username + "/default";
+                        window.location.assign(link)
+                    }
+                    return res.json()
+                })
+                .then(data => {
 
+                }
+                )
+        }
 
 
 
