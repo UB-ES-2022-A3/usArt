@@ -198,14 +198,8 @@ class TestPublicationAPI(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
         data = {
             'pub_id': pub.id,
+            'description': 'test'
         }
         url = reverse('catalog:commission_post')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        data = {
-            'pub_id': pub.id,
-            'description': ''
-        }
-        url = reverse('catalog:commission_post')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
