@@ -4,6 +4,7 @@ import { useContext } from "react";
 import AuthContext from "../context/authcontext";
 
 
+
 //#TODO: Poner lo de underL en la NoLogged
 function NoLoggedNavBar() {
   return (
@@ -68,10 +69,10 @@ function LoggedNavBar() {
                   <a  className="nav-link underL px-3" href="/buzon">Buzon</a>
                 </li>
                 <li className="nav-item px-3">
-                  <a  className="nav-link underL px-3" href={"/profile/"+user.username}>Mi perfil</a>
+                  <a  className="nav-link underL px-3" href={"/profile/"+user.username+"/default"}>Mi perfil</a>
                 </li>
                 <li className="nav-item px-3 ">
-                  <a  className="nav-link underL px-3" href="/home" onClick={logoutUser}>Log Out</a>
+                  <a  className="nav-link underL px-3" href="/home" id="logout_button" onClick={logoutUser}>Log Out</a>
                 </li>
               </ul>
           </div>

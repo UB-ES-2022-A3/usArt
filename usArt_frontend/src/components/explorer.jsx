@@ -60,7 +60,7 @@ export default function Explorer() {
         <h1>Explore el talento en UsArt</h1>
         <p style={{ color: "white" }}>Miles de personas ofrecen servicios de arte diariamente</p>
       </div>
-      <div className="grid ">
+      <div className="grid grid-explorer ">
         {cards.map(RenderCard)}
       </div>
       <Footer/>

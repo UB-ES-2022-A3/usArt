@@ -1,5 +1,8 @@
 name: Python + Selenium CI 
 
+env:
+  ENV: "TEST"
+
 on:
   push:
     branches:
@@ -27,3 +30,47 @@ jobs:
           cd ./usArt_backend/
           coverage run manage.py test
           coverage report --fail-under=85
+      
+  selenium-test:
+    runs-on: ubuntu-latest
+    env:
+      ENV: "DEV"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10.0
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ${GITHUB_WORKSPACE}/usArt_backend/requirements.txt
+      - name: Setup Chromium
+        uses: nanasess/setup-chromedriver@v1
+      - run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+          sudo dpkg --force depends -P lxd; sudo dpkg --force depends -P lxd-client
+          sudo apt upgrade
+          sudo apt-get install -y chromium-browser
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: usArt_frontend/package-lock.json
+      - name: npm install, build, and test
+        run: |
+          cd usArt_frontend
+          npm install
+      - name: Run servers
+        run: |
+          cd ${GITHUB_WORKSPACE}/usArt_backend/
+          python manage.py runserver &
+          cd ${GITHUB_WORKSPACE}/usArt_frontend/
+          npm start &
+      - name: Run E2E Tests
+        run: |
+          cd ${GITHUB_WORKSPACE}/testing
+          pytest test_e2e.py

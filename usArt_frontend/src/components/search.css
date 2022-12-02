@@ -12,9 +12,8 @@
 }
 
 .custom-grid {
-  margin-inline-start: 9%;
-  margin-inline-end: 3%;
-  justify-content: inherit;
+  
+  justify-content: center;
 }
 
 .input-grid {

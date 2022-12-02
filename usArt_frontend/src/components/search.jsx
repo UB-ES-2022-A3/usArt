@@ -98,7 +98,7 @@ function Search() {
     function RenderCard(card, index) {
         if (option === "US") {
             return (
-                <a style={{ margin: "0.5%", textDecoration: 'none' }} href={"/profile/" + card.user_name} key={card.id}>
+                <a style={{ margin: "0.5%", textDecoration: 'none' }} href={"/profile/" + card.user_name+"/default"} key={card.id}>
                     <div className="card custom search-card">
                         <picture >
                             <img style={{ marginTop: "10px" }} id={index} src={card.photo} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
@@ -106,14 +106,9 @@ function Search() {
                         <div className="card-body ">
                             <div className='grid' style={{ justifyContent: "inherit" }}>
                                 <h5 style={{ color: "black" }}><strong>{card.user_name}</strong></h5>
-                                <div className="ratings" style={{ marginTop: "-5px" }}>
-                                    <div className="empty-stars"></div>
-                                    <div className="full-stars" style={{ width: "70%" }}></div>
-                                </div>
-                            </div>
-                            <p className="card-text max">{card.description}</p>
+                                <p className="card-text max">{card.description}</p>
+                            </div> 
                         </div>
-
                     </div>
                 </a>
             )
