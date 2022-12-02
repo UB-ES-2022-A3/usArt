@@ -11,5 +11,6 @@ urlpatterns = [
     path('user/<str:username>', views.PublicationUser.as_view(), name='publications_user'),
     path('user/commissions/<str:pub_id>', views.CommissionList.as_view(), name='commissions_user'),
     path('user/commission/<str:pub_id>&<str:user_id>', views.CommissionAcceptDelete.as_view(),
-         name='commission_update_delete')
+         name='commission_update_delete'),
+    path('user/commission/post/', views.CommissionPost.as_view(), name='commission_post')
 ]

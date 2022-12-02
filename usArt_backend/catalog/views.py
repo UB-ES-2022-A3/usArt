@@ -1,7 +1,7 @@
 from catalog.models import Publication, Commission
-from catalog.serializers import PublicationListSerializer, CommissionListSerializer
-
-from rest_framework import filters, generics
+from authentication.models import UsArtUser
+from catalog.serializers import PublicationListSerializer,CommissionListSerializer
+from rest_framework import filters, generics, status
 
 from authentication.models import UsArtUser
 from rest_framework.permissions import IsAuthenticated
@@ -35,6 +35,15 @@ class PublicationDetail(generics.RetrieveAPIView):
     serializer_class = PublicationListSerializer
 
 
+class CommissionPost(generics.CreateAPIView):
+    queryset = Commission.objects.all()
+    serializer_class = CommissionListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        
+
+
 class CommissionList(generics.ListAPIView):
     queryset = Commission.objects.all()
     serializer_class = CommissionListSerializer
@@ -63,3 +72,10 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
         commission = Commission.objects.get(pub_id__id=self.kwargs['pub_id'],
                                             user_id__id=self.kwargs['user_id'])
         return commission
+
+        pub = get_object_or_404(Publication, id=request.data['pub_id'])
+        print(request.user,pub)
+        serialiser = CommissionListSerializer(data=request.data)
+        serialiser.is_valid(raise_exception=True)
+        serialiser.save(user_id=request.user, pub_id=pub)
+        return Response(data=serialiser.data, status=status.HTTP_201_CREATED)

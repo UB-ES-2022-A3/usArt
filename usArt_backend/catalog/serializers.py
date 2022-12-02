@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from catalog.models import Publication, Commission
+from catalog.models import Publication, Commission, Commission
 from authentication.serializers import UsArtUserSerializer
 
 
@@ -22,4 +22,5 @@ class CommissionListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Commission
         fields = '__all__'
-        extra_kwargs = {'description': {'required': False}}
+        extra_kwargs = {'description': {'required': False},"user_id":{"required":False}}
+        #extra_kwargs = {"user_id":{"required":False}}
