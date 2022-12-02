@@ -86,5 +86,5 @@ class ArtistCommissionList(generics.ListAPIView):
 
     def get_queryset(self):
         
-        commissions = Commission.objects.filter(pub_id__author=self.request.user)
+        commissions = Commission.objects.filter(pub_id__author=self.request.user,status="PD")
         return commissions
