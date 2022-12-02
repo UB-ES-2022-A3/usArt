@@ -13,7 +13,7 @@ on:
       - development
 
 jobs:
-  python-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,3 +30,20 @@ jobs:
           cd ./usArt_backend/
           coverage run manage.py test
           coverage report --fail-under=85
+      - name: Setup Chromium
+        uses: nanasess/setup-chromedriver@v1
+        with:
+          # Optional: do not specify to match Chrome's version
+          chromedriver-version: '88.0.4324.96'
+      - run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+      - name: Run servers
+        run: |
+          cd ./usArt_backend/
+          python manage.py runserver
+      - name: Run Tests
+        run: |
+          cd ${GITHUB_WORKSPACE}/testing
+          pytest test_e2e.py
