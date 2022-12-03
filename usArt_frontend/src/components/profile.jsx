@@ -8,6 +8,7 @@ import Footer from './footer'
 import empty from '../assets/suchEmpty.png'
 import LINK_FRONTEND from './LINK_FRONTEND';
 import { Modal } from 'bootstrap'
+import { BsFillTrashFill } from "react-icons/bs";
 
 function Profile() {
 
@@ -22,14 +23,12 @@ function Profile() {
     const [message, setMessage] = useState('');
     const [components, setComponents] = useState([]);
     const [radioGender, setRadioProduct] = useState('Products');
-
     const [buttonPopup, setButtonPopup] = useState(false)
 
     var input_textarea_title = document.getElementById('titlepost');
     var input_textarea_description = document.getElementById('descriptionpost');
     var input_textarea_price = document.getElementById('pricepost');
     var input_type = document.getElementById('typepost');
-    var input_images = document.getElementById('images');
 
 
     const initialValues = { state: "AR" };
@@ -40,32 +39,34 @@ function Profile() {
     //----------------------------------------------------------------------------
 
 
-    const initialImagesValues = { data: null, fullScreen: false, loading: false };
-    const [stateImages, setStateImages] = useState(initialImagesValues);
+    const initialImagesValues = { data: null, loading: false };
+    const [stateImages, setStateImages] = useState([]);
+    const [showImagesArr, setshowImages] = useState([]);
 
     const handleFileChange = (event) => {
         const { target } = event;
         const { files } = target;
         if (files && files[0]) {
             var reader = new FileReader();
-            reader.onloadstart = () => setStateImages({ loading: true });
+            reader.onloadstart = () => setStateImages([{ loading: true }]);
             reader.onload = event => {
-                setStateImages({
+                setStateImages([...stateImages, {
                     data: event.target.result,
-                    loading: false
-                });
+                    loading: false,
+                    target: URL.createObjectURL(files[0])
+                }])
             };
-
-            reader.readAsDataURL(files[0]);
+        };
+        if (showImagesArr.length === 0) setshowImages([URL.createObjectURL(files[0])])
+        else {
+            setshowImages([...showImagesArr, URL.createObjectURL(files[0])])
         }
+
+        reader.readAsDataURL(files[0]);
     }
 
-    const handleClearClick = () => {
-        setStateImages({
-            data: null,
-            fullScreen: false
-        });
-    };
+
+
 
     const handlePreviewClick = () => {
         const { data, fullScreen } = stateImages;
@@ -216,19 +217,25 @@ function Profile() {
         var description = input_textarea_description.value
         var price = input_textarea_price.value
         var type = input_type.value
-
-        if (stateImages.data) {
-            var images = stateImages.data
+        let images = []
+        if (stateImages.length > 0) {
+            stateImages.forEach(element => {
+                images.push(element.data)
+            });
+        } else {
+            alert("Put some images!")
+            
         }
-        if (title.length == 0 || description.length == 0 || price.length == 0 || type == null) {
+        if (title.length === 0 || description.length === 0 || price.length === 0 || type == null) {
             alert("Fields cannot be empty!")
+           
         }
         else {
             postArt(title, description, price, type, images)
-            alert("New article published!")
+
         }
     }
-
+    const [modal,setModal] = useState()
     function postArt(title, description, price, type, images) {
         fetch(LINK_BACKEND + "/api/catalog/manage/post/", {
             method: 'POST',
@@ -243,20 +250,28 @@ function Profile() {
                 'description': description,
                 'price': price,
                 'type': type,
-                'images': [images]
+                'images': images
             }),
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (res.status !== 201) alert("Error uploading")
+                return res.json()
+            })
             .then(data => {
+                callApiProducts()
+                modal.hide()
+               
             }
             )
+        document.getElementById("profileOpacity").style.opacity = "1";
     }
 
     function LINK_FRONTENDContact() {
+        document.getElementById("profileOpacity").style.opacity = "0.5"
         var coModal = new Modal(document.getElementById('coModal'), {
             keyboard: false
         })
-
+        setModal(coModal)
         coModal.show()
 
     }
@@ -270,7 +285,7 @@ function Profile() {
 
         if (user == null) return
         if (user.username === username)
-            return (<button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }} disabled={user === null}><span>Upload Art</span></button>)
+            return (<button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null}><span>Upload Art</span></button>)
     }
 
     const { data, fullScreen, loading } = stateImages;
@@ -548,8 +563,51 @@ function Profile() {
             }
         }
     }
+    function checkNumbers(e) {
+
+        if (input_textarea_price.value > 6) {
+            if (input_textarea_price.value[5] === ".") input_textarea_price.value = input_textarea_price.value.slice(0, 4);
+            else { input_textarea_price.value = input_textarea_price.value.slice(0, 6); }
+        }
+    }
+    const handleClearClick = (e) => {
+        console.log(e)
+        let fileReader = stateImages.filter(function (value, index, arr) {
+
+            return value.target !== e.target.src & e.target.accessKey !== index;
+        });
+        setStateImages(fileReader)
+
+    };
+    function showImages(images, key) {
+
+        if (showImagesArr.length === 0) return
+        return (
+            <div class="image-div">
+                <img key={key} accessKey={key} onClick={handleClearClick} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
+                <div class="trashContainer hidden_img">
+                    <div class="trash">
+                        <div class="tap">
+                            <div class="tip"></div>
+                            <div class="top"></div>
+                        </div>
+                        <div class="tap2">
+                            <div class="bottom">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        )
+    }
     return (
-        <div >
+        <div>
             <div id='profileOpacity'>
                 <section className="h-100 gradient-custom-2" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <div className="card" style={{ width: "70vw" }}>
@@ -635,51 +693,82 @@ function Profile() {
             <div class="modal" id="coModal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content upload-modal">
-                        <div class="modal-header">
+                        <div class="modal-header" style={{ marginTop: "-5%" }} >
                             <h5 class="modal-title text-dark">Upload</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Title:<input name="title" type="text" class="content-input" id="titlepost" required /></p>
-                            <p>Description:<textarea name="description" class="content-input" id="descriptionpost" rows="4" cols="50" required ></textarea></p>
-                            <p>Price:<input name="price" type="float" class="content-input" id="pricepost" required /></p>
-                            <p>Type:
-                                <select value={formValues.state.value} name="state" class="content-input" id="typepost" onChange={handleChangePosting}>
-                                    <option value="AR">Art</option>
-                                    <option value="CO">Commission</option>
-                                    <option value="AU">Auction</option>
-                                </select>
-                            </p>
-                            <p>Attach some images:</p>
+                            <div >
+                                <p>Title:</p>
+                                <input style={{ marginBottom: "2%" }} name="title" type="text" class="content-input-title" id="titlepost" required />
+                            </div>
                             <div>
+                                <p>Description:</p>
+                                <textarea name="description" class="content-input" id="descriptionpost" rows="4" cols="50" required ></textarea>
+                            </div>
+                            <div>
+                                <p>Price:</p>
+                                <p><input name="price" type="number" onInput={checkNumbers} id='pricepost'  ></input> €</p>
+                            </div>
+                            <div style={{ marginTop: "4%", display: "flex", flexDirection: "column" }}>
+                                <p>Type:
+                                    <select style={{ marginLeft: "2%" }} value={formValues.state.value} name="state" class="content-input" id="typepost" onChange={handleChangePosting}>
+                                        <option value="AR">Art</option>
+                                        <option value="CO">Commission</option>
+                                        <option value="AU">Auction</option>
+                                    </select>
+                                </p>
+                            </div>
+                            <p>Attach some images:</p>
+                            <div style={{ display: "flex" }}>
                                 <input
-                                    id="car"
                                     type="file"
+                                    name="file-input"
+                                    id="file-input"
+                                    class="file-input__input"
                                     accept="image/*"
                                     capture="camera"
                                     onChange={handleFileChange}
                                 />
-                                <div
-                                    className={previewClasses}
-                                    onClick={handlePreviewClick}
-                                >
+                                <label class="file-input__label" for="file-input" style={{ padding: "0", marginRight: "2%" }}>
+                                    <svg
+                                        aria-hidden="true"
+                                        focusable="false"
+                                        data-prefix="fas"
+                                        data-icon="upload"
+                                        accept="image/*"
+                                        class="svg-inline--fa fa-upload fa-w-16"
+                                        role="img"
+                                        capture="camera"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 512 512"
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"
+                                        ></path>
+                                    </svg>
+                                    <div
+                                        className={previewClasses}
+                                        onClick={handlePreviewClick}
+                                    >
 
-
-                                    {loading &&
-                                        <span>Loading...</span>
-                                    }
+                                        {loading &&
+                                            <span>Loading...</span>
+                                        }
+                                    </div>
+                                    <span>Upload new picture </span></label>
+                            </div>
+                            <div className='row'>
+                                <div className="col-sm" style={{ margin: "1%" }}>
+                                    {stateImages.map(showImages)}
                                 </div>
-
-                                <button type='button' onClick={handleClearClick}>
-                                    Clear Image
-                                </button>
-
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
-                            <button onClick={updateOutput} class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
+                        <div class="modal-footer" style={{ marginBottom: "-8%" }}>
+                            <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
+                            <button onClick={updateOutput} class="button" id='sendButton' style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
                         </div>
                     </div>
                 </div>

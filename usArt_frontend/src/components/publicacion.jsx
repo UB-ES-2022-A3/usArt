@@ -134,19 +134,7 @@ function Publicacion(props) {
         document.getElementById("toOpacity").style.opacity = "1"
 
     }
-    function updateOutputA() {
-        let description = input_textarea.value
-        if (description.length === 0) {
-            alert("La descripción no puede estar vacia")
-        } else {
-            console.log(description)
-            postPetCom(id, description)
-            alert("Petición hecha!")
-            document.getElementById("toOpacity").style.opacity = "1"
-        }
-
-
-    }
+    
     function postPetCom(pub_id, description) {
         fetch(LINK_BACKEND + "/api/catalog/user/commission/post/", {
             method: 'PUT',
@@ -214,7 +202,7 @@ function Publicacion(props) {
                             </div>
                             <div className="card-body custom-body ">
                                 <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
-                                    <h1 style={{ color: "black" }}>{card.title}</h1>
+                                    <h1 style={{ color: "black",marginTop:"3%" }}>{card.title}</h1>
                                 </div >
                                 <h4 style={{ color: "black" }}>{card.price}€</h4>
                                 <hr></hr>
