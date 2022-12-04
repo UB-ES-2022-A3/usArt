@@ -278,10 +278,13 @@ body {
     position: relative;
     float: left;
 }
-
+.image-div:hover .stack-images{
+    opacity: 0.4;
+}
 .image-div:hover .hidden_img {
     display: block;
     cursor: pointer;
+    
 }
 
 .image-div .hidden_img {
