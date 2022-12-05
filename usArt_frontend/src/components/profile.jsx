@@ -34,14 +34,12 @@ function Profile() {
     const initialValues = { state: "AR" };
     const [formValues, setFormValues] = useState(initialValues);
 
+    const [pictureUpdate, setPictureUpdate] = useState()
 
 
     //----------------------------------------------------------------------------
 
-
-    const initialImagesValues = { data: null, loading: false };
     const [stateImages, setStateImages] = useState([]);
-    const [showImagesArr, setshowImages] = useState([]);
 
     const handleFileChange = (event) => {
         const { target } = event;
@@ -50,17 +48,23 @@ function Profile() {
             var reader = new FileReader();
             reader.onloadstart = () => setStateImages([{ loading: true }]);
             reader.onload = event => {
-                setStateImages([...stateImages, {
-                    data: event.target.result,
-                    loading: false,
-                    target: URL.createObjectURL(files[0])
-                }])
+                if (window.location.href.includes('edit')) {
+                    setPictureUpdate({
+                        data: event.target.result,
+                        loading: false,
+                        target: URL.createObjectURL(files[0])
+
+                    })
+                    document.getElementById("profilePhoto").src = URL.createObjectURL(files[0]);
+                } else {
+                    setStateImages([...stateImages, {
+                        data: event.target.result,
+                        loading: false,
+                        target: URL.createObjectURL(files[0])
+                    }])
+                }
             };
         };
-        if (showImagesArr.length === 0) setshowImages([URL.createObjectURL(files[0])])
-        else {
-            setshowImages([...showImagesArr, URL.createObjectURL(files[0])])
-        }
 
         reader.readAsDataURL(files[0]);
     }
@@ -224,18 +228,18 @@ function Profile() {
             });
         } else {
             alert("Put some images!")
-            
+
         }
         if (title.length === 0 || description.length === 0 || price.length === 0 || type == null) {
             alert("Fields cannot be empty!")
-           
+
         }
         else {
             postArt(title, description, price, type, images)
 
         }
     }
-    const [modal,setModal] = useState()
+    const [modal, setModal] = useState()
     function postArt(title, description, price, type, images) {
         fetch(LINK_BACKEND + "/api/catalog/manage/post/", {
             method: 'POST',
@@ -260,7 +264,7 @@ function Profile() {
             .then(data => {
                 callApiProducts()
                 modal.hide()
-               
+
             }
             )
         document.getElementById("profileOpacity").style.opacity = "1";
@@ -285,7 +289,7 @@ function Profile() {
 
         if (user == null) return
         if (user.username === username)
-            return (<button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null}><span>Upload Art</span></button>)
+            return (<button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
     }
 
     const { data, fullScreen, loading } = stateImages;
@@ -457,7 +461,7 @@ function Profile() {
                 },
                 body: JSON.stringify({
                     'description': description,
-                    'photo': data
+                    'photo': pictureUpdate.data
                 }),
             })
                 .then((res) => {
@@ -571,7 +575,7 @@ function Profile() {
         }
     }
     const handleClearClick = (e) => {
-        console.log(e)
+
         let fileReader = stateImages.filter(function (value, index, arr) {
 
             return value.target !== e.target.src & e.target.accessKey !== index;
@@ -581,7 +585,7 @@ function Profile() {
     };
     function showImages(images, key) {
 
-        if (showImagesArr.length === 0) return
+        if (stateImages.length === 0) return
         return (
             <div class="image-div">
                 <img key={key} accessKey={key} onClick={handleClearClick} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>

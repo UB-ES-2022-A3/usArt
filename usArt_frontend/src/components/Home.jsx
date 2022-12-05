@@ -18,7 +18,7 @@ const Home = () => {
   }
 
   return (
-    <div name='home' >
+    <div name='home' style={{height:"80vh"}} >
       <div className="d-flex align-items-center justify-content-center landName row">
         <div className="col-sm"></div>
         <div className="col-sm">
@@ -26,7 +26,7 @@ const Home = () => {
             <div className="col-sm">
             </div>
             <div className="col-sm custom-margin">
-              <h1 className="w-75 pb-4">Art is not what you see, but what you make <i> others </i> see.</h1>
+              <h1 className="w-100 pb-4">Art is not what you see, but what you make <i> others </i> see.</h1>
               <div className="bg-white rounded shadow">
                 <form action="" />
                 <div className="p-1 bg-light rounded rounded-pill shadow-sm mb-4">

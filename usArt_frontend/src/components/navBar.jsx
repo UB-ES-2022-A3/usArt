@@ -8,7 +8,7 @@ import AuthContext from "../context/authcontext";
 //#TODO: Poner lo de underL en la NoLogged
 function NoLoggedNavBar() {
   return (
-    <nav className="navbar navbar-expand-sm navbar-light " aria-label="Offcanvas navbar small">
+    <nav className="navbar navbar-expand-sm navbar-light " style={{zIndex:"100"}} aria-label="Offcanvas navbar small">
       <div className="container-fluid">
         <a className="navbar-brand i p-4" id="navBar-brand" href="/home"><h1>UsArt</h1></a>
         <button className="navbar-toggler"
@@ -44,7 +44,7 @@ function NoLoggedNavBar() {
 function LoggedNavBar() {
   let { user, logoutUser } = useContext(AuthContext);
   return (
-    <nav className="navbar navbar-expand-sm navbar-light" aria-label="Offcanvas navbar small">
+    <nav className="navbar navbar-expand-sm navbar-light" style={{zIndex:"100"}} aria-label="Offcanvas navbar small">
       <div className="container-fluid">
         <a className="navbar-brand p-4 " href="/home"><h1>UsArt</h1></a>
         <button style={{background:"white"}} className="navbar-toggler" id="button"
