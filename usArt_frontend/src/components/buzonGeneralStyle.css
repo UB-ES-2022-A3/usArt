@@ -136,7 +136,8 @@
 
 .chat .otherside {
     flex-direction: row !important;
-
+    width: 35vw;
+    line-break: anywhere;
 }
 
 .chat .otherside p {
