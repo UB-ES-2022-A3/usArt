@@ -10,8 +10,6 @@ import Footer from './footer'
 
 import { Modal } from 'bootstrap'
 import AuthContext from "../context/authcontext";
-import { useContext } from 'react';
-
 
 function Publicacion(props) {
 
