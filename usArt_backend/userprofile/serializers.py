@@ -6,7 +6,6 @@ from catalog.serializers import PublicationListSerializer
 from rest_framework import serializers
 
 from userprofile.models import PurchaseHistory, Review, Fav
-from catalog.models import Publication
 
 
 class UsArtUserSerializer(serializers.ModelSerializer):

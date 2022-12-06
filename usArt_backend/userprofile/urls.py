@@ -1,6 +1,7 @@
 from django.urls import path
 
-from userprofile.views import PurchaseHistoryList, UserDetail, UserList, FavList, FavGetDelete, PurchaseHistoryDetail, ReviewUser, ReviewUserStars, ReviewList
+from userprofile.views import PurchaseHistoryList, UserDetail, UserList, FavList, UserProfile
+from userprofile.views import FavGetDelete, PurchaseHistoryDetail, ReviewUser, ReviewUserStars, ReviewList
 
 
 
