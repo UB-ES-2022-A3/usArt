@@ -300,7 +300,7 @@ function Profile() {
     //#TODO, En teoria habrá una fecha
     function RenderMyHistorialProducts(product) {
         return (
-            <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + product.id} key={product.id}>
+            <a style={{ margin: "1%", textDecoration: 'none' }} href={"/purchasedetails/" + product.id} key={product.id}>
                 <div className='d-flex rounded  p-3 productRow text-center align-items-center justify-content-center' style={{ backgroundColor: "white" }}>
                     <img src={product.pub_id.images[0]} className="imageProducts shadow rounded" alt="Sorry! not available at this time" ></img>
                     <div className='col-3  d-flex  justify-content-center'>
