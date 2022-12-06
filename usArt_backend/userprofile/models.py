@@ -54,6 +54,7 @@ class Review(models.Model):
             )
         ]
 
+
 class Block(models.Model):
     blocked_id = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name='blocked')
     blocker_id = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name='blocker')

@@ -163,6 +163,11 @@
     margin: 5px;
 }
 
+.button:disabled, 
+button[disabled]{
+    background-color: #373737;
+}
+
 .button_heart {
     display: inline-block;
     border-radius: 20px;
@@ -251,6 +256,18 @@
     align-items: initial;
 
 
+}
+
+.modal-dialog {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)!important;
+
+}
+.modal-backdrop{
+    z-index: -1;
 }
 
 .card-item {
