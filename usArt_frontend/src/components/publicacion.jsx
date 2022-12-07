@@ -89,6 +89,22 @@ function Publicacion(props) {
                 aria-label={label_i}></button>
         )
     }
+    function renderDelFavButtons() {
+        console.log(author)
+        console.log(user)
+        if (author == user) {
+            return (
+                <button onClick={deleteOnClick} className="button" style={{ verticalAlign: "middle" }}><span>Fav </span></button>
+            )
+        } else {
+            return (
+                <button onClick={deleteOnClick} className="button" style={{ verticalAlign: "middle" }}><span>Delete </span></button>
+            )
+        }
+    }
+    function deleteOnClick() {
+        alert("eliminar")
+    }
     function LINK_FRONTENDContact() {
         let coModal = new Modal(document.getElementById('coModal'), {
             keyboard: false, backdrop: 'static'
@@ -210,12 +226,14 @@ function Publicacion(props) {
 
                             </div>
                             <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
-                            <div style={{ textAlign: "right", marginBottom: "1%", marginRight: "1%" }}>
-
-                                <button onClick={LINK_FRONTENDContact} id="contact_button" className="button" style={{ verticalAlign: "middle" }} disabled={user === null}><span>{Nameaux()} </span></button>
-
-
-                            </div >
+                            <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
+                                    {renderDelFavButtons}
+                                </div>
+                                <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
+                                    <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
