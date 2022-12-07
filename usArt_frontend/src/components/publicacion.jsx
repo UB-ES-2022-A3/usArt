@@ -25,6 +25,11 @@ function Publicacion(props) {
 
     let input_textarea = document.querySelector('.content-input');
 
+    const favButton = (
+        <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+            <i style={{ color: color, width: "30px", height: "30px"}} class='fa'>{heart}</i></button>
+    )
 
     useEffect(callApi, [])
 
@@ -48,68 +53,70 @@ function Publicacion(props) {
                     )
             }
             )
-
-        fetch(
-            LINK_BACKEND + "/api/userprofile/get/delete/fav/" + id, {
-            method: 'GET',
-            withCredentials: true,
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Bearer ' + authTokens.access,
-                'Content-Type': 'application/json'
-            },
-        })
-            .then((res) => res.json())
-            .then(data => {
-                console.log(data["detail"])
-                if (data["detail"] !== "Not found.") {
-                    setFavorite(true)
-                    setHeart(<span>&#xf004;</span>)
-                    setColor('red')
-                }
-            })
-
-    }
-
-    function toggleFavorite() {
-        if (!fav) {
-            setFavorite(true)
-            setHeart(<span>&#xf004;</span>)
-            setColor('red')
-            fetch(LINK_BACKEND + "/api/userprofile/fav/", {
-                method: 'POST',
+        if (authTokens) {
+            fetch(
+                LINK_BACKEND + "/api/userprofile/get/delete/fav/" + id, {
+                method: 'GET',
                 withCredentials: true,
                 credentials: 'include',
                 headers: {
                     'Authorization': 'Bearer ' + authTokens.access,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    'pub_id': id,
-                }),
             })
                 .then((res) => res.json())
                 .then(data => {
-                    console.log(data)
-                }
-                )
-        } else {
-            setFavorite(false)
-            setHeart(<span>&#xf08a;</span>)
-            setColor('black')
-            fetch(
-                LINK_BACKEND + "/api/userprofile/get/delete/fav/" + id, {
-                method: 'DELETE',
-                withCredentials: true,
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Bearer ' + authTokens.access,
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then(data => {
-                    console.log(data);
+                    console.log(data["detail"])
+                    if (data["detail"] !== "Not found.") {
+                        setFavorite(true)
+                        setHeart(<span>&#xf004;</span>)
+                        setColor('red')
+                    }
                 })
+        }
+    }
+
+    function toggleFavorite() {
+        if (authTokens) {
+            if (!fav) {
+                setFavorite(true)
+                setHeart(<span>&#xf004;</span>)
+                setColor('red')
+                fetch(LINK_BACKEND + "/api/userprofile/fav/", {
+                    method: 'POST',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Bearer ' + authTokens.access,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'pub_id': id,
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then(data => {
+                        console.log(data)
+                    }
+                    )
+            } else {
+                setFavorite(false)
+                setHeart(<span>&#xf08a;</span>)
+                setColor('black')
+                fetch(
+                    LINK_BACKEND + "/api/userprofile/get/delete/fav/" + id, {
+                    method: 'DELETE',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Bearer ' + authTokens.access,
+                        'Content-Type': 'application/json'
+                    },
+                })
+                    .then(data => {
+                        console.log(data);
+                    })
+            }
         }
     }
 
@@ -122,7 +129,6 @@ function Publicacion(props) {
                 </div>
             </div>)
     }
-
 
     function renderCard(card, index) {
         if (index === 0) return (
@@ -199,7 +205,7 @@ function Publicacion(props) {
         document.getElementById("toOpacity").style.opacity = "1"
 
     }
-    
+
     function postPetCom(pub_id, description) {
         fetch(LINK_BACKEND + "/api/catalog/user/commission/post/", {
             method: 'PUT',
@@ -267,7 +273,7 @@ function Publicacion(props) {
                             </div>
                             <div className="card-body custom-body ">
                                 <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
-                                    <h1 style={{ color: "black",marginTop:"3%" }}>{card.title}</h1>
+                                    <h1 style={{ color: "black", marginTop: "3%" }}>{card.title}</h1>
                                 </div >
                                 <h4 style={{ color: "black" }}>{card.price}€</h4>
                                 <hr></hr>
@@ -277,9 +283,7 @@ function Publicacion(props) {
                             <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
                             <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
-                                    <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
-                                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                                        <i style={{ color: color, width: "30px", height: "30px"}} class='fa'>{heart}</i></button>
+                                    {authTokens ? favButton : <div></div>}
                                 </div>
                                 <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
                                     <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
