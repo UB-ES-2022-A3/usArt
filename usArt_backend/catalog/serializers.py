@@ -6,6 +6,7 @@ import base64
 import io
 from django.core.files.images import ImageFile
 
+
 class PublicationImageField(serializers.RelatedField):
     def to_representation(self, value):
         return value.image.url
@@ -18,11 +19,13 @@ class PublicationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publication
         fields = ['id', 'title', 'description', 'author', 'price', 'images', 'type']
-    
+
+
 class PublicationPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publication
         fields = ['title', 'description', 'price', 'type']
+
     def create(self, validated_data):
         publication = Publication.objects.create(
             author=validated_data['author'],
@@ -40,6 +43,7 @@ class PublicationPostSerializer(serializers.ModelSerializer):
             PublicationImage.objects.create(publication=publication, image=im)
         return publication
 
+
 class CommissionListSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -47,6 +51,7 @@ class CommissionListSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'description': {'required': False},"user_id":{"required":False}}
         #extra_kwargs = {"user_id":{"required":False}}
+
 
 class ArtistCommissionListSerializer(serializers.ModelSerializer):
     user_id = UsArtUserSerializer(read_only=True)
