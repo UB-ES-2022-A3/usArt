@@ -201,8 +201,17 @@ class TestPublicationAPI(APITestCase):
         url = reverse('userprofile:user_purchase_detail', kwargs={"id": purchase.id})
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
         
-    def test_post_fav(self):
+    
+
+    def test_put_block(self):
+        user = UsArtUser.objects.get(user_name='test')
+        url = reverse('userprofile:bloqued_user', kwargs={'id': user.id})
+        response = self.client.put(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
         url_post_login = reverse('api:token_obtain_pair')
         login_data = {
             'user_name': 'test2',
@@ -213,6 +222,7 @@ class TestPublicationAPI(APITestCase):
         self.assertTrue('access' in response.data)
         token = response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+
         publication = Publication.objects.get(title='Title test')
         url = reverse('userprofile:post_user_fav')
         data = {'pub_id': publication.id}
@@ -266,3 +276,14 @@ class TestPublicationAPI(APITestCase):
         url = reverse('userprofile:get_delete_fav', kwargs={'pub_id': publication.id})
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+        response = self.client.put(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        print(response.data)
+
+        response = self.client.put(url,  format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        print(response.data)
+
+
