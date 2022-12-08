@@ -53,6 +53,8 @@ function Details(props) {
                 console.log(id)
                 console.log(data)
                 setImagen(data.pub_id.images[0])
+                setEmailCreator(data.pub_id.author.email)
+                setEmailUser(data.user_id.email)
                 setUsername(data.user_id.user_name)
                 setPrice(data.price)
                 setFecha(data.date)
@@ -64,6 +66,9 @@ function Details(props) {
     }
 
     const [modal, setModal] = useState()
+
+    const [emailUser, setEmailUser] = useState(null)
+    const [emailCreator, setEmailCreator] = useState(null)
 
 
     function LINK_FRONTENDContact() {
@@ -91,11 +96,35 @@ function Details(props) {
 
     function postComplain(description) {
         // Aqui hem de enviar el correu 
-        alert("Your complain and devolution has been sent")
+        if(emailCreator != null && emailUser != null){
+            window.open('mailto:' + emailCreator + '?subject=Refund inquiry&body='+ description);
+            //window.location.href = 'mailto:'+emailCreator+'?cc='+''+'&subject='+'Refund inquiry'+'&body='+description;
+
+            /*var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    console.log(xhttp.responseText);
+                }
+            }
+            xhttp.open('GET', 'https://mandrillapp.com/api/1.0/messages/send.json?message[from_email]=mail@7995.by&message[to][0][email]=zdanevich.vitaly@yaa.ru&message[subject]=Заявка%20с%207995.by&message[html]=xxxxxx&key=oxddROOvCpKCp6InvVDqiGw', true);
+            xhttp.send();*/
+
+            alert("Your complain has been sent to the creator with email: " + emailCreator)
+
+        }
+        else{
+            alert("There was an error sending your inquiri, contact us to resolve this issue.")
+        }
     }
 
 
+
+
+    
+
+
     return (
+        
         <div className='body_register'>
             <MDBContainer className="vertical-center " >
                 <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '25px' }}>
