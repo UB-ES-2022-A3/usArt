@@ -11,8 +11,8 @@ from userprofile.models import PurchaseHistory, Review
 from rest_framework import filters, generics, status
 
 from rest_framework.response import Response
-
-
+from userprofile.models import Block
+from userprofile.serializers import BlockSerializer
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -122,4 +122,32 @@ class ReviewList(generics.ListAPIView):
 
     def get_queryset(self):
         return Review.objects.filter(reviewed_id__user_name=self.kwargs['author'])
-        
+
+
+class UserBlocPut(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = BlockSerializer
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        if queryset:
+            self.perform_destroy(queryset)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            request.data['blocked_id'] = self.kwargs['id']
+            request.data['blocker_id'] = self.request.user.id
+            blocked_id = UsArtUser.objects.get(id=self.kwargs['id'])
+            blocker_id = UsArtUser.objects.get(id=self.request.user.id)
+            serializer = BlockSerializer(queryset, data=self.request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(blocked_id=blocked_id,blocker_id=blocker_id)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_queryset(self):
+        try:
+            block = Block.objects.get(blocked_id=self.kwargs['id'],
+                                      blocker_id=self.request.user.id)
+        except:
+            block = None
+
+        return block

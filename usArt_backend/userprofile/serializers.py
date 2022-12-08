@@ -5,7 +5,7 @@ from catalog.serializers import PublicationListSerializer
 
 from rest_framework import serializers
 
-from userprofile.models import PurchaseHistory, Review
+from userprofile.models import PurchaseHistory, Review, Block
 
 
 class UsArtUserSerializer(serializers.ModelSerializer):
@@ -56,3 +56,9 @@ class ReviewerUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['reviewer_id', 'stars', 'review']
+
+class BlockSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Block
+        fields = ['blocker_id', 'blocked_id']
