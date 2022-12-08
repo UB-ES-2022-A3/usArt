@@ -1,4 +1,4 @@
-import React from 'react';
+//import React from 'react';
 import { useState, useEffect, useRef, useContext } from 'react';
 
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
@@ -11,8 +11,7 @@ import Footer from './footer';
 import LINK_BACKEND from "./LINK_BACKEND"
 import { useParams } from "react-router-dom"
 
-
-
+import { Modal } from 'bootstrap'
 
 import {
     MDBContainer,
@@ -64,6 +63,37 @@ function Details(props) {
 
     }
 
+    const [modal, setModal] = useState()
+
+
+    function LINK_FRONTENDContact() {
+        var coModal = new Modal(document.getElementById('coModal'), {
+            keyboard: false
+        })
+        setModal(coModal)
+        coModal.show()
+
+    }
+
+    var input_textarea_description = document.getElementById('modal_reason');
+
+    function updateOutput() {
+        var description = input_textarea_description.value
+        if (description.length === 0) {
+            alert("Please fill the textfield explaining the reason!")
+        }
+        else {
+            postComplain(description)
+            window.location.assign(LINK_FRONTEND + "/home")
+
+        }
+    }
+
+    function postComplain(description) {
+        // Aqui hem de enviar el correu 
+        alert("Your complain and devolution has been sent")
+    }
+
 
     return (
         <div className='body_register'>
@@ -104,6 +134,19 @@ function Details(props) {
 
                         </MDBRow>
                         <div className="" style={{bottom:"0",position:"absolute",right:"0"}}>
+                            <button className="button" onClick={LINK_FRONTENDContact} style={{ verticalAlign: "middle", width: "100px" , backgroundColor:"darkred"}} >Refund</button>
+                            <div class="modal" id="coModal" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content upload-modal">
+                                        <div class="modal-header" style={{ marginTop: "-5%" }} >
+                                            <h5 class="modal-title text-dark" style={{position:"relative"}}>Tell us why do you want to return this item</h5>
+                                        </div>
+                                        <p><textarea style={{position:"relative"}} name="reason" className="content-input" rows="5" cols="60" id="modal_reason" required ></textarea></p>
+                                        <button className="button" onClick={updateOutput} style={{ verticalAlign: "middle", width: "100px"}}>Send</button>
+                                        <button className="button" onClick={() => window.location.assign(LINK_FRONTEND + "/home")} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
                             <button className="button" onClick={() => window.location.assign(LINK_FRONTEND + "/home")} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Close</button>
                         </div>
                     </MDBCardBody>
