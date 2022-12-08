@@ -4,9 +4,11 @@ from authentication.models import UsArtUser
 
 from django.shortcuts import get_object_or_404
 
+from catalog.serializers import PublicationListSerializer
 from catalog.models import Publication
+
 from userprofile import serializers
-from userprofile.models import PurchaseHistory, Review
+from userprofile.models import PurchaseHistory, Review, Fav
 
 from rest_framework import filters, generics, status
 
@@ -21,6 +23,11 @@ from rest_framework.views import APIView
 import base64
 import io
 from django.core.files.images import ImageFile
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.forms.models import model_to_dict
+
 
 class PurchaseHistoryList(generics.ListCreateAPIView):
     serializer_class = serializers.PurchaseHistorySerializer
@@ -123,3 +130,25 @@ class ReviewList(generics.ListAPIView):
     def get_queryset(self):
         return Review.objects.filter(reviewed_id__user_name=self.kwargs['author'])
         
+
+class FavList(generics.ListCreateAPIView):
+    queryset = Fav.objects.all()
+    serializer_class = serializers.FavSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        pub = Publication.objects.get(id=self.request.data['pub_id'])
+        serializer.save(user_id=self.request.user, pub_id=pub)
+
+    def get_queryset(self):
+        return Fav.objects.filter(user_id=self.request.user)
+
+
+class FavGetDelete(generics.RetrieveDestroyAPIView):
+    queryset = Fav.objects.all()
+    serializer_class = serializers.FavDelGetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        pub = Publication.objects.get(id=self.kwargs['pub_id'])
+        return get_object_or_404(Fav, user_id=self.request.user, pub_id=pub)
