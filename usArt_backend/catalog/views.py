@@ -52,6 +52,7 @@ class PublicationDelete(generics.DestroyAPIView):
         self.perform_destroy(pub)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+ 
 class CommissionPost(generics.CreateAPIView):
     queryset = Commission.objects.all()
     serializer_class = CommissionListSerializer
@@ -67,7 +68,6 @@ class CommissionPost(generics.CreateAPIView):
         serialiser.is_valid(raise_exception=True)
         serialiser.save(user_id=request.user, pub_id=pub)
         return Response(data=serialiser.data, status=status.HTTP_201_CREATED)
-
 
 
 class CommissionList(generics.ListAPIView):
@@ -99,7 +99,6 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
                                             user_id__id=self.kwargs['user_id'])
         return commission
 
-        
 
 class ArtistCommissionList(generics.ListAPIView):
     queryset = Commission.objects.all()
