@@ -90,7 +90,7 @@ function Details(props) {
     }
 
     function postComplain(description) {
-        //
+        // Aqui hem de enviar el correu 
         alert("Your complain and devolution has been sent")
     }
 
