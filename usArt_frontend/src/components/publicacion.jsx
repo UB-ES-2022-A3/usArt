@@ -23,6 +23,8 @@ function Publicacion(props) {
     const [color, setColor] = useState('black')
 
     let input_textarea = document.querySelector('.content-input');
+    let input_reason = document.querySelector('.reason-input');
+
 
     useEffect(callApi, [])
 
@@ -169,7 +171,7 @@ function Publicacion(props) {
                 <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
             )
         }
-        
+
     }
 
     function renderFavButtons() {
@@ -180,7 +182,7 @@ function Publicacion(props) {
             return (
                 <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                    <i style={{ color: color, width: "30px", height: "30px"}} class='fa'>{heart}</i></button>
+                    <i style={{ color: color, fontSize: "35px"}} class='fa'>{heart}</i></button>
             )
         } else {
             return (<div></div>)
@@ -213,15 +215,23 @@ function Publicacion(props) {
         delModal.show()
     }
 
+    function complaintPopUp() {
+        let compModal = new Modal(document.getElementById('complaintModal'), {
+            keyboard: false, backdrop: 'static'
+        })
+        document.getElementById("toOpacity").style.opacity = "0.5";
+        compModal.show()
+    }
+
     function LINK_FRONTENDContact() {
         if (authTokens) {
             let coModal = new Modal(document.getElementById('coModal'), {
                 keyboard: false, backdrop: 'static'
             })
-    
+
             if (card.type === "CO") {
                 document.getElementById("toOpacity").style.opacity = "0.5";
-    
+
                 coModal.show()
             } else {
                 document.getElementById("toOpacity").style.opacity = "0.5";
@@ -231,7 +241,7 @@ function Publicacion(props) {
         } else {
             alert("You must be logged!")
         }
-        
+
     }
     function LINK_FRONTENDProfile() {
 
@@ -253,12 +263,47 @@ function Publicacion(props) {
         let description = input_textarea.value
         if (description.length === 0) {
             alert("La descripción no puede estar vacia")
+            input_textarea.value = ""
         }
         console.log(description)
         postPetCom(id, description)
         alert("Petición hecha!")
         document.getElementById("toOpacity").style.opacity = "1"
+        input_textarea.value = ""
+    }
 
+    function complaintConfirm() {
+        let reason = input_reason.value
+        if (reason.length === 0) {
+            complaintPopUp()
+            alert("Reason can't be empty")
+        } else {
+            fetch(LINK_BACKEND + "/api/catalog/complaint/get/post/" + id, {
+                method: 'POST',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'reason': reason
+                }),
+            })
+                .then((res) => res.json())
+                .then(data => {
+                    console.log(data)
+                }
+                )
+            alert("Complaint done!")
+            document.getElementById("toOpacity").style.opacity = "1"
+            input_reason.value = ""
+        }
+    }
+
+    function cancelComplaint() {
+        document.getElementById("toOpacity").style.opacity = "1"
+        input_reason.value = ""
     }
 
     function postPetCom(pub_id, description) {
@@ -339,6 +384,10 @@ function Publicacion(props) {
                             <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
                                     {renderFavButtons()}
+                                    <button onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
+                                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                                        <i title="Report" style={{ color: "#000000", fontSize: "43px", marginTop: "2px"}} class='fa'>&#x1F5E3;</i>
+                                    </button>
                                 </div>
                                 <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
                                     {renderDelContactButton()}
@@ -379,6 +428,22 @@ function Publicacion(props) {
                         <div className="modal-footer">
                             <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
                             <button onClick={deleteConfirm} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="complaintModal" tabIndex="-1">
+                <div className="modal-dialog" style={{ width: '400px', textAlign: "center"}}>
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title text-dark" id="modal_title">Reason for the complaint?</h4>
+                        </div>
+                        <div className="modal-body">
+                            <p><textarea name="reason" className="reason-input" rows="5" cols="45" id="reason" maxlength="300" required ></textarea></p>
+                        </div>
+                        <div className="modal-footer">
+                            <button className="button" id="close_button" onClick={cancelComplaint} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
+                            <button onClick={complaintConfirm} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Complaint</button>
                         </div>
                     </div>
                 </div>
