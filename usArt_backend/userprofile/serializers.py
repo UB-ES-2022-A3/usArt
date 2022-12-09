@@ -17,6 +17,12 @@ class UsArtUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'user_name', 'email', 'description', 'photo', 'is_self')
 
 
+class UsArtUserStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsArtUser
+        fields = ['user_name', 'status']
+
+
 class PurchaseHistorySerializer(serializers.ModelSerializer):
     user_id = UsArtUserSerializer(read_only=True)
     pub_id = PublicationListSerializer(read_only=True)
