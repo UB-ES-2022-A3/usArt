@@ -14,7 +14,6 @@ from rest_framework import filters, generics, status
 
 from rest_framework.response import Response
 
-
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -53,7 +52,6 @@ class PurchaseHistoryDetail(generics.RetrieveAPIView):
         id = self.kwargs["id"]
         return get_object_or_404(PurchaseHistory,id = id)
         
-
 
 class UserDetail(generics.RetrieveAPIView):
     queryset = UsArtUser.objects.all()
@@ -123,6 +121,7 @@ class ReviewUserStars(APIView):
         except:
             total = 0
         return Response({'average': total}, status=status.HTTP_200_OK)
+
 
 class ReviewList(generics.ListAPIView):
     serializer_class = serializers.ReviewerUserSerializer
