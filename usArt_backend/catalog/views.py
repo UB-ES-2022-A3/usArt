@@ -108,7 +108,7 @@ class PublicationPosting(generics.CreateAPIView):
         serializer.save(author=author, images=self.request.data['images'])
 
 
-class ComplaintMethods(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+class ComplaintGetPost(generics.ListCreateAPIView):
     queryset = Complaint.objects.all()
     serializer_class = ComplaintGetPutSerializer
     permission_classes = [IsAuthenticated]
@@ -132,9 +132,15 @@ class ComplaintMethods(generics.ListCreateAPIView, generics.UpdateAPIView, gener
         serializer.save(complainer_id=complainer, pub_id=pub)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def put(self, request):
+
+class ComplaintPutDelete(generics.UpdateAPIView, generics.DestroyAPIView):
+    queryset = Complaint.objects.all()
+    serializer_class = ComplaintGetPutSerializer
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
         if self.request.user.is_superuser:
-            com = get_object_or_404(Complaint, id=request.data['id'])
+            com = get_object_or_404(Complaint, id=self.kwargs["complaint_id"])
             self.request.data["complainer_id"] = com.complainer_id.id
             self.request.data["pub_id"] = com.pub_id.id
             self.request.data["reason"] = com.reason
@@ -145,12 +151,13 @@ class ComplaintMethods(generics.ListCreateAPIView, generics.UpdateAPIView, gener
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-    def delete(self, request):
+    def delete(self, request, *args, **kwargs):
         if self.request.user.is_superuser:
-            com = get_object_or_404(Complaint, id=request.data['id'])
+            com = get_object_or_404(Complaint, id=self.kwargs["complaint_id"])
             self.perform_destroy(com)
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
+
 
 

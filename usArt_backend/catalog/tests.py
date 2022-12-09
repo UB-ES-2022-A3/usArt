@@ -218,7 +218,7 @@ class TestPublicationAPI(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         pub = Publication.objects.get(title='Title test')
-        url = reverse('catalog:complaint_methods', kwargs={'pub_id': pub.id})
+        url = reverse('catalog:complaint_get_post', kwargs={'pub_id': pub.id})
         data = {
             'reason': 'fkdajgfk lajlgkfja kjfgdakñfañkmf ñkamdskñmjañk'
         }
@@ -238,7 +238,7 @@ class TestPublicationAPI(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         pub = Publication.objects.get(title='Title test 3')
-        url = reverse('catalog:complaint_methods', kwargs={'pub_id': pub.id})
+        url = reverse('catalog:complaint_get_post', kwargs={'pub_id': pub.id})
         data = {
             'reason': 'mnsdmgfbsdjghu nmg, zndgklsjdfli'
         }
@@ -248,7 +248,7 @@ class TestPublicationAPI(APITestCase):
 
         # post forbidden
         pub = Publication.objects.get(title='Title test')
-        url = reverse('catalog:complaint_methods', kwargs={'pub_id': pub.id})
+        url = reverse('catalog:complaint_get_post', kwargs={'pub_id': pub.id})
         response = self.client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -258,18 +258,14 @@ class TestPublicationAPI(APITestCase):
 
         # put forbidden
         data = {
-            'id': id,
             'status': 'AP'
         }
-        url = reverse('catalog:complaint_methods')
+        url = reverse('catalog:complaint_put_delete', kwargs={'complaint_id': id})
         response = self.client.put(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         # delete forbidden
-        data = {
-            'id': id,
-        }
-        url = reverse('catalog:complaint_methods')
+        url = reverse('catalog:complaint_put_delete', kwargs={'complaint_id': id})
         response = self.client.delete(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -286,25 +282,21 @@ class TestPublicationAPI(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         pub = Publication.objects.get(title='Title test 3')
-        url = reverse('catalog:complaint_methods', kwargs={'pub_id': pub.id})
+        url = reverse('catalog:complaint_get_post', kwargs={'pub_id': pub.id})
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
         # put user superuser 'AP'
         data = {
-            'id': id,
             'status': 'AP'
         }
-        url = reverse('catalog:complaint_methods')
+        url = reverse('catalog:complaint_put_delete', kwargs={'complaint_id': id})
         response = self.client.put(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['status'], 'AP')
 
         # delete user superuser 'AP'
-        data = {
-            'id': id,
-        }
-        url = reverse('catalog:complaint_methods')
+        url = reverse('catalog:complaint_put_delete', kwargs={'complaint_id': id})
         response = self.client.delete(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
