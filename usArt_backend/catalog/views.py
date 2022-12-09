@@ -42,6 +42,17 @@ class PublicationDetail(generics.RetrieveAPIView):
     serializer_class = PublicationListSerializer
 
 
+class PublicationDelete(generics.DestroyAPIView):
+    queryset = Publication.objects.all()
+    serializer_class = PublicationListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        pub = Publication.objects.get(author=self.request.user, id=self.kwargs["pub_id"])
+        self.perform_destroy(pub)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+ 
 class CommissionPost(generics.CreateAPIView):
     queryset = Commission.objects.all()
     serializer_class = CommissionListSerializer

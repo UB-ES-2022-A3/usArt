@@ -53,6 +53,7 @@ class CommissionListSerializer(serializers.ModelSerializer):
         # extra_kwargs = {"user_id":{"required":False}}
 
 
+
 class ArtistCommissionListSerializer(serializers.ModelSerializer):
     user_id = UsArtUserSerializer(read_only=True)
 
