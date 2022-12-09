@@ -64,8 +64,27 @@ class TestPublicationAPI(APITestCase):
         # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_delete_publication(self):
-        pass
+    def test_publication_delete(self):
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test',
+            'password': 'test'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        publication = Publication.objects.get(title='Title test')
+        url = reverse('catalog:publication_details', kwargs={'pk': publication.id})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = reverse('catalog:publication_delete', kwargs={'pub_id': publication.id})
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        url = reverse('catalog:publication_details', kwargs={'pk': publication.id})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_search_publications(self):
         url = reverse('catalog:publications_list') + '?search=test'

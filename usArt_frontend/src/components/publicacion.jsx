@@ -22,14 +22,7 @@ function Publicacion(props) {
     const [heart, setHeart] = useState(<span>&#xf08a;</span>)
     const [color, setColor] = useState('black')
 
-
     let input_textarea = document.querySelector('.content-input');
-
-    const favButton = (
-        <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-            <i style={{ color: color, width: "30px", height: "30px"}} class='fa'>{heart}</i></button>
-    )
 
     useEffect(callApi, [])
 
@@ -66,7 +59,6 @@ function Publicacion(props) {
             })
                 .then((res) => res.json())
                 .then(data => {
-                    console.log(data["detail"])
                     if (data["detail"] !== "Not found.") {
                         setFavorite(true)
                         setHeart(<span>&#xf004;</span>)
@@ -160,22 +152,86 @@ function Publicacion(props) {
                 aria-label={label_i}></button>
         )
     }
-    function LINK_FRONTENDContact() {
-        let coModal = new Modal(document.getElementById('coModal'), {
+
+    function renderDelContactButton() {
+        if (authTokens) {
+            if (author['id'] == user['user_id']) {
+                return (
+                    <button onClick={deleteOnClick} className="button" style={{ verticalAlign: "middle" }}><span>Delete</span></button>
+                )
+            } else {
+                return(
+                    <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
+                )
+            }
+        } else {
+            return (
+                <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
+            )
+        }
+        
+    }
+
+    function renderFavButtons() {
+        if (!authTokens) {
+            return (<div></div>)
+        }
+        if (author['id'] != user['user_id']) {
+            return (
+                <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                    <i style={{ color: color, width: "30px", height: "30px"}} class='fa'>{heart}</i></button>
+            )
+        } else {
+            return (<div></div>)
+        }
+    }
+
+    function deleteConfirm() {
+        fetch(
+            LINK_BACKEND + "/api/catalog/delete/" + id, {
+            method: 'DELETE',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(data => {
+                console.log(data);
+            })
+        LINK_FRONTENDProfile()
+        document.getElementById("toOpacity").style.opacity = "1";
+    }
+
+    function deleteOnClick() {
+        let delModal = new Modal(document.getElementById('deleteModal'), {
             keyboard: false, backdrop: 'static'
         })
+        document.getElementById("toOpacity").style.opacity = "0.5";
+        delModal.show()
+    }
 
-        if (card.type === "CO") {
-
-
-            document.getElementById("toOpacity").style.opacity = "0.5";
-
-            coModal.show()
+    function LINK_FRONTENDContact() {
+        if (authTokens) {
+            let coModal = new Modal(document.getElementById('coModal'), {
+                keyboard: false, backdrop: 'static'
+            })
+    
+            if (card.type === "CO") {
+                document.getElementById("toOpacity").style.opacity = "0.5";
+    
+                coModal.show()
+            } else {
+                document.getElementById("toOpacity").style.opacity = "0.5";
+                const link = LINK_FRONTEND + "/compra/" + id
+                window.location.assign(link)
+            }
         } else {
-            document.getElementById("toOpacity").style.opacity = "0.5";
-            const link = LINK_FRONTEND + "/compra/" + id
-            window.location.assign(link)
+            alert("You must be logged!")
         }
+        
     }
     function LINK_FRONTENDProfile() {
 
@@ -187,10 +243,9 @@ function Publicacion(props) {
     function Nameaux() {
         let name = ""
         if (card.type == "CO") {
-            name = "Contactar"
+            name = "Contact"
         } else {
-            name = "Comprar"
-
+            name = "Buy"
         }
         return name
     }
@@ -251,7 +306,7 @@ function Publicacion(props) {
                             </div>
                             <hr></hr>
                             <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
-                                <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
+                                <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Profile </span></button>
                             </div>
                         </div>
                         <div className="custom-container">
@@ -283,10 +338,10 @@ function Publicacion(props) {
                             <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
                             <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
-                                    {authTokens ? favButton : <div></div>}
+                                    {renderFavButtons()}
                                 </div>
                                 <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
-                                    <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                                    {renderDelContactButton()}
                                 </div>
                             </div>
                         </div>
@@ -311,6 +366,19 @@ function Publicacion(props) {
                         <div className="modal-footer">
                             <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
                             <button onClick={updateOutput} id="send_button" className="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="deleteModal" tabIndex="-1">
+                <div className="modal-dialog" style={{ width: '400px', textAlign: "center"}}>
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title text-dark" id="modal_title">Are you sure you want delete this publication?</h4>
+                        </div>
+                        <div className="modal-footer">
+                            <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
+                            <button onClick={deleteConfirm} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Delete</button>
                         </div>
                     </div>
                 </div>

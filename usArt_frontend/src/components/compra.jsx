@@ -65,59 +65,57 @@ function Compra(props) {
         console.log(formValues.ccv)
         postCompra(formValues.username, formValues.email, formValues.Direccion, formValues.CodigoPostal, formValues.Num, formValues.Fecha, formValues.ccv)
 
-
     };
     function postCompra(user_name, email, CodigoPostal, Direccion, Num, Fecha, ccv) {
-        fetch(LINK_BACKEND + "/api/catalog/" + id)
-            .then((res) => res.json())
-            .then(data => {
-                fetch(LINK_BACKEND + "/api/userprofile/purchases/", {
-                    method: 'POST',
-                    withCredentials: true,
-                    credentials: 'include',
-                    headers: {
-                        'Authorization': 'Bearer ' + authTokens.access,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        'pub_id': id,
-                        'price': data.price
+        if (Object.keys(validate(formValues, checkValue)).length === 0) {
+            fetch(LINK_BACKEND + "/api/catalog/" + id)
+                .then((res) => res.json())
+                .then(data => {
+                    fetch(LINK_BACKEND + "/api/userprofile/purchases/", {
+                        method: 'POST',
+                        withCredentials: true,
+                        credentials: 'include',
+                        headers: {
+                            'Authorization': 'Bearer ' + authTokens.access,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'pub_id': id,
+                            'price': data.price
 
-                    }),
-                    extra: JSON.stringify({
-                        'user_name': user_name,
-                        'email': email,
-                        'CodigoPostal': CodigoPostal,
-                        'Direccion': Direccion,
-                        'Num': Num,
-                        'Fecha': Fecha,
-                        'ccv': ccv
+                        }),
+                        extra: JSON.stringify({
+                            'user_name': user_name,
+                            'email': email,
+                            'CodigoPostal': CodigoPostal,
+                            'Direccion': Direccion,
+                            'Num': Num,
+                            'Fecha': Fecha,
+                            'ccv': ccv
+                        })
                     })
-                })
 
-                    .then(function(response){ 
-                        if (response.status === 201){
-                            return response.json();
-                        }else{
-                            alert("No se ha podido realizar la compra")
+                        .then(function(response){ 
+                            if (response.status === 201){
+                                return response.json();
+                            }else{
+                                alert("No se ha podido realizar la compra")
+                            }
+                                })
+                        .then(function(data) {
+                            const items = data;
+                            console.log(items.id)
+                            const link = LINK_FRONTEND + "/purchasedetails/"+items.id
+
+                            window.location.assign(link)
+
                         }
-                             })
-                    .then(function(data) {
-                        const items = data;
-                        console.log(items.id)
-                        const link = LINK_FRONTEND + "/purchasedetails/"+items.id
-
-                        window.location.assign(link)
-
-                    }
-                    )
+                        )
 
 
-            }
-            )
-
-
-
+                }
+                )
+        }
     }
 
     useEffect(() => {
@@ -165,9 +163,9 @@ function Compra(props) {
         if (!values.ccv) {
             errors.ccv = "CCV is required";
         } else if (values.ccv.length != 3) {
-            errors.Num = "Numero targeta has diferent length than expected"
+            errors.ccv = "CCV has diferent length than expected"
         }
-
+        console.log(errors)
         return errors;
     };
 
