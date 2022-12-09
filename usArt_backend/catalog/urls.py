@@ -15,5 +15,9 @@ urlpatterns = [
     path('user/commission/<str:pub_id>&<str:user_id>', views.CommissionAcceptDelete.as_view(),
          name='commission_update_delete'),
     path('user/commission/post/', views.CommissionPost.as_view(), name='commission_post'),
-    path('manage/post/', views.PublicationPosting.as_view(), name='post_publication')
+    path('manage/post/', views.PublicationPosting.as_view(), name='post_publication'),
+
+    path('complaint/<str:pub_id>', views.ComplaintMethods.as_view(), name='complaint_methods'),
+    path('complaint/', views.ComplaintMethods.as_view(), name='complaint_methods')
+
 ]

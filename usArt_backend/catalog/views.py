@@ -1,15 +1,15 @@
 
 from rest_framework import filters, generics, status
 from rest_framework.generics import get_object_or_404
-from catalog.models import Publication, PublicationImage, UsArtUser, Commission
-from catalog.serializers import PublicationListSerializer, PublicationPostSerializer,CommissionListSerializer,ArtistCommissionListSerializer
-from django.shortcuts import get_object_or_404
-from authentication.models import UsArtUser
+from rest_framework.utils import json
+
+from catalog.models import Publication, PublicationImage, Commission, Complaint
+from catalog.serializers import PublicationListSerializer, PublicationPostSerializer, CommissionListSerializer, \
+    ArtistCommissionListSerializer, ComplaintGetPutSerializer
 
 
 from authentication.models import UsArtUser
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 
 
@@ -76,7 +76,6 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, *args, **kwargs):
         commission = self.get_object()
-        print(commission)
         request.data['pub_id'] = self.kwargs['pub_id']
         request.data['user_id'] = self.kwargs['user_id']
         serializer = CommissionListSerializer(commission, data=self.request.data)
@@ -87,10 +86,8 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         commission = Commission.objects.get(pub_id__id=self.kwargs['pub_id'],
                                             user_id__id=self.kwargs['user_id'])
-        print(commission)
         return commission
 
-        
 
 class ArtistCommissionList(generics.ListAPIView):
     queryset = Commission.objects.all()
@@ -109,4 +106,51 @@ class PublicationPosting(generics.CreateAPIView):
     def perform_create(self, serializer):
         author = get_object_or_404(UsArtUser, id=self.request.user.id)
         serializer.save(author=author, images=self.request.data['images'])
+
+
+class ComplaintMethods(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+    queryset = Complaint.objects.all()
+    serializer_class = ComplaintGetPutSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        com = Complaint.objects.filter(pub_id=self.kwargs["pub_id"])
+        data = [ComplaintGetPutSerializer(x).data for x in list(com)]
+        return Response(data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        complainer = request.user
+        pub = get_object_or_404(Publication, id=self.kwargs["pub_id"])
+        if complainer.id == pub.author.id:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        self.request.data["complainer_id"] = complainer.id
+        self.request.data["pub_id"] = pub.id
+        serializer = ComplaintGetPutSerializer(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(complainer_id=complainer, pub_id=pub)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    def put(self, request):
+        if self.request.user.is_superuser:
+            com = get_object_or_404(Complaint, id=request.data['id'])
+            self.request.data["complainer_id"] = com.complainer_id.id
+            self.request.data["pub_id"] = com.pub_id.id
+            self.request.data["reason"] = com.reason
+            serializer = ComplaintGetPutSerializer(com, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request):
+        if self.request.user.is_superuser:
+            com = get_object_or_404(Complaint, id=request.data['id'])
+            self.perform_destroy(com)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
 
