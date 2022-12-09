@@ -14,7 +14,7 @@ on:
 
 jobs:
   python-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.10
@@ -32,7 +32,7 @@ jobs:
           coverage report --fail-under=85
       
   selenium-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       ENV: "DEV"
     steps:
