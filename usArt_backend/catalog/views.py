@@ -59,7 +59,6 @@ class CommissionPost(generics.CreateAPIView):
         return Response(data=serialiser.data, status=status.HTTP_201_CREATED)
 
 
-
 class CommissionList(generics.ListAPIView):
     queryset = Commission.objects.all()
     serializer_class = CommissionListSerializer
