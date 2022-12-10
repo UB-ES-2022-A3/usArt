@@ -38,14 +38,14 @@ class ChatsActivos(generics.RetrieveAPIView):
             chats = []
             for c in response:
                 if c.id_2.id == request.user.id:
-                    if c.id_2_active == False: return Response({'chats':[]}, status=status.HTTP_204_NO_CONTENT)
+                    if c.id_2_active == False: continue
                     chats.append({'user':{
                             'id':c.id_1.id,
                             'user_name': c.id_1.user_name,
                             'photo': c.id_1.photo.url
                         } ,'id_sala': c.id_sala})
                 elif c.id_1.id  == request.user.id:
-                    if c.id_1_active == False: return Response({'chats':[]}, status=status.HTTP_204_NO_CONTENT)
+                    if c.id_1_active == False: continue
                     chats.append({'user':{
                             'id':c.id_2.id,
                             'user_name': c.id_2.user_name,
