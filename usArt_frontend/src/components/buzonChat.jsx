@@ -18,6 +18,7 @@ function BuzonChat() {
   const bottomRef = useRef(null);
   const [pusher, setPusher] = useState();
   const [channel, setChannel] = useState()
+
   useEffect(callApi, []);
 
   const [c, setC] = useState(0)
@@ -229,7 +230,7 @@ function BuzonChat() {
 
 
   }
-  function postComission() {//TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+  function postComission() {
 
     fetch(
       LINK_BACKEND + "/api/catalog/user/commission/" + activeUser.pub_id + "&" + activeUser.user_id.id, {
@@ -262,7 +263,7 @@ function BuzonChat() {
       }
       )
   }
-  function deleteComission() { //TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+  function deleteComission() {
     fetch(
       LINK_BACKEND + "/api/catalog/user/commission/" + activeUser.pub_id + "&" + activeUser.user_id.id, {
       method: 'DELETE',
@@ -285,7 +286,23 @@ function BuzonChat() {
   }
 
   function deleteChat() {
-    alert("borrar")
+    fetch(
+      LINK_BACKEND + "/api/auth/deletechat/", {
+      method: 'PUT',
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Authorization': 'Bearer ' + authTokens.access,
+        'Content-Type': 'application/json',
+      }, body: JSON.stringify({ "id_sala": idSala })
+    })
+      .then((res) => res.json())
+      .then(data => {
+        setActiveUser()
+        setMeUser()
+        generalChat()
+      }
+      )
   }
 
   function mainChat() {
