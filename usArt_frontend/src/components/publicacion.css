@@ -17,6 +17,11 @@
     width: 38vw;
 
 }
+.listdenuncia {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    max-width: 730px;
+    text-overflow: clip;
+}
 
 
 .custom-container {
@@ -28,6 +33,7 @@
     width: 38vw;
 
 
+    
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 20px;
 
@@ -190,6 +196,16 @@ button[disabled]{
     transition: 0.5s;
 }
 
+.quejas {
+    margin-left: 2em;
+    margin-bottom: 2em;
+    
+}
+.acceptDel{
+    margin: 30px;
+}
+
+
 .button span:after {
     content: '\00bb';
     position: absolute;
@@ -282,7 +298,7 @@ button[disabled]{
     max-height: 400px;
     min-height: 400px;
 
-    margin-block-start: 4%;
+    margin-block-start: 2em;
 
 }
 

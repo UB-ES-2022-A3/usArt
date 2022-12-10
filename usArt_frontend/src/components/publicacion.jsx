@@ -8,11 +8,15 @@ import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
 import Footer from './footer'
 
+import { HiArchive } from "react-icons/hi";
+import { AiFillDelete } from "react-icons/ai";
+
 import { Modal } from 'bootstrap'
 import AuthContext from "../context/authcontext";
 
 function Publicacion(props) {
 
+    
     let { user, authTokens } = useContext(AuthContext);
     const { id } = useParams()
     const [card, setCard] = useState([])
@@ -21,6 +25,8 @@ function Publicacion(props) {
     const [fav, setFavorite] = useState(false)
     const [heart, setHeart] = useState(<span>&#xf08a;</span>)
     const [color, setColor] = useState('black')
+    const [report, setReport] = useState([])
+
 
 
     let input_textarea = document.querySelector('.content-input');
@@ -28,7 +34,7 @@ function Publicacion(props) {
     const favButton = (
         <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-            <i style={{ color: color, width: "30px", height: "30px"}} class='fa'>{heart}</i></button>
+            <i style={{ color: color, width: "30px", height: "30px" }} class='fa'>{heart}</i></button>
     )
 
     useEffect(callApi, [])
@@ -74,6 +80,54 @@ function Publicacion(props) {
                     }
                 })
         }
+        console.log("user: ", user)
+        if (user.is_superuser) {
+            fetch(
+                LINK_BACKEND + "/complaint/get/post/" + id)
+                .then((res) => res.json())
+                .then(data => {
+                    setReport(data);
+                }
+                )
+        }
+    }
+
+    function renderReportsUser() {
+        console.log("el user: ", user)
+        if (user.is_superuser && report.length != 0) {
+            return (
+
+                <div className='rounded listdenuncia justify-content-center  text-center pt-3 mt-5 mb-5 text-align-center'>
+                    <h1 style={{ color: "black", fontWeight: "600", fontSize: "30px" }}>Complains</h1>
+                    <div className=' text-center justify-content-center  '>
+                        {report.map(renderAllReports)}
+                    </div>
+
+                </div>
+            )
+        }
+    }
+    function onArchive(){
+
+    }
+    function onDelete(){
+
+    }
+
+    function renderAllReports(reports) {
+        return (
+            <div className='d-flex justify-content-between '>
+                <div className="rounded  justify-content-center pt-3 mt-4 shadow w-75 align-items-center quejas" style={{ backgroundColor: "RGBA(255,0,0,0.61)" }}>
+                    <p>{reports.reason}</p>
+                </div>
+                <div className='d-flex justify-content-center text-center align-items-center acceptDel'>
+                    < HiArchive style={{ fontSize: "35" , margin:"10px"}} onClick={onArchive()}/>
+                    < AiFillDelete style={{ fontSize: "35", margin:"10px" }}  onClick={onDelete()}/>
+                </div>
+
+            </div>
+
+        )
     }
 
     function toggleFavorite() {
@@ -230,8 +284,8 @@ function Publicacion(props) {
         <div>
             <div id='toOpacity'>
                 <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
-                    <div className="grid template"  >
-                        <div className="card card-item">
+                    <div className="grid template" >
+                        <div className="card card-item ">
                             <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
                                 <picture >
                                     <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
@@ -254,46 +308,52 @@ function Publicacion(props) {
                                 <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Perfil </span></button>
                             </div>
                         </div>
-                        <div className="custom-container">
-                            <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
-                                <div className="carousel-indicators">
-                                    {card.images.map(renderButtons)}
+                        <div>
+                            <div className="custom-container rounded">
+                                <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
+                                    <div className="carousel-indicators">
+                                        {card.images.map(renderButtons)}
+                                    </div>
+                                    <div className="carousel-inner " >
+                                        {card.images.map(renderCard)}
+                                    </div>
+                                    <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                        <span className="carousel-control-prev-icon " aria-hidden="true"></span>
+                                        <span className="visually-hidden">Previous</span>
+                                    </button>
+                                    <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                        <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span className="visually-hidden">Next</span>
+                                    </button>
                                 </div>
-                                <div className="carousel-inner " >
-                                    {card.images.map(renderCard)}
+                                <div className="card-body custom-body ">
+                                    <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
+                                        <h1 style={{ color: "black", marginTop: "3%" }}>{card.title}</h1>
+                                    </div >
+                                    <h4 style={{ color: "black" }}>{card.price}€</h4>
+                                    <hr></hr>
+                                    <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
+
                                 </div>
-                                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                    <span className="carousel-control-prev-icon " aria-hidden="true"></span>
-                                    <span className="visually-hidden">Previous</span>
-                                </button>
-                                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span className="visually-hidden">Next</span>
-                                </button>
-                            </div>
-                            <div className="card-body custom-body ">
-                                <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
-                                    <h1 style={{ color: "black", marginTop: "3%" }}>{card.title}</h1>
-                                </div >
-                                <h4 style={{ color: "black" }}>{card.price}€</h4>
-                                <hr></hr>
-                                <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
+                                <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
+                                <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                                    <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
+                                        {authTokens ? favButton : <div></div>}
+                                    </div>
+                                    <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
+                                        <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                                    </div>
+                                </div>
 
                             </div>
-                            <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
-                            <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-                                <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
-                                    {authTokens ? favButton : <div></div>}
-                                </div>
-                                <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
-                                    <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
-                                </div>
-                            </div>
+                            {renderReportsUser()}
                         </div>
-                    </div>
-                    <Footer />
-                </div>
 
+
+                    </div>
+
+                </div>
+                <Footer />
             </div>
             <div className="modal fade" id="coModal" tabIndex="-1">
                 <div className="modal-dialog">
