@@ -76,6 +76,7 @@ class CommissionList(generics.ListAPIView):
 
     def get_queryset(self):
         pub_id = self.kwargs['pub_id']
+        print(pub_id)
         commissions = Commission.objects.filter(pub_id__author=self.request.user, pub_id__id=pub_id)
         return commissions
 
