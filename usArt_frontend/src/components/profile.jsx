@@ -24,6 +24,7 @@ function Profile() {
     const [components, setComponents] = useState([]);
     const [radioGender, setRadioProduct] = useState('Products');
     const [buttonPopup, setButtonPopup] = useState(false)
+    const [block, setBlock] = useState('Block')
 
     var input_textarea_title = document.getElementById('titlepost');
     var input_textarea_description = document.getElementById('descriptionpost');
@@ -279,13 +280,17 @@ function Profile() {
         coModal.show()
 
     }
-    function LINK_FRONTENDBloc() {
+    async function LINK_FRONTENDBloc() {
         document.getElementById("profileOpacity").style.opacity = "0.5"
         var modalfade = new Modal(document.getElementById('blockmodal'), {
             keyboard: false
         })
-
-        modalfade.show()
+        if (block == "Block"){
+            modalfade.show()
+        }else{
+            PutBlock()
+        }
+       
 
     }
 
@@ -502,7 +507,7 @@ function Profile() {
         if (user == null) return
         if (username !== user.username) {
 
-            return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal-fade" id="block button" onClick={LINK_FRONTENDBloc} data-bs-target="#blockmodal" class="btn btn-dark">Block</button>
+            return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal-fade" id="block button" onClick={LINK_FRONTENDBloc} data-bs-target="#blockmodal" class="btn btn-dark">{block}</button>
         }
     }
 
@@ -628,8 +633,35 @@ function Profile() {
         )
     }
     function PutBlock() {
+        
+        fetch(LINK_BACKEND + "/api/userprofile/bloc/"+prof.id, {
+            method: 'PUT',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+        })
+            .then((res) => res.json())
+            .then(data => {})
+
+        console.log(data)
+
+        alert("User "+ block +"ed")
+        if(block=="Block"){
+            
+            setBlock("Unblock")
+        }else{
+            setBlock("Block")
+        }
+            
+        document.getElementById("profileOpacity").style.opacity = "1"
+            
+        
         return
     }
+    
     return (
         <div>
             <div id='profileOpacity'>
@@ -687,11 +719,11 @@ function Profile() {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title text-dark" id="modal_title">Are you sure you want delete this publication?</h4>
+                            <h4 className="modal-title text-dark" id="modal_title">Are you sure you want to block this user?</h4>
                         </div>
                         <div className="modal-footer">
-                        <button className="button" id="close_button" onClick={() => window.location.assign(LINK_FRONTEND + "/home")} data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
-                            <button onClick={PutBlock} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Block</button>
+                        <button className="button" id="close_button" onClick={() =>document.getElementById("profileOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
+                            <button onClick={PutBlock } id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Block</button>
                         </div>
                     </div>
                 </div>

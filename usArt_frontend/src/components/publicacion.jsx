@@ -160,22 +160,37 @@ function Publicacion(props) {
                 aria-label={label_i}></button>
         )
     }
-    function LINK_FRONTENDContact() {
+    async function LINK_FRONTENDContact() {
+        let block = null
+       
         let coModal = new Modal(document.getElementById('coModal'), {
             keyboard: false, backdrop: 'static'
         })
-
-        if (card.type === "CO") {
-
-
-            document.getElementById("toOpacity").style.opacity = "0.5";
-
-            coModal.show()
-        } else {
-            document.getElementById("toOpacity").style.opacity = "0.5";
-            const link = LINK_FRONTEND + "/compra/" + id
-            window.location.assign(link)
-        }
+        try {
+            const response = await fetch(
+                LINK_BACKEND + "/api/userprofile/blocked/" + author.id, {
+                method: 'GET',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                    'Content-Type': 'application/json'
+                },
+            })
+            if (!response.ok) {
+                if (card.type === "CO") {
+                    document.getElementById("toOpacity").style.opacity = "0.5";
+                    coModal.show()
+                }else{
+                    document.getElementById("toOpacity").style.opacity = "0.5";
+                    const link = LINK_FRONTEND + "/compra/" + id
+                    window.location.assign(link)
+                } 
+           } else {
+                alert("This user blocked you")
+                }
+        } catch (error){}
+      
     }
     function LINK_FRONTENDProfile() {
 
@@ -286,7 +301,7 @@ function Publicacion(props) {
                                     {authTokens ? favButton : <div></div>}
                                 </div>
                                 <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
-                                    <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                                    <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()} </span></button>
                                 </div>
                             </div>
                         </div>

@@ -9,7 +9,7 @@ from userprofile.views import PurchaseHistoryList, UserDetail, UserList, Purchas
 
 from userprofile.views import PurchaseHistoryList, UserDetail, UserList, UserProfile
 
-from userprofile.views import PurchaseHistoryList, UserDetail, UserList, UserProfile, ReviewUser, ReviewUserStars, ReviewList,UserBlocPut
+from userprofile.views import PurchaseHistoryList, UserDetail, UserList, UserProfile, ReviewUser, ReviewUserStars, ReviewList,UserBlocPut,UserBlockedGET,UserBlockerGET
 
 
 
@@ -28,6 +28,8 @@ urlpatterns = [
     path('review-artist/', ReviewUser.as_view(), name='review_artist'),
     path('review-artist/<str:author>', ReviewUserStars.as_view(), name='review_artist_puntuation'),
     path('review-list/<str:author>', ReviewList.as_view(), name='review_artist_list'),
-    path('bloc/<str:id>', UserBlocPut.as_view(), name = 'bloqued_user')
+    path('bloc/<str:id>', UserBlocPut.as_view(), name = 'bloqued_user'),
+    path('blocked/<str:id>', UserBlockedGET.as_view(), name='Userbloqued'),
+    path('blocker/<str:id>', UserBlockerGET.as_view(), name='Userbloquer')
 
 ]

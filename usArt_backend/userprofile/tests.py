@@ -202,15 +202,11 @@ class TestPublicationAPI(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        
-    
-
     def test_put_block(self):
         user = UsArtUser.objects.get(user_name='test')
         url = reverse('userprofile:bloqued_user', kwargs={'id': user.id})
         response = self.client.put(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
 
         url_post_login = reverse('api:token_obtain_pair')
         login_data = {
@@ -223,11 +219,52 @@ class TestPublicationAPI(APITestCase):
         token = response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
 
-        publication = Publication.objects.get(title='Title test')
-        url = reverse('userprofile:post_user_fav')
-        data = {'pub_id': publication.id}
-        response = self.client.post(url, data, format='json')
+        response = self.client.put(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        print(response.data)
+
+        response = self.client.put(url,  format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        print(response.data)
+
+    def test_get_block(self):
+        user = UsArtUser.objects.get(user_name='test')
+        url = reverse('userprofile:bloqued_user', kwargs={'id': user.id})
+        response = self.client.put(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test2',
+            'password': 'test2'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        response = self.client.put(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        print(response.data)
+
+
+        user = UsArtUser.objects.get(user_name='test2')
+
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test',
+            'password': 'test'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        url = reverse('userprofile:Userbloqued', kwargs={'id': user.id})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("GET:", response.data)
 
     def test_get_fav_lsit(self):
         url_post_login = reverse('api:token_obtain_pair')

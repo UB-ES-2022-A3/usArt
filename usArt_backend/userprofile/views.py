@@ -160,8 +160,10 @@ class UserBlocPut(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BlockSerializer
     permission_classes = [IsAuthenticated]
 
+    
+
     def put(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        queryset = self.get_object()
         if queryset:
             self.perform_destroy(queryset)
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -175,7 +177,7 @@ class UserBlocPut(generics.RetrieveUpdateDestroyAPIView):
             serializer.save(blocked_id=blocked_id,blocker_id=blocker_id)
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-    def get_queryset(self):
+    def get_object(self):
         try:
             block = Block.objects.get(blocked_id=self.kwargs['id'],
                                       blocker_id=self.request.user.id)
@@ -184,3 +186,25 @@ class UserBlocPut(generics.RetrieveUpdateDestroyAPIView):
 
         return block
 
+
+class UserBlockedGET(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = BlockSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = "id"
+
+    def get_object(self):
+
+        block = get_object_or_404(Block, blocked_id=self.request.user.id, blocker_id=self.kwargs['id'])
+
+        return block
+
+class UserBlockerGET(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = BlockSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = "id"
+
+    def get_object(self):
+
+        block = get_object_or_404(Block, blocked_id=self.kwargs['id'], blocker_id=self.request.user.id)
+
+        return block
