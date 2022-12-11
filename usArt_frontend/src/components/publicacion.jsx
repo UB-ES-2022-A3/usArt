@@ -81,6 +81,10 @@ function Publicacion(props) {
                 })
         }
         console.log("user: ", user)
+        refreshReports()
+    }
+
+    function refreshReports() {
         if (user.is_superuser) {
 
             fetch(
@@ -129,7 +133,7 @@ function Publicacion(props) {
 
     function onArchive(e) {
         fetch(
-            LINK_BACKEND + "/api/catalog/complaint/put/delete/" + e,{
+            LINK_BACKEND + "/api/catalog/complaint/put/delete/" + e, {
             method: 'PUT',
             withCredentials: true,
             credentials: 'include',
@@ -148,7 +152,7 @@ function Publicacion(props) {
                 }
             })
 
-            setReport(report)
+        refreshReports()
 
     }
     function onDelete(e) {
@@ -166,7 +170,7 @@ function Publicacion(props) {
             .then(data => {
                 console.log(data);
             })
-            setReport(report)
+        refreshReports()
 
     }
 
@@ -177,11 +181,11 @@ function Publicacion(props) {
                     <p>{reports.reason}</p>
                 </div>
                 <div className='d-flex justify-content-center text-center align-items-center acceptDel'>
-                    < HiArchive style={{ fontSize: "35", margin: "10px" ,cursor: "pointer", name: reports.id}}  onClick={onArchive.bind(this, reports.id)} />
-                    < AiFillDelete style={{ fontSize: "35", margin: "10px", cursor: "pointer" }}  onClick={onDelete.bind(this, reports.id)} />
+                    < HiArchive style={{ fontSize: "35", margin: "10px", cursor: "pointer", name: reports.id }} onClick={onArchive.bind(this, reports.id)} />
+                    < AiFillDelete style={{ fontSize: "35", margin: "10px", cursor: "pointer" }} onClick={onDelete.bind(this, reports.id)} />
                 </div>
 
-            </div> 
+            </div>
 
         )
     }
