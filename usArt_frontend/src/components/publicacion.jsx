@@ -148,7 +148,7 @@ function Publicacion(props) {
                 }
             })
 
-            window.location.reload(false);
+            setReport(report)
 
     }
     function onDelete(e) {
@@ -166,7 +166,8 @@ function Publicacion(props) {
             .then(data => {
                 console.log(data);
             })
-            window.location.reload(false);
+            setReport(report)
+
     }
 
     function renderAllReports(reports) {
