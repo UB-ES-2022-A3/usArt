@@ -2,7 +2,7 @@
 from rest_framework import filters, generics, status
 from rest_framework.generics import get_object_or_404
 from catalog.models import Publication, PublicationImage, UsArtUser, Commission
-from catalog.serializers import PublicationListSerializer, PublicationPostSerializer,CommissionListSerializer,ArtistCommissionListSerializer
+from catalog.serializers import PublicationListSerializer, PublicationPostSerializer, CommissionListSerializer, ArtistCommissionListSerializer
 from django.shortcuts import get_object_or_404
 from authentication.models import UsArtUser
 
@@ -11,20 +11,19 @@ from authentication.models import UsArtUser
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-
-
 
 
 import django_filters.rest_framework
 
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
 class PublicationList(generics.ListAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationListSerializer
-    filter_backends = (filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend)
+    filter_backends = (filters.SearchFilter,
+                       django_filters.rest_framework.DjangoFilterBackend)
     search_fields = ['title', 'description', 'author__user_name']
     filterset_fields = ['type']
 
@@ -48,11 +47,13 @@ class PublicationDelete(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def destroy(self, request, *args, **kwargs):
-        pub = Publication.objects.get(author=self.request.user, id=self.kwargs["pub_id"])
-        self.perform_destroy(pub)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        pub = Publication.objects.get(id=self.kwargs["pub_id"])
+        if (request.user == pub.author or request.user.is_superuser):
+            self.perform_destroy(pub)
+            return Response(status=status.HTTP_204_NO_CONTENT)            
+        return Response(status=status.HTTP_403_NO_CONTENT)
 
- 
+
 class CommissionPost(generics.CreateAPIView):
     queryset = Commission.objects.all()
     serializer_class = CommissionListSerializer
@@ -60,7 +61,8 @@ class CommissionPost(generics.CreateAPIView):
 
     def put(self, request):
         pub = get_object_or_404(Publication, id=request.data['pub_id'])
-        com = Commission.objects.filter(pub_id = request.data['pub_id'],user_id=request.user.id)
+        com = Commission.objects.filter(
+            pub_id=request.data['pub_id'], user_id=request.user.id)
         if len(com) == 0:
             serialiser = CommissionListSerializer(data=request.data)
         else:
@@ -76,7 +78,8 @@ class CommissionList(generics.ListAPIView):
 
     def get_queryset(self):
         pub_id = self.kwargs['pub_id']
-        commissions = Commission.objects.filter(pub_id__author=self.request.user, pub_id__id=pub_id)
+        commissions = Commission.objects.filter(
+            pub_id__author=self.request.user, pub_id__id=pub_id)
         return commissions
 
 
@@ -89,7 +92,8 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
         commission = self.get_object()
         request.data['pub_id'] = self.kwargs['pub_id']
         request.data['user_id'] = self.kwargs['user_id']
-        serializer = CommissionListSerializer(commission, data=self.request.data)
+        serializer = CommissionListSerializer(
+            commission, data=self.request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -105,8 +109,9 @@ class ArtistCommissionList(generics.ListAPIView):
     serializer_class = ArtistCommissionListSerializer
 
     def get_queryset(self):
-        
-        commissions = Commission.objects.filter(pub_id__author=self.request.user,status="PD")
+
+        commissions = Commission.objects.filter(
+            pub_id__author=self.request.user, status="PD")
         return commissions
 
 
@@ -117,4 +122,3 @@ class PublicationPosting(generics.CreateAPIView):
     def perform_create(self, serializer):
         author = get_object_or_404(UsArtUser, id=self.request.user.id)
         serializer.save(author=author, images=self.request.data['images'])
-
