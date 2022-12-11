@@ -16,7 +16,7 @@ import AuthContext from "../context/authcontext";
 
 function Publicacion(props) {
 
-    
+
     let { user, authTokens } = useContext(AuthContext);
     const { id } = useParams()
     const [card, setCard] = useState([])
@@ -86,7 +86,13 @@ function Publicacion(props) {
                 LINK_BACKEND + "/complaint/get/post/" + id)
                 .then((res) => res.json())
                 .then(data => {
-                    setReport(data);
+                    let finalReports = []
+                    data.forEach(async (rep) =>{
+                        if(rep.status === 'PE'){
+                            finalReports.push(rep);
+                        }
+                    });  
+                    setReport(finalReports);                
                 }
                 )
         }
@@ -107,11 +113,44 @@ function Publicacion(props) {
             )
         }
     }
-    function onArchive(){
 
+    function onArchive() {
+        console.log("entro en el archive")
+        fetch(
+            LINK_BACKEND + "complaint/put/delete/" + id, {
+            method: 'PUT',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                status: 'AP',
+            }),
+        })
+            .then(data => {
+                console.log(data);
+                if (data.status === 403) {
+                    alert("ERROR: Something went wrong")
+                }
+            })
     }
-    function onDelete(){
-
+    function onDelete() {
+        console.log("entro en el delete")
+        fetch(
+            LINK_BACKEND + "complaint/put/delete/" + id, {
+            method: 'DELETE',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(data => {
+                console.log(data);
+            })
     }
 
     function renderAllReports(reports) {
@@ -121,8 +160,8 @@ function Publicacion(props) {
                     <p>{reports.reason}</p>
                 </div>
                 <div className='d-flex justify-content-center text-center align-items-center acceptDel'>
-                    < HiArchive style={{ fontSize: "35" , margin:"10px"}} onClick={onArchive()}/>
-                    < AiFillDelete style={{ fontSize: "35", margin:"10px" }}  onClick={onDelete()}/>
+                    < HiArchive style={{ fontSize: "35", margin: "10px" }} onClick={onArchive()} />
+                    < AiFillDelete style={{ fontSize: "35", margin: "10px" }} onClick={onDelete()} />
                 </div>
 
             </div>
