@@ -82,17 +82,29 @@ function Publicacion(props) {
         }
         console.log("user: ", user)
         if (user.is_superuser) {
+
             fetch(
-                LINK_BACKEND + "/complaint/get/post/" + id)
+
+                LINK_BACKEND + "/api/catalog/complaint/get/post/" + id, {
+                method: 'GET',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                    'Content-Type': 'application/json'
+                },
+            })
                 .then((res) => res.json())
                 .then(data => {
+                    console.log("la data es esta: ", data)
                     let finalReports = []
-                    data.forEach(async (rep) =>{
-                        if(rep.status === 'PE'){
+                    data.forEach(async (rep) => {
+                        if (rep.status === 'PE') {
                             finalReports.push(rep);
                         }
-                    });  
-                    setReport(finalReports);                
+                    });
+                    console.log("los finla reports: ", finalReports)
+                    setReport(finalReports);
                 }
                 )
         }
@@ -100,6 +112,7 @@ function Publicacion(props) {
 
     function renderReportsUser() {
         console.log("el user: ", user)
+        console.log("los reports: ", report)
         if (user.is_superuser && report.length != 0) {
             return (
 
@@ -114,10 +127,9 @@ function Publicacion(props) {
         }
     }
 
-    function onArchive() {
-        console.log("entro en el archive")
+    function onArchive(e) {
         fetch(
-            LINK_BACKEND + "complaint/put/delete/" + id, {
+            LINK_BACKEND + "/api/catalog/complaint/put/delete/" + e,{
             method: 'PUT',
             withCredentials: true,
             credentials: 'include',
@@ -135,11 +147,12 @@ function Publicacion(props) {
                     alert("ERROR: Something went wrong")
                 }
             })
+
     }
-    function onDelete() {
+    function onDelete(e) {
         console.log("entro en el delete")
         fetch(
-            LINK_BACKEND + "complaint/put/delete/" + id, {
+            LINK_BACKEND + "/api/catalog/complaint/put/delete/" + e, {
             method: 'DELETE',
             withCredentials: true,
             credentials: 'include',
@@ -160,11 +173,11 @@ function Publicacion(props) {
                     <p>{reports.reason}</p>
                 </div>
                 <div className='d-flex justify-content-center text-center align-items-center acceptDel'>
-                    < HiArchive style={{ fontSize: "35", margin: "10px" }} onClick={onArchive()} />
-                    < AiFillDelete style={{ fontSize: "35", margin: "10px" }} onClick={onDelete()} />
+                    < HiArchive style={{ fontSize: "35", margin: "10px" ,cursor: "pointer", name: reports.id}}  onClick={onArchive.bind(this, reports.id)} />
+                    < AiFillDelete style={{ fontSize: "35", margin: "10px", cursor: "pointer" }}  onClick={onDelete.bind(this, reports.id)} />
                 </div>
 
-            </div>
+            </div> 
 
         )
     }
@@ -224,6 +237,7 @@ function Publicacion(props) {
     }
 
     function renderCard(card, index) {
+
         if (index === 0) return (
             <div className="carousel-item active" data-bs-interval="30000">
                 <img id={index} src={card} className="img-slider" alt="Sorry! not available at this time" ></img>
