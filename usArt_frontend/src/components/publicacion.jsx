@@ -148,6 +148,8 @@ function Publicacion(props) {
                 }
             })
 
+            window.location.reload(false);
+
     }
     function onDelete(e) {
         console.log("entro en el delete")
@@ -164,6 +166,7 @@ function Publicacion(props) {
             .then(data => {
                 console.log(data);
             })
+            window.location.reload(false);
     }
 
     function renderAllReports(reports) {
