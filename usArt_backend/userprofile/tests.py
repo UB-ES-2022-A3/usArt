@@ -315,12 +315,6 @@ class TestPublicationAPI(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
 
-        response = self.client.put(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        print(response.data)
-
-        response = self.client.put(url,  format='json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        print(response.data)
+       
 
 
