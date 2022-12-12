@@ -1,24 +1,16 @@
 
 from rest_framework import filters, generics, status
-from rest_framework.generics import get_object_or_404
-from catalog.models import Publication, PublicationImage, UsArtUser, Commission
-from catalog.serializers import PublicationListSerializer, PublicationPostSerializer,CommissionListSerializer,ArtistCommissionListSerializer
+from catalog.models import Publication, UsArtUser, Commission, Auction, Bid
+from catalog.serializers import PublicationListSerializer, PublicationPostSerializer, CommissionListSerializer,ArtistCommissionListSerializer, BiddingSerializer, AuctionSerializer
 from django.shortcuts import get_object_or_404
 from authentication.models import UsArtUser
-
-
-from authentication.models import UsArtUser
-from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
-from rest_framework.response import Response
-
-
-
-
 import django_filters.rest_framework
-
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+
+from pusher import Pusher
+
+pusher = Pusher(app_id=u'1519042', key=u'464bf9750a028fa769ca', secret=u'215b58084e762c8107c6', cluster=u'eu')
 
 
 class PublicationList(generics.ListAPIView):
@@ -118,3 +110,50 @@ class PublicationPosting(generics.CreateAPIView):
         author = get_object_or_404(UsArtUser, id=self.request.user.id)
         serializer.save(author=author, images=self.request.data['images'])
 
+
+class Bidding(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        auc = get_object_or_404(Auction, pub_id=request.data['pub_id'])
+        bid = Bid.objects.filter(auc_id = auc,user_id=request.user.id)
+        if len(bid) == 0:
+            serializer = BiddingSerializer(data=request.data)
+        else:
+            serializer = BiddingSerializer(bid[0], data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user_id=request.user, auc_id=auc)
+
+        if auc.min_bid < request.data['bid']:
+            Auction.objects.filter(pub_id=auc.pub_id).update(min_bid=request.data['bid'])
+
+        dic = {
+            "auc_id": str(serializer.data['auc_id']),
+            "user_id": {
+                "id": serializer.data['user_id']['id'],
+                "email": serializer.data['user_id']['email'],
+                "user_name": serializer.data['user_id']['user_name'],
+                "description": serializer.data['user_id']['description'],
+                "photo": serializer.data['user_id']['photo']
+            },
+            "bid": str(serializer.data['bid'])
+        }
+        pusher.trigger(str(request.data['pub_id']), u'subasta', dic)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+class BidList(generics.ListAPIView):
+    queryset = Bid.objects.all()
+    serializer_class = BiddingSerializer
+
+    def get_queryset(self):
+        pub_id = self.kwargs['pub_id']
+        bids = Bid.objects.filter(auc_id=pub_id).order_by('-bid')
+        return bids
+
+class AuctionGet(generics.ListAPIView):
+    queryset = Auction.objects.all()
+
+    def get(self, request, pub_id):
+        auction = Auction.objects.get(pub_id=pub_id)
+        serializer = AuctionSerializer(auction)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -1,14 +1,8 @@
 import io
 from authentication.models import UsArtUser
 from django.http import JsonResponse
-from catalog.models import Publication
-from rest_framework.parsers import JSONParser
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.decorators import login_required
 from authentication.models import UsArtUser, idChats
-from authentication.serializers import UsArtUserSerializer, SalaChatSerializer
+from authentication.serializers import UsArtUserSerializer
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
