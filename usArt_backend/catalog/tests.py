@@ -1,7 +1,9 @@
 from django.test import TestCase
 from django.urls import reverse
 from authentication.models import UsArtUser
-from catalog.models import Publication, Commission
+from catalog.models import Publication, Commission, Auction
+import datetime
+import pytz
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -41,8 +43,13 @@ class TestPublicationAPI(APITestCase):
                                    type='CO')
         pub1 = Publication.objects.create(title='Title test 3', description='Description test 3',
                                           author=user2, price=5.0)
-        Publication.objects.create(title='Title test 4', description='Description test 4',
+        pub2 = Publication.objects.create(title='Title test 4', description='Description test 4',
                                           author=user2, price=5.0, type='AU')
+        Auction.objects.create(pub_id=pub2, 
+                            closure_date=datetime.datetime.utcnow().replace(tzinfo=pytz.utc),
+                            min_bid=pub2.price,
+                            stock=1
+                            )
         Commission.objects.create(pub_id=pub1, user_id=user, description='Description test user')
         Commission.objects.create(pub_id=pub1, user_id=user3, description='Description test user3')
 
@@ -222,3 +229,74 @@ class TestPublicationAPI(APITestCase):
         url = reverse('catalog:commission_post')
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    
+    def test_bid(self):
+        user = UsArtUser.objects.get(user_name='test')
+        pub = Publication.objects.get(title='Title test 4')
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test2',
+            'password': 'test'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        data = {
+            'pub_id': pub.id,
+            'bid': 7
+        }
+        url = reverse('catalog:bidding')
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['bid'], 7)
+
+    def test_bid_list(self):
+        user = UsArtUser.objects.get(user_name='test')
+        pub = Publication.objects.get(title='Title test 4')
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test2',
+            'password': 'test'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        data = {
+            'pub_id': pub.id,
+            'bid': 7
+        }
+        url = reverse('catalog:bidding')
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['bid'], 7)
+        user = UsArtUser.objects.get(user_name='test')
+        pub = Publication.objects.get(title='Title test 4')
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'test',
+            'password': 'test'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        data = {
+            'pub_id': pub.id,
+            'bid': 10
+        }
+        url = reverse('catalog:bidding')
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['bid'], 10)
+
+        url = reverse('catalog:bid_list', kwargs={'pub_id': pub.id})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['bid'], 10)
+        self.assertEqual(response.data[1]['bid'], 7)
