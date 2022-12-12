@@ -151,10 +151,7 @@ if str(os.environ.get('ENV')) == 'PROD':
             'USER': 'usartadmin',
             'PASSWORD': '4GAg*JFY0!4!72%N',
             'HOST': 'usart-database.mysql.database.azure.com',
-            'PORT': '3306',
-            'OPTIONS': {
-                "init_command": "SET foreign_key_checks = 0;"
-            }
+            'PORT': '3306'
         }
     }
 elif str(os.environ.get('ENV')) == 'DEV':
@@ -165,10 +162,7 @@ elif str(os.environ.get('ENV')) == 'DEV':
             'USER': 'usartadmin',
             'PASSWORD': '4GAg*JFY0!4!72%N',
             'HOST': 'usart-database.mysql.database.azure.com',
-            'PORT': '3306',
-            'OPTIONS': {
-                "init_command": "SET foreign_key_checks = 0;",
-            }
+            'PORT': '3306'
         }
     }
 elif str(os.environ.get('ENV')) == 'TEST':
@@ -176,10 +170,7 @@ elif str(os.environ.get('ENV')) == 'TEST':
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': 'db.sqlite3',
-            'USER': '',
-            'OPTIONS': {
-                    "init_command": "SET foreign_key_checks = 0;",
-            }
+            'USER': ''
         }
     }
 else:
@@ -190,10 +181,7 @@ else:
             'USER': 'usartadmin',
             'PASSWORD': '4GAg*JFY0!4!72%N',
             'HOST': 'usart-database.mysql.database.azure.com',
-            'PORT': '3306',
-            'OPTIONS': {
-                "init_command": "SET foreign_key_checks = 0;",
-            }
+            'PORT': '3306'
         }
     }
 
