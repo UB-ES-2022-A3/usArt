@@ -221,8 +221,7 @@ function BuzonChat() {
       .then((res) => res.json())
       .then(data => {
         document.getElementById("btnradio1").checked = false;
-        setActiveUser()
-        setMeUser()
+        console.log(data)
         setRenderList(data)
 
       }
