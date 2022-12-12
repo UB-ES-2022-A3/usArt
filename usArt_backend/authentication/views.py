@@ -76,7 +76,12 @@ class SalaChat(generics.RetrieveAPIView):
         try:
             response = idChats.objects.get(
                 criterion1 & criterion2| criterion3 & criterion4)
-            
+            if response.id_1_active == 0:
+                idChats.objects.filter(
+                criterion1 & criterion2| criterion3 & criterion4).update(id_1_active=1)
+            if response.id_2_active == 0:
+                idChats.objects.filter(
+                criterion1 & criterion2| criterion3 & criterion4).update(id_2_active=1)
             return Response(response.id_sala, status=status.HTTP_200_OK)
 
         except:
