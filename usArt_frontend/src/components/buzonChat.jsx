@@ -136,6 +136,7 @@ function BuzonChat() {
         </div>
       </div>)
     } if (document.getElementById("btnradio2").checked) {
+      if (user.user_id == undefined) return 
       return (
         <div className='userChat' onClick={() => createchat(user)}>
           <img src={user.user_id.photo} alt="" style={{ height: "50px", width: "50px", objectFit: "cover", borderRadius: "50%" }} />
@@ -286,7 +287,7 @@ function BuzonChat() {
 
   function deleteChat() {
     fetch(
-      LINK_BACKEND + "/api/auth/deletechat/", {
+      LINK_BACKEND + "/auth/deletechat/", {
       method: 'PUT',
       withCredentials: true,
       credentials: 'include',
@@ -295,11 +296,15 @@ function BuzonChat() {
         'Content-Type': 'application/json',
       }, body: JSON.stringify({ "id_sala": idSala })
     })
-      .then((res) => res.json())
-      .then(data => {
+      .then((res) => {
+        if(res.status === 204){
         setActiveUser()
         setMeUser()
-        generalChat()
+        callApi()
+      }
+        return res.json()
+      })
+      .then(data => {
       }
       )
   }
