@@ -5,6 +5,7 @@
     min-height: 86%;
     max-height: 86%;
     display: flex;
+    margin-bottom: 2%;
     
 }
 
@@ -234,7 +235,9 @@
 
 .chats{
     overflow-y: scroll;
+    max-height: 65%;
 }
+
 .chats {
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
