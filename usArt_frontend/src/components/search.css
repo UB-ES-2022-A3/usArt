@@ -74,7 +74,7 @@
   display: grid;
   justify-items: center;
   align-items: center;
-  grid-template-columns: repeat(3, 60px);
+  grid-template-columns: repeat(4, 60px);
   grid-gap: 5px;
 
 }
@@ -89,6 +89,8 @@
 
 .icons {
   font-size: 35px;
+  width: 33px;
+  height: 33px;
   margin: 0;
   position: absolute;
   top: 50%;
@@ -99,7 +101,8 @@
 
 .box1,
 .box2,
-.box3 {
+.box3,
+.box4 {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   contain: content;
 
@@ -107,7 +110,9 @@
   width: 50px;
   border-radius: 100%
 }
-
+.box4{
+  contain: content;
+}
 .box1:hover,
 .box1.active {
   z-index: 2;
@@ -131,6 +136,16 @@
 
 .box3:hover,
 .box3.active {
+  z-index: 2;
+  border-radius: 100%;
+  content: "Autores";
+  transform: scale(1.1);
+
+  cursor: pointer
+}
+
+.box4:hover,
+.box4.active {
   z-index: 2;
   border-radius: 100%;
   content: "Autores";

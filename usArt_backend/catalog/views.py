@@ -124,8 +124,8 @@ class Bidding(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save(user_id=request.user, auc_id=auc)
 
-        if auc.min_bid < request.data['bid']:
-            Auction.objects.filter(pub_id=auc.pub_id).update(min_bid=request.data['bid'])
+        if auc.min_bid < float(request.data['bid']):
+            Auction.objects.filter(pub_id=auc.pub_id).update(min_bid=float(request.data['bid']))
 
         dic = {
             "auc_id": str(serializer.data['auc_id']),
