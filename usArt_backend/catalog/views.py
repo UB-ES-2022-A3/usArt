@@ -5,8 +5,9 @@ from catalog.models import Publication, PublicationImage, UsArtUser, Commission
 from catalog.serializers import PublicationListSerializer, PublicationPostSerializer,CommissionListSerializer,ArtistCommissionListSerializer
 from django.shortcuts import get_object_or_404
 from authentication.models import UsArtUser
-
-
+import base64
+import io
+from django.core.files.images import ImageFile
 from authentication.models import UsArtUser
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
@@ -117,4 +118,23 @@ class PublicationPosting(generics.CreateAPIView):
     def perform_create(self, serializer):
         author = get_object_or_404(UsArtUser, id=self.request.user.id)
         serializer.save(author=author, images=self.request.data['images'])
+
+class PublicationUpdating(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        publication = Publication.objects.filter(id = request.data['pub_id']).update(
+            title=request.data['title'],
+            description=request.data['description'],
+            price=request.data['price']
+            )
+        PublicationImage.objects.filter(publication = publication).delete()
+        for i, image in enumerate(request.data['images']):
+            imlist = image.split(",")
+            imageStr = imlist[1] #remove data:image/png;base64,
+            extension = imlist[0].split(';')[0].split('/')[1]
+            image_64_decode = base64.b64decode(imageStr)
+            im = ImageFile(io.BytesIO(image_64_decode), name= str(publication.id)+'_'+str(i)+'.' + extension)
+            PublicationImage.objects.create(publication=publication, image=im)
+        return publication
 
