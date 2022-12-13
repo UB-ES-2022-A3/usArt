@@ -128,13 +128,15 @@ class PublicationUpdating(generics.CreateAPIView):
             description=request.data['description'],
             price=request.data['price']
             )
-        PublicationImage.objects.filter(publication = publication).delete()
-        for i, image in enumerate(request.data['images']):
-            imlist = image.split(",")
-            imageStr = imlist[1] #remove data:image/png;base64,
-            extension = imlist[0].split(';')[0].split('/')[1]
-            image_64_decode = base64.b64decode(imageStr)
-            im = ImageFile(io.BytesIO(image_64_decode), name= str(publication.id)+'_'+str(i)+'.' + extension)
-            PublicationImage.objects.create(publication=publication, image=im)
-        return publication
+        if len(request.data['images']) > 0:
+            publication = Publication.objects.get(id = request.data['pub_id'])
+            PublicationImage.objects.filter(publication = publication).delete()
+            for i, image in enumerate(request.data['images']):
+                imlist = image.split(",")
+                imageStr = imlist[1] #remove data:image/png;base64,
+                extension = imlist[0].split(';')[0].split('/')[1]
+                image_64_decode = base64.b64decode(imageStr)
+                im = ImageFile(io.BytesIO(image_64_decode), name= str(publication.id)+'_'+str(i)+'.' + extension)
+                PublicationImage.objects.create(publication=publication, image=im)
+        return Response(status=status.HTTP_201_CREATED)
 
