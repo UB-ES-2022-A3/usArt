@@ -257,9 +257,9 @@ function Search() {
                     </div>
                     <div className="grid custom-grid">
                         {Object.keys(cards).length !== 0 & loaded === true & option !== "US" ? cards.map(RenderCard) :
-                            (Object.keys(cards).length === 0 & loaded === true & option !== "US") ? <div> No hay na</div> :
+                            (Object.keys(cards).length === 0 & loaded === true & option !== "US") ? <div> No results founded :( </div> :
                                 (Object.keys(authors).length !== 0 & loaded === true & option === "US") ? authors.map(RenderCard) :
-                                    (Object.keys(authors).length === 0 & loaded === true & option === "US") ? <div> No hay na</div> :
+                                    (Object.keys(authors).length === 0 & loaded === true & option === "US") ? <div>No results founded :( </div> :
                                         loader()}
                     </div>
                 </div>
