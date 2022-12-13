@@ -311,3 +311,25 @@ button[disabled]{
     margin-top: 10px;
 
 }
+
+.image-div {
+    position: relative;
+    float: left;
+}
+.image-div:hover .stack-images{
+    opacity: 0.4;
+}
+
+.image-div:hover .hidden_img {
+    display: block;
+    cursor: pointer;
+    
+}
+.image-div .hidden_img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+
+}

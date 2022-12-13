@@ -390,7 +390,7 @@ function Publicacion(props) {
     const handleClearClick = (e) => {
         let fileReader = stateImages.filter(function (value, index, arr) {
 
-            return value.target !== e.target.src & e.target.accessKey !== index;
+            return value.target !== e.src & e.accessKey !== index;
         });
         setStateImages(fileReader)
 
@@ -400,8 +400,8 @@ function Publicacion(props) {
         if (stateImages.length === 0) return
         return (
             <div class="image-div">
-                <img key={key} accessKey={key} onClick={handleClearClick} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
-                <div class="trashContainer hidden_img">
+                <img key={key} id={"image"+key} accessKey={key} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
+                <div onClick={()=>handleClearClick(document.getElementById("image"+key))} class="trashContainer hidden_img">
                     <div class="trash">
                         <div class="tap">
                             <div class="tip"></div>
@@ -416,9 +416,6 @@ function Publicacion(props) {
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         )
     }
