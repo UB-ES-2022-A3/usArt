@@ -8,6 +8,7 @@ import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
 import Footer from './footer'
 
+
 import { Modal } from 'bootstrap'
 import AuthContext from "../context/authcontext";
 
@@ -154,13 +155,14 @@ function Publicacion(props) {
     }
 
     function renderDelContactButton() {
+        console.log("este es el user", user)
         if (authTokens) {
-            if (author['id'] == user['user_id']) {
+            if (author['id'] == user['user_id'] || user.is_superuser === true) {
                 return (
                     <button onClick={deleteOnClick} className="button" style={{ verticalAlign: "middle" }}><span>Delete</span></button>
                 )
             } else {
-                return(
+                return (
                     <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
                 )
             }
@@ -169,18 +171,18 @@ function Publicacion(props) {
                 <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
             )
         }
-        
+
     }
 
     function renderFavButtons() {
         if (!authTokens) {
             return (<div></div>)
         }
-        if (author['id'] != user['user_id']) {
+        if (author['id'] != user['user_id'] && user.is_superuser == false) {
             return (
                 <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                    <i style={{ color: color, width: "30px", height: "30px"}} class='fa'>{heart}</i></button>
+                    <i style={{ color: color, width: "30px", height: "30px" }} class='fa'>{heart}</i></button>
             )
         } else {
             return (<div></div>)
@@ -199,9 +201,16 @@ function Publicacion(props) {
             },
         })
             .then(data => {
-                console.log(data);
+                console.log("esto es la data: ", data);
             })
-        LINK_FRONTENDProfile()
+            
+        
+        if(user.is_superuser == true){
+            window.location.assign(LINK_FRONTEND + "/explore")
+        }else{
+            LINK_FRONTENDProfile()
+        }
+        
         document.getElementById("toOpacity").style.opacity = "1";
     }
 
@@ -218,10 +227,10 @@ function Publicacion(props) {
             let coModal = new Modal(document.getElementById('coModal'), {
                 keyboard: false, backdrop: 'static'
             })
-    
+
             if (card.type === "CO") {
                 document.getElementById("toOpacity").style.opacity = "0.5";
-    
+
                 coModal.show()
             } else {
                 document.getElementById("toOpacity").style.opacity = "0.5";
@@ -231,7 +240,7 @@ function Publicacion(props) {
         } else {
             alert("You must be logged!")
         }
-        
+
     }
     function LINK_FRONTENDProfile() {
 
@@ -310,7 +319,7 @@ function Publicacion(props) {
                             </div>
                         </div>
                         <div className="custom-container">
-                            <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
+                            <div id="carouselExampleControls" className="carousel carousel-dark slide" data-bs-ride="carousel"  >
                                 <div className="carousel-indicators">
                                     {card.images.map(renderButtons)}
                                 </div>
@@ -371,7 +380,21 @@ function Publicacion(props) {
                 </div>
             </div>
             <div className="modal fade" id="deleteModal" tabIndex="-1">
-                <div className="modal-dialog" style={{ width: '400px', textAlign: "center"}}>
+                <div className="modal-dialog" style={{ width: '400px', textAlign: "center" }}>
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title text-dark" id="modal_title">Are you sure you want delete this publication?</h4>
+                        </div>
+                        <div className="modal-footer">
+                            <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
+                            <button onClick={deleteConfirm} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="modal fade" id="deleteModal" tabIndex="-1">
+                <div className="modal-dialog" style={{ width: '400px', textAlign: "center" }}>
                     <div className="modal-content">
                         <div className="modal-header">
                             <h4 className="modal-title text-dark" id="modal_title">Are you sure you want delete this publication?</h4>
