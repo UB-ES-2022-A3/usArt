@@ -128,7 +128,7 @@ class PublicationUpdating(generics.CreateAPIView):
             description=request.data['description'],
             price=request.data['price']
             )
-        PublicationImage.objects.filter(publication = publication)
+        PublicationImage.objects.filter(publication = publication).delete()
         for i, image in enumerate(request.data['images']):
             imlist = image.split(",")
             imageStr = imlist[1] #remove data:image/png;base64,
