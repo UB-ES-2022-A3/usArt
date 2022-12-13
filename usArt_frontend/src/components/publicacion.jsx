@@ -283,7 +283,7 @@ function Publicacion(props) {
                     <button onClick={deleteOnClick} className="button" style={{ verticalAlign: "middle" }}><span>Delete</span></button>
                 )
             } else {
-                return(
+                return (
                     <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
                 )
             }
@@ -303,7 +303,7 @@ function Publicacion(props) {
             return (
                 <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                    <i style={{ color: color, fontSize: "35px"}} class='fa'>{heart}</i></button>
+                    <i style={{ color: color, fontSize: "35px" }} class='fa'>{heart}</i></button>
             )
         } else {
             return (<div></div>)
@@ -507,9 +507,9 @@ function Publicacion(props) {
                                     <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
                                         {authTokens ? favButton : <div></div>}
                                         <button onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
-                                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                                        <i title="Report" style={{ color: "#000000", fontSize: "43px", marginTop: "2px"}} class='fa'>&#x1F5E3;</i>
-                                    </button>
+                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                                            <i title="Report" style={{ color: "#000000", fontSize: "43px", marginTop: "2px" }} class='fa'>&#x1F5E3;</i>
+                                        </button>
                                     </div>
                                     <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
                                         <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
@@ -547,7 +547,7 @@ function Publicacion(props) {
                 </div>
             </div>
             <div className="modal fade" id="deleteModal" tabIndex="-1">
-                <div className="modal-dialog" style={{ width: '400px', textAlign: "center"}}>
+                <div className="modal-dialog" style={{ width: '400px', textAlign: "center" }}>
                     <div className="modal-content">
                         <div className="modal-header">
                             <h4 className="modal-title text-dark" id="modal_title">Are you sure you want delete this publication?</h4>
@@ -560,7 +560,7 @@ function Publicacion(props) {
                 </div>
             </div>
             <div className="modal fade" id="complaintModal" tabIndex="-1">
-                <div className="modal-dialog" style={{ width: '400px', textAlign: "center"}}>
+                <div className="modal-dialog" style={{ width: '400px', textAlign: "center" }}>
                     <div className="modal-content">
                         <div className="modal-header">
                             <h4 className="modal-title text-dark" id="modal_title">Reason for the complaint?</h4>
