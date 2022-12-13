@@ -24,12 +24,14 @@ function Auction(props) {
             let jsonpar = (JSON.parse(lastBid))
             const asArray = Object.entries(bidHistory);
             let arr = (asArray.filter(([key, value]) => value.user_id.user_name != jsonpar.user_id.user_name));
+            
             arr.push([arr.length,jsonpar])
             let filtered = []
             arr.forEach(element => {
-                filtered[element[0]] = element[1]
+                filtered.push(element[1])
             });
             filtered.sort(function(a, b){return b.bid- a.bid});
+            
             setbidHistory(filtered);
         }
     }, [lastBid]);
@@ -129,7 +131,7 @@ function Auction(props) {
     function checkNumbers(e) {
         let input_textarea_price = document.getElementById('bidpost');
         let buttonPrice = document.getElementById('bidbutton');
-        if (input_textarea_price.value == "") buttonPrice.disabled = true
+        if (input_textarea_price.value == "" | input_textarea_price.value < card.pub_id.price) buttonPrice.disabled = true
         else buttonPrice.disabled = false
         if (input_textarea_price.value > 10) {
             if (input_textarea_price.value[5] === ".") input_textarea_price.value = input_textarea_price.value.slice(0, 4);

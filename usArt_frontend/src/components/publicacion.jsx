@@ -197,13 +197,14 @@ function Publicacion(props) {
                 'Authorization': 'Bearer ' + authTokens.access,
                 'Content-Type': 'application/json'
             },
-        })
-            .then(data => {
-                console.log(data);
-            })
-        LINK_FRONTENDProfile()
+        }).then((res) => {
+            LINK_FRONTENDProfile()
+            return res.json()
+          })
+            
         document.getElementById("toOpacity").style.opacity = "1";
     }
+
 
     function deleteOnClick() {
         let delModal = new Modal(document.getElementById('deleteModal'), {
@@ -227,7 +228,7 @@ function Publicacion(props) {
                 document.getElementById("toOpacity").style.opacity = "0.5";
                 const link = LINK_FRONTEND + "/compra/" + id
                 window.location.assign(link)
-            } else if (card.type === "AU"){
+            } else if (card.type === "AU") {
                 document.getElementById("toOpacity").style.opacity = "0.5";
                 const link = LINK_FRONTEND + "/auction/" + id
                 window.location.assign(link)
@@ -251,7 +252,7 @@ function Publicacion(props) {
             name = "Contact"
         } else if (card.type == "AR") {
             name = "Buy"
-        }else{
+        } else {
             name = "Bid"
         }
         return name
@@ -337,7 +338,7 @@ function Publicacion(props) {
                                 <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
                                     <h1 style={{ color: "black", marginTop: "3%" }}>{card.title}</h1>
                                 </div >
-                                <h4 style={{ color: "black" }}>{card.type === "AU" ? "Initial price: "+card.price:card.price}€</h4>
+                                <h4 style={{ color: "black" }}>{card.type === "AU" ? "Initial price: " + card.price : card.price}€</h4>
                                 <hr></hr>
                                 <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
 
