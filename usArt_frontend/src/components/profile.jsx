@@ -288,7 +288,7 @@ function Profile() {
 
         if (user == null) return
         if (user.username === username)
-            return (<button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
+            return (<button onClick={LINK_FRONTENDContact} className="button" style={{width:"150px", verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
     }
 
     const { data, fullScreen, loading } = stateImages;
