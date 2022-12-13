@@ -8,7 +8,7 @@ import Profile from './components/profile';
 import Publicacion from './components/publicacion';
 import Search from './components/search';
 import Compra from './components/compra';
-
+import Auction from './components/Auction';
 import Details from './components/purchaseDetails';
 
 import BuzonTest from './components/buzonChat';
@@ -67,6 +67,7 @@ function App() {
               <Route path="/termsandconditions" element={<TermsAndConditions />}></Route>
               <Route path="/compra/:id" element={<Compra/>}></Route>
               <Route path="/purchasedetails/:id" element={<Details/>}></Route>
+              <Route path="/auction/:id" element={<Auction/>}></Route>
             </Routes>
         </div>
       </AuthProvider>

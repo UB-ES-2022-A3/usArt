@@ -26,7 +26,7 @@ function BuzonChat() {
   const [channel, setChannel] = useState()
   useEffect(callApi, []);
 
-  const [c, setC] = useState(0)
+
 
 
   useEffect(() => {
@@ -56,7 +56,7 @@ function BuzonChat() {
 
   const saveChat = (data) => {
     
-    if (c === 0) setlastMessage(JSON.stringify(data))
+    setlastMessage(JSON.stringify(data))
   };
  
   useEffect(() => {
