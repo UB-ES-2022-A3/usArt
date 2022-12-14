@@ -276,8 +276,9 @@ function Publicacion(props) {
     }
 
     function renderDelContactButton() {
+        console.log("este es el user", user)
         if (authTokens) {
-            if (author['id'] == user['user_id']) {
+            if (author['id'] == user['user_id'] || user.is_superuser === true) {
                 return (
                     <button onClick={deleteOnClick} className="button" style={{ verticalAlign: "middle" }}><span>Delete</span></button>
                 )
@@ -298,7 +299,7 @@ function Publicacion(props) {
         if (!authTokens) {
             return (<div></div>)
         }
-        if (author['id'] != user['user_id']) {
+        if (author['id'] != user['user_id'] && user.is_superuser == false) {
             return (
                 <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
@@ -321,9 +322,16 @@ function Publicacion(props) {
             },
         })
             .then(data => {
-                console.log(data);
+                console.log("esto es la data: ", data);
             })
-        LINK_FRONTENDProfile()
+            
+        
+        if(user.is_superuser == true){
+            window.location.assign(LINK_FRONTEND + "/explore")
+        }else{
+            LINK_FRONTENDProfile()
+        }
+        
         document.getElementById("toOpacity").style.opacity = "1";
     }
 
@@ -361,7 +369,7 @@ function Publicacion(props) {
         } else {
             alert("You must be logged!")
         }
-
+        
     }
     function LINK_FRONTENDProfile() {
 
