@@ -838,7 +838,7 @@ function Profile() {
                         <h5 class="modal-title text-dark" id="banModalLabel">Do you want to ban this user?</h5>
                     </div>
                     <div class="modal-body">
-                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"></textarea>
+                        <textarea style={{resize:"none"}} class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"}  type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
