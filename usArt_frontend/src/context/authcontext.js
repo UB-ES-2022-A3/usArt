@@ -39,9 +39,14 @@ export const AuthProvider = ({ children }) => {
 
     if (response.status === 200) {
       setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-      window.location.assign(LINK_FRONTEND + "/home");
+      const incomeUser = jwt_decode(data.access)
+      setUser(incomeUser);
+      if (incomeUser.status == "ALO") {
+        localStorage.setItem("authTokens", JSON.stringify(data));
+        window.location.assign(LINK_FRONTEND + "/home");
+      } else {
+        alert("You have been banned and cannot access")
+      }  
     } else {
       alert("Something went wrong!");
     }

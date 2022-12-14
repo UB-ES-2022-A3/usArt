@@ -14,7 +14,13 @@ class UsArtUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UsArtUser
-        fields = ('id', 'user_name', 'email', 'description', 'photo', 'is_self')
+        fields = ('id', 'user_name', 'email', 'description', 'photo', 'is_self', 'status')
+
+
+class UsArtUserStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsArtUser
+        fields = ['user_name', 'status']
 
 
 class PurchaseHistorySerializer(serializers.ModelSerializer):
@@ -40,7 +46,7 @@ class ExternalUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UsArtUser
-        fields = ('id', 'user_name', 'description', 'photo', 'is_self')
+        fields = ('id', 'user_name', 'description', 'photo', 'is_self', 'status')
 
 
 class ReviewUserSerializer(serializers.ModelSerializer):

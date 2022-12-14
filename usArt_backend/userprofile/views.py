@@ -10,14 +10,14 @@ from catalog.models import Publication
 from userprofile import serializers
 from userprofile.models import PurchaseHistory, Review, Fav
 
-from rest_framework import filters, generics, status
+from rest_framework import filters, generics
+
 
 from rest_framework.response import Response
-
-from rest_framework.permissions import IsAuthenticated
-
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.views import APIView
+
+
 
 import base64
 import io
@@ -151,3 +151,10 @@ class FavGetDelete(generics.RetrieveDestroyAPIView):
     def get_object(self):
         pub = Publication.objects.get(id=self.kwargs['pub_id'])
         return get_object_or_404(Fav, user_id=self.request.user, pub_id=pub)
+
+
+class BanUser(generics.UpdateAPIView):
+    queryset = UsArtUser.objects.all()
+    permission_classes = [IsAdminUser]
+    serializer_class = serializers.UsArtUserStatusSerializer
+    lookup_field = 'user_name'
