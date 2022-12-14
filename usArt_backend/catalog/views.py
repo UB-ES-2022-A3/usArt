@@ -42,6 +42,17 @@ class PublicationDetail(generics.RetrieveAPIView):
     serializer_class = PublicationListSerializer
 
 
+class PublicationDelete(generics.DestroyAPIView):
+    queryset = Publication.objects.all()
+    serializer_class = PublicationListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        pub = Publication.objects.get(author=self.request.user, id=self.kwargs["pub_id"])
+        self.perform_destroy(pub)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+ 
 class CommissionPost(generics.CreateAPIView):
     queryset = Commission.objects.all()
     serializer_class = CommissionListSerializer
@@ -59,13 +70,13 @@ class CommissionPost(generics.CreateAPIView):
         return Response(data=serialiser.data, status=status.HTTP_201_CREATED)
 
 
-
 class CommissionList(generics.ListAPIView):
     queryset = Commission.objects.all()
     serializer_class = CommissionListSerializer
 
     def get_queryset(self):
         pub_id = self.kwargs['pub_id']
+        print(pub_id)
         commissions = Commission.objects.filter(pub_id__author=self.request.user, pub_id__id=pub_id)
         return commissions
 
@@ -77,7 +88,6 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, *args, **kwargs):
         commission = self.get_object()
-        print(commission)
         request.data['pub_id'] = self.kwargs['pub_id']
         request.data['user_id'] = self.kwargs['user_id']
         serializer = CommissionListSerializer(commission, data=self.request.data)
@@ -88,10 +98,8 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         commission = Commission.objects.get(pub_id__id=self.kwargs['pub_id'],
                                             user_id__id=self.kwargs['user_id'])
-        print(commission)
         return commission
 
-        
 
 class ArtistCommissionList(generics.ListAPIView):
     queryset = Commission.objects.all()
