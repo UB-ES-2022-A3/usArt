@@ -4,6 +4,7 @@ import uuid
 
 # Create your models here.
 
+
 class AccountManager(BaseUserManager):
 
     def create_superuser(self, email, user_name, password, **other_fields):
@@ -60,8 +61,6 @@ class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
 
     def __str__(self):
         return self.user_name
-
-
 
 
 class idChats(models.Model):
