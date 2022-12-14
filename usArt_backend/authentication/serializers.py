@@ -14,3 +14,8 @@ class SalaChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = idChats
         fields = ('id_sala', 'id_1', 'id_2','chat')
+
+class DeleteChatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = idChats
+        fields = ('id_sala', 'id_1', 'id_2')
