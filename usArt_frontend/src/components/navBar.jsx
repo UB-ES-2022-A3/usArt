@@ -26,7 +26,7 @@ function NoLoggedNavBar() {
           <div className="offcanvas-body">
               <ul className="navbar-nav justify-content-end flex-grow-1 pe-3" style={{zIndex:"2"}}>
                 <li className="nav-item px-3">
-                  <a  className="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
+                  <a id="explore-button" className="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
                 </li>
                 <li className="nav-item px-3">
                   <a id="button_login" className="nav-link underL px-3" href="/login">Log in</a>

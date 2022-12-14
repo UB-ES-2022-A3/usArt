@@ -57,7 +57,7 @@ export default function Explorer() {
   return (
     <div style={{overflowX:"hidden"}}className="body_register">
       <div className="row header border">
-        <h1>Explore el talento en UsArt</h1>
+        <h1 id="explore-title">Explore el talento en UsArt</h1>
         <p style={{ color: "white" }}>Miles de personas ofrecen servicios de arte diariamente</p>
       </div>
       <div className="grid grid-explorer ">
