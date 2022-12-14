@@ -135,9 +135,10 @@ function Publicacion(props) {
             </div>
         )
     }
-    function renderButtons(card, index) {
+    function renderButtons(cards, index) {
         let label_i = "Slide " + (index + 1)
         let index_ = (index)
+        if (card.images.length === 1) return
         if (index_ === 0) {
             return (
                 <button className="active" key={index}
@@ -227,10 +228,10 @@ function Publicacion(props) {
             let coModal = new Modal(document.getElementById('coModal'), {
                 keyboard: false, backdrop: 'static'
             })
-
+    
             if (card.type === "CO") {
                 document.getElementById("toOpacity").style.opacity = "0.5";
-
+    
                 coModal.show()
             } else {
                 document.getElementById("toOpacity").style.opacity = "0.5";
@@ -240,7 +241,7 @@ function Publicacion(props) {
         } else {
             alert("You must be logged!")
         }
-
+        
     }
     function LINK_FRONTENDProfile() {
 
@@ -319,21 +320,24 @@ function Publicacion(props) {
                             </div>
                         </div>
                         <div className="custom-container">
-                            <div id="carouselExampleControls" className="carousel carousel-dark slide" data-bs-ride="carousel"  >
+                            <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
+
                                 <div className="carousel-indicators">
                                     {card.images.map(renderButtons)}
                                 </div>
                                 <div className="carousel-inner " >
                                     {card.images.map(renderCard)}
                                 </div>
-                                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                    <span className="carousel-control-prev-icon " aria-hidden="true"></span>
-                                    <span className="visually-hidden">Previous</span>
-                                </button>
-                                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span className="visually-hidden">Next</span>
-                                </button>
+                                {card.images.length > 1 ?
+                                    <div><button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                        <span className="carousel-control-prev-icon " aria-hidden="true"></span>
+                                        <span className="visually-hidden">Previous</span>
+                                    </button>
+                                        <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Next</span>
+                                        </button> </div>
+                                    : <div></div>}
                             </div>
                             <div className="card-body custom-body ">
                                 <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
@@ -379,20 +383,6 @@ function Publicacion(props) {
                     </div>
                 </div>
             </div>
-            <div className="modal fade" id="deleteModal" tabIndex="-1">
-                <div className="modal-dialog" style={{ width: '400px', textAlign: "center" }}>
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title text-dark" id="modal_title">Are you sure you want delete this publication?</h4>
-                        </div>
-                        <div className="modal-footer">
-                            <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
-                            <button onClick={deleteConfirm} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div className="modal fade" id="deleteModal" tabIndex="-1">
                 <div className="modal-dialog" style={{ width: '400px', textAlign: "center" }}>
                     <div className="modal-content">

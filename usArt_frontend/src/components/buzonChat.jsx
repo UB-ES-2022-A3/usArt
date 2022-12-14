@@ -1,22 +1,16 @@
 import React from 'react'
 import styles from '../components/buzonGeneralStyle.css'
-import { Component } from "react";
-import { BsThreeDots, BsFillImageFill } from "react-icons/bs";
-import useWebSocket, { ReadyState } from "react-use-websocket";
-import { useParams } from "react-router-dom";
+import { BsThreeDots } from "react-icons/bs";
 import { useState, useEffect, useCallback, useContext, useRef } from "react";
 import AuthContext from "../context/authcontext";
 import LINK_BACKEND from "./LINK_BACKEND";
-import LINK_RESOURCES from "./LINK_RESOURCES";
+import { Modal } from 'bootstrap'
 import Pusher from 'pusher-js'
 function BuzonChat() {
   let { user, authTokens } = useContext(AuthContext);
   const [activeUser, setActiveUser] = useState();
   const [idSala, setIdSala] = useState();
   const [meUser, setMeUser] = useState();
-  const [socketUrl, setSocketUrl] = useState('');
-  const { id } = useParams()
-  const [userList, setUserList] = useState([]);
   const [renderList, setRenderList] = useState([]);
   const [messageHistory, setMessageHistory] = useState([]);
   const [msg, setMsg] = useState("")
@@ -24,6 +18,7 @@ function BuzonChat() {
   const bottomRef = useRef(null);
   const [pusher, setPusher] = useState();
   const [channel, setChannel] = useState()
+
   useEffect(callApi, []);
 
   const [c, setC] = useState(0)
@@ -39,7 +34,7 @@ function BuzonChat() {
 
   useEffect(() => {
     if (idSala == null) return
-  
+
     setPusher(new Pusher("464bf9750a028fa769ca", { cluster: "eu", }));
   }, [idSala]);
 
@@ -55,10 +50,9 @@ function BuzonChat() {
   }, [channel]);
 
   const saveChat = (data) => {
-    
     if (c === 0) setlastMessage(JSON.stringify(data))
   };
- 
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messageHistory]);
@@ -86,7 +80,6 @@ function BuzonChat() {
     }
     setActiveUser(theuser.user);
     setIdSala(theuser.id_sala);
-    setSocketUrl(LINK_RESOURCES + '/chats/?id=' + theuser.id_sala)
     fetch(LINK_BACKEND + "/auth/chatsHistory/" + theuser.id_sala, {
       method: 'GET',
       withCredentials: true,
@@ -126,12 +119,12 @@ function BuzonChat() {
     })
       .then((res) => res.json())
       .then(data => {
-        setUserList(data.chats)
+
         setRenderList(data.chats)
       }
       )
   }
-  
+
   function renderChats(user) {
 
     if (document.getElementById("btnradio1").checked) {
@@ -143,6 +136,7 @@ function BuzonChat() {
         </div>
       </div>)
     } if (document.getElementById("btnradio2").checked) {
+      if (user.user_id == undefined) return 
       return (
         <div className='userChat' onClick={() => createchat(user)}>
           <img src={user.user_id.photo} alt="" style={{ height: "50px", width: "50px", objectFit: "cover", borderRadius: "50%" }} />
@@ -228,8 +222,7 @@ function BuzonChat() {
       .then((res) => res.json())
       .then(data => {
         document.getElementById("btnradio1").checked = false;
-        setActiveUser()
-        setMeUser()
+        console.log(data)
         setRenderList(data)
 
       }
@@ -237,7 +230,7 @@ function BuzonChat() {
 
 
   }
-  function postComission() {//TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+  function postComission() {
 
     fetch(
       LINK_BACKEND + "/api/catalog/user/commission/" + activeUser.pub_id + "&" + activeUser.user_id.id, {
@@ -270,7 +263,7 @@ function BuzonChat() {
       }
       )
   }
-  function deleteComission() { //TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+  function deleteComission() {
     fetch(
       LINK_BACKEND + "/api/catalog/user/commission/" + activeUser.pub_id + "&" + activeUser.user_id.id, {
       method: 'DELETE',
@@ -292,12 +285,55 @@ function BuzonChat() {
     callApi();
   }
 
+  function deleteChat() {
+    fetch(
+      LINK_BACKEND + "/auth/deletechat/", {
+      method: 'PUT',
+      withCredentials: true,
+      credentials: 'include',
+      headers: {
+        'Authorization': 'Bearer ' + authTokens.access,
+        'Content-Type': 'application/json',
+      }, body: JSON.stringify({ "id_sala": idSala })
+    })
+      .then((res) => {
+        if(res.status === 204){
+        setActiveUser()
+        setMeUser()
+        callApi()
+      }
+        return res.json()
+      })
+      .then(data => {
+      }
+      )
+  }
+
   function mainChat() {
     if (activeUser != undefined) {
       return (<div className='chat'><div className="chatInfo">
         <span>{activeUser.user_name == undefined ? activeUser.user_id.user_name : activeUser.user_name}</span>
-        <div className="chatIcons">
-          <BsThreeDots style={{ cursor: "pointer" }} />
+        <div onClick={() => {
+          let coModal = new Modal(document.getElementById('myModal'), {
+            keyboard: false
+          })
+          coModal.show()
+        }} className="chatIcons">
+          <div class="trashContainer">
+            <div class="trash icons-buzon">
+              <div class="tap">
+                <div class="tip"></div>
+                <div class="top"></div>
+              </div>
+              <div class="tap2">
+                <div class="bottom">
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
         <div className='messages' id="scrollbar-2">
@@ -355,6 +391,19 @@ function BuzonChat() {
           </div>
         </div>
         {mainChat()}
+      </div>
+      <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+          <div class="modal-content">
+            <div class="modal-body">
+              <p>Do you really want to delete this chat? This process cannot be undone.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" onClick={deleteChat} data-bs-dismiss="modal" class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
