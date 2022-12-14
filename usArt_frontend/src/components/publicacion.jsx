@@ -8,6 +8,7 @@ import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
 import Footer from './footer'
 
+
 import { Modal } from 'bootstrap'
 import AuthContext from "../context/authcontext";
 
@@ -134,9 +135,10 @@ function Publicacion(props) {
             </div>
         )
     }
-    function renderButtons(card, index) {
+    function renderButtons(cards, index) {
         let label_i = "Slide " + (index + 1)
         let index_ = (index)
+        if (card.images.length === 1) return
         if (index_ === 0) {
             return (
                 <button className="active" key={index}
@@ -154,13 +156,14 @@ function Publicacion(props) {
     }
 
     function renderDelContactButton() {
+        console.log("este es el user", user)
         if (authTokens) {
-            if (author['id'] == user['user_id']) {
+            if (author['id'] == user['user_id'] || user.is_superuser === true) {
                 return (
                     <button onClick={deleteOnClick} className="button" style={{ verticalAlign: "middle" }}><span>Delete</span></button>
                 )
             } else {
-                return(
+                return (
                     <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
                 )
             }
@@ -169,18 +172,18 @@ function Publicacion(props) {
                 <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
             )
         }
-        
+
     }
 
     function renderFavButtons() {
         if (!authTokens) {
             return (<div></div>)
         }
-        if (author['id'] != user['user_id']) {
+        if (author['id'] != user['user_id'] && user.is_superuser == false) {
             return (
                 <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                    <i style={{ color: color, width: "30px", height: "30px"}} class='fa'>{heart}</i></button>
+                    <i style={{ color: color, width: "30px", height: "30px" }} class='fa'>{heart}</i></button>
             )
         } else {
             return (<div></div>)
@@ -199,9 +202,16 @@ function Publicacion(props) {
             },
         })
             .then(data => {
-                console.log(data);
+                console.log("esto es la data: ", data);
             })
-        LINK_FRONTENDProfile()
+            
+        
+        if(user.is_superuser == true){
+            window.location.assign(LINK_FRONTEND + "/explore")
+        }else{
+            LINK_FRONTENDProfile()
+        }
+        
         document.getElementById("toOpacity").style.opacity = "1";
     }
 
@@ -311,20 +321,23 @@ function Publicacion(props) {
                         </div>
                         <div className="custom-container">
                             <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
+
                                 <div className="carousel-indicators">
                                     {card.images.map(renderButtons)}
                                 </div>
                                 <div className="carousel-inner " >
                                     {card.images.map(renderCard)}
                                 </div>
-                                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                    <span className="carousel-control-prev-icon " aria-hidden="true"></span>
-                                    <span className="visually-hidden">Previous</span>
-                                </button>
-                                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span className="visually-hidden">Next</span>
-                                </button>
+                                {card.images.length > 1 ?
+                                    <div><button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                        <span className="carousel-control-prev-icon " aria-hidden="true"></span>
+                                        <span className="visually-hidden">Previous</span>
+                                    </button>
+                                        <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span className="visually-hidden">Next</span>
+                                        </button> </div>
+                                    : <div></div>}
                             </div>
                             <div className="card-body custom-body ">
                                 <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
@@ -371,7 +384,7 @@ function Publicacion(props) {
                 </div>
             </div>
             <div className="modal fade" id="deleteModal" tabIndex="-1">
-                <div className="modal-dialog" style={{ width: '400px', textAlign: "center"}}>
+                <div className="modal-dialog" style={{ width: '400px', textAlign: "center" }}>
                     <div className="modal-content">
                         <div className="modal-header">
                             <h4 className="modal-title text-dark" id="modal_title">Are you sure you want delete this publication?</h4>

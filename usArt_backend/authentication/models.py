@@ -70,5 +70,7 @@ class idChats(models.Model):
     id_1 = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name="user1")
     id_2 = models.ForeignKey(UsArtUser, on_delete=models.CASCADE,related_name="user2")
     chat = models.FileField(upload_to='chats/')
+    id_1_active = models.BooleanField(default=True)
+    id_2_active = models.BooleanField(default=True)
     
     

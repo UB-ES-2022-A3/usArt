@@ -281,6 +281,7 @@ body {
 .image-div:hover .stack-images{
     opacity: 0.4;
 }
+
 .image-div:hover .hidden_img {
     display: block;
     cursor: pointer;
@@ -293,6 +294,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     display: none;
+   
 }
 
 .trashContainer {
