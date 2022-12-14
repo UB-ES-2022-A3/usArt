@@ -57,8 +57,8 @@ export default function Explorer() {
   return (
     <div style={{overflowX:"hidden"}}className="body_register">
       <div className="row header border">
-        <h1>Explore el talento en UsArt</h1>
-        <p style={{ color: "white" }}>Miles de personas ofrecen servicios de arte diariamente</p>
+        <h1>Explore the talent at UsArt</h1>
+        <p style={{ color: "white" }}>Thousands of people offer art services daily</p>
       </div>
       <div className="grid grid-explorer ">
         {cards.map(RenderCard)}
