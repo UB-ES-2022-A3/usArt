@@ -24,8 +24,8 @@ function Profile() {
     const [components, setComponents] = useState([]);
     const [radioGender, setRadioProduct] = useState('Products');
     const [buttonPopup, setButtonPopup] = useState(false)
-    const [block, setBlock] = useState('Block')
-
+    const [block, setBlock] = useState('')
+    
     var input_textarea_title = document.getElementById('titlepost');
     var input_textarea_description = document.getElementById('descriptionpost');
     var input_textarea_price = document.getElementById('pricepost');
@@ -110,16 +110,39 @@ function Profile() {
                 .then((res) => res.json())
                 .then(data => {
                     setProfile(data);
+                    fetch(LINK_BACKEND + "/api/userprofile/blocker/" + data.id, {
+                        method: 'GET',
+                        withCredentials: true,
+                        credentials: 'include',
+                        headers: {
+                            'Authorization': 'Bearer ' + authTokens.access,
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    .then(data => {
+                        console.log(data)
+                        
+                        if (!data.ok) {
+        
+                            setBlock("Block")
+                            
+                        } else {
+                            
+                            setBlock("Unblock")
+                        }
+                    })
 
                 }
                 )
-
+            
         } else {
             fetch(
                 LINK_BACKEND + "/api/userprofile/" + username)
                 .then((res) => res.json())
                 .then(data => {
+
                     setProfile(data);
+
                 }
 
                 )
@@ -285,13 +308,26 @@ function Profile() {
         var modalfade = new Modal(document.getElementById('blockmodal'), {
             keyboard: false
         })
-        if (block == "Block"){
+        const response = await fetch(
+            LINK_BACKEND + "/api/userprofile/blocker/" + prof.id, {
+            method: 'GET',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+        })
+        if (!response.ok) {
+            
             modalfade.show()
-        }else{
+            
+           
+       } else {
             PutBlock()
+            setBlock("Block")
         }
        
-
     }
 
     const handleChangePosting = (e) => {
@@ -496,6 +532,7 @@ function Profile() {
 
 
     }
+    
     function is_other() {
         if (user == null) return
         if (username !== user.username) {
@@ -507,9 +544,11 @@ function Profile() {
         if (user == null) return
         if (username !== user.username) {
 
-            return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal-fade" id="block button" onClick={LINK_FRONTENDBloc} data-bs-target="#blockmodal" class="btn btn-dark">{block}</button>
+            return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal-fade" id="block button" onClick={LINK_FRONTENDBloc} data-bs-target="#blockmodal" class="btn btn-dark"><span>{block} </span></button>
         }
     }
+
+   
 
     function buttonsTogether() {
 
@@ -649,11 +688,8 @@ function Profile() {
         console.log(data)
 
         alert("User "+ block +"ed")
-        if(block=="Block"){
-            
+        if (block == "Block"){
             setBlock("Unblock")
-        }else{
-            setBlock("Block")
         }
             
         document.getElementById("profileOpacity").style.opacity = "1"

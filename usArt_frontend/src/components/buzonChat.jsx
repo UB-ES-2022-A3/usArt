@@ -249,8 +249,7 @@ function BuzonChat() {
         'Content-Type': 'application/json',
       }, body: JSON.stringify({ "status": "AC" })
     })
-      .then((res) => res.json())
-      .then(data => {
+      .then((res) =>{
         setActiveUser()
         setMeUser()
         fetch(LINK_BACKEND + "/auth/chats/" + activeUser.user_id.id, {
@@ -267,8 +266,9 @@ function BuzonChat() {
           }
           )
         pendingComisions()
-      }
-      )
+        return res.json()
+      } )
+      
   }
   function deleteComission() { //TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
     fetch(

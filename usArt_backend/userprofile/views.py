@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 
-from authentication.models import UsArtUser
+from authentication.models import UsArtUser,idChats
 
 from django.shortcuts import get_object_or_404
 
@@ -19,7 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
-
+from django.db.models import Q
 import base64
 import io
 from django.core.files.images import ImageFile
@@ -175,6 +175,12 @@ class UserBlocPut(generics.RetrieveUpdateDestroyAPIView):
             serializer = BlockSerializer(queryset, data=self.request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save(blocked_id=blocked_id,blocker_id=blocker_id)
+            criterion1 = Q(id_1=request.user.id)
+            criterion2 = Q(id_2=id)
+
+            criterion3 = Q(id_1=id)
+            criterion4 = Q(id_2=request.user.id)
+            response = idChats.objects.filter(criterion1 & criterion2 | criterion3 & criterion4).delete()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
     def get_object(self):

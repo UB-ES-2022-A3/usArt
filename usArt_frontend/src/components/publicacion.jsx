@@ -178,16 +178,36 @@ function Publicacion(props) {
                 },
             })
             if (!response.ok) {
-                if (card.type === "CO") {
-                    document.getElementById("toOpacity").style.opacity = "0.5";
-                    coModal.show()
+                const response = await fetch(
+                    LINK_BACKEND + "/api/userprofile/blocker/" + author.id, {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Bearer ' + authTokens.access,
+                        'Content-Type': 'application/json'
+                    },
+                })
+                if(response.ok){
+                    alert("You block this user")
+
                 }else{
-                    document.getElementById("toOpacity").style.opacity = "0.5";
-                    const link = LINK_FRONTEND + "/compra/" + id
-                    window.location.assign(link)
-                } 
+                    if (card.type === "CO") {
+                        document.getElementById("toOpacity").style.opacity = "0.5";
+                        coModal.show()
+                    }else{
+                        document.getElementById("toOpacity").style.opacity = "0.5";
+                        const link = LINK_FRONTEND + "/compra/" + id
+                        window.location.assign(link)
+                }
+                
+                }
            } else {
+               
                 alert("This user blocked you")
+                
+
+                
                 }
         } catch (error){}
       
