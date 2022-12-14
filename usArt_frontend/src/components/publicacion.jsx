@@ -154,7 +154,7 @@ function Publicacion(props) {
         )
     }
 
-    async function renderDelContactButton() {
+    function renderDelContactButton() {
         if (authTokens) {
             if (author['id'] == user['user_id']) {
                 return (
@@ -166,8 +166,8 @@ function Publicacion(props) {
                 )
             }
         } else {
-        let block = null
-       
+           
+
             return (
                 <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
             )
@@ -216,25 +216,14 @@ function Publicacion(props) {
         delModal.show()
     }
 
-    function LINK_FRONTENDContact() {
+    async function LINK_FRONTENDContact() {
         if (authTokens) {
             let coModal = new Modal(document.getElementById('coModal'), {
                 keyboard: false, backdrop: 'static'
             })
-        try {
-            const response = await fetch(
-                LINK_BACKEND + "/api/userprofile/blocked/" + author.id, {
-                method: 'GET',
-                withCredentials: true,
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Bearer ' + authTokens.access,
-                    'Content-Type': 'application/json'
-                },
-            })
-            if (!response.ok) {
+            try {
                 const response = await fetch(
-                    LINK_BACKEND + "/api/userprofile/blocker/" + author.id, {
+                    LINK_BACKEND + "/api/userprofile/blocked/" + author.id, {
                     method: 'GET',
                     withCredentials: true,
                     credentials: 'include',
@@ -243,29 +232,41 @@ function Publicacion(props) {
                         'Content-Type': 'application/json'
                     },
                 })
-                if(response.ok){
-                    alert("You block this user")
+                if (!response.ok) {
+                    const response = await fetch(
+                        LINK_BACKEND + "/api/userprofile/blocker/" + author.id, {
+                        method: 'GET',
+                        withCredentials: true,
+                        credentials: 'include',
+                        headers: {
+                            'Authorization': 'Bearer ' + authTokens.access,
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    if (response.ok) {
+                        alert("You block this user")
 
-                }else{
-                    if (card.type === "CO") {
-                        document.getElementById("toOpacity").style.opacity = "0.5";
-                        coModal.show()
-                    }else{
-                        document.getElementById("toOpacity").style.opacity = "0.5";
-                        const link = LINK_FRONTEND + "/compra/" + id
-                        window.location.assign(link)
-                }
-                
-                }
-           } else {
-               
-                alert("This user blocked you")
-                
+                    } else {
+                        if (card.type === "CO") {
+                            document.getElementById("toOpacity").style.opacity = "0.5";
+                            coModal.show()
+                        } else {
+                            document.getElementById("toOpacity").style.opacity = "0.5";
+                            const link = LINK_FRONTEND + "/compra/" + id
+                            window.location.assign(link)
+                        }
 
-                
+                    }
+                } else {
+
+                    alert("This user blocked you")
+
+
+
                 }
-        } catch (error){}
-      
+            } catch (error) { }
+
+        }
     }
     function LINK_FRONTENDProfile() {
 

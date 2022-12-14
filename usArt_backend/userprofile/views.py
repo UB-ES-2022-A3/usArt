@@ -168,17 +168,17 @@ class UserBlocPut(generics.RetrieveUpdateDestroyAPIView):
             self.perform_destroy(queryset)
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
-            request.data['blocked_id'] = self.kwargs['id']
-            request.data['blocker_id'] = self.request.user.id
-            blocked_id = UsArtUser.objects.get(id=self.kwargs['id'])
-            blocker_id = UsArtUser.objects.get(id=self.request.user.id)
-            serializer = BlockSerializer(queryset, data=self.request.data)
+            request.data['blocked_id'] = kwargs['id']
+            request.data['blocker_id'] = request.user.id
+            blocked_id = UsArtUser.objects.get(id=kwargs['id'])
+            blocker_id = UsArtUser.objects.get(id=request.user.id)
+            serializer = BlockSerializer(queryset, data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save(blocked_id=blocked_id,blocker_id=blocker_id)
             criterion1 = Q(id_1=request.user.id)
-            criterion2 = Q(id_2=id)
+            criterion2 = Q(id_2=self.kwargs["id"])
 
-            criterion3 = Q(id_1=id)
+            criterion3 = Q(id_1=self.kwargs["id"])
             criterion4 = Q(id_2=request.user.id)
             response = idChats.objects.filter(criterion1 & criterion2 | criterion3 & criterion4).delete()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
