@@ -307,7 +307,7 @@ function Publicacion(props) {
                             </div>
                             <hr></hr>
                             <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
-                                <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Profile </span></button>
+                                <button id="profile-button" onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Profile </span></button>
                             </div>
                         </div>
                         <div className="custom-container">
