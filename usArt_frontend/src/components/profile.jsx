@@ -165,8 +165,9 @@ function Profile() {
     }
 
     function renderBanIfAdmin() {
+        console.log(user)
         if (user == null) return
-        if (!user.is_staff || user.username == username) return
+        if (!user.is_superuser || user.username == username) return
         if (prof.status == "BAN") {
             return (
                 <div>
@@ -176,26 +177,19 @@ function Profile() {
         } else if (prof.status == "ALO") {
             return (
                 <div>
-                    <div class="modal fade" id="banModal" tabindex="-1" aria-labelledby="banModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title text-dark" id="banModalLabel">Do you want to ban this user?</h5>
-                            </div>
-                            <div class="modal-body">
-                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"></textarea>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
-                                <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#banModal">Ban user</button>
+                    <button type="button" class="btn btn-danger" onClick={showBanModal}>Ban user</button>
                 </div>
             )
         }
+    }
+
+    function showBanModal() {
+        document.getElementById("profileOpacity").style.opacity = "0.5"
+        var banModal = new Modal(document.getElementById('banModal'), {
+            keyboard: false
+        })
+        setModal(banModal)
+        banModal.show()
     }
 
     function banUser(e, ban) {
@@ -224,6 +218,8 @@ function Profile() {
                 if (ban) {
                     alert("The user has been banned") 
                 }
+                document.getElementById("profileOpacity").style.opacity = "1"
+                modal.hide()
             })
     }
 
@@ -837,6 +833,22 @@ function Profile() {
                             <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
                             <button onClick={updateOutput} class="button" id='sendButton' style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="banModal" tabIndex="-1" aria-labelledby="banModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="banModalLabel">Do you want to ban this user?</h5>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"}  type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
+                    </div>
                     </div>
                 </div>
             </div>
