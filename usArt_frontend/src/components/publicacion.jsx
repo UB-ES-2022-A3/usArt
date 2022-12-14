@@ -82,6 +82,7 @@ function Publicacion(props) {
         }
         console.log("user: ", user)
         refreshReports()
+        
     }
 
     function refreshReports() {
@@ -100,14 +101,12 @@ function Publicacion(props) {
             })
                 .then((res) => res.json())
                 .then(data => {
-                    console.log("la data es esta: ", data)
                     let finalReports = []
                     data.forEach(async (rep) => {
                         if (rep.status === 'PE') {
                             finalReports.push(rep);
                         }
                     });
-                    console.log("los finla reports: ", finalReports)
                     setReport(finalReports);
                 }
                 )
@@ -115,8 +114,6 @@ function Publicacion(props) {
     }
 
     function renderReportsUser() {
-        console.log("el user: ", user)
-        console.log("los reports: ", report)
         if (user.is_superuser && report.length != 0) {
             return (
 
@@ -146,13 +143,13 @@ function Publicacion(props) {
             }),
         })
             .then(data => {
-                console.log(data);
                 if (data.status === 403) {
                     alert("ERROR: Something went wrong")
                 }
             })
 
         refreshReports()
+        window.location.assign(LINK_FRONTEND + "/publicacion/" + id)
 
     }
     function onDelete(e) {
@@ -171,6 +168,7 @@ function Publicacion(props) {
                 console.log(data);
             })
         refreshReports()
+        window.location.assign(LINK_FRONTEND + "/publicacion/" + id)
 
     }
 
