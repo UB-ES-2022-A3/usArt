@@ -354,7 +354,7 @@ function Publicacion(props) {
         compModal.show()
     }
 
-    function LINK_FRONTENDContact() {
+    async function LINK_FRONTENDContact() {
 
         if (authTokens) {
             let coModal = new Modal(document.getElementById('coModal'), {

@@ -33,7 +33,7 @@ urlpatterns = [
     path('blocked/<str:id>', UserBlockedGET.as_view(), name='Userbloqued'),
     path('blocker/<str:id>', UserBlockerGET.as_view(), name='Userbloquer'),
 
-    path('ban-user/<str:user_name>', BanUser.as_view(), name='ban_user')
+    path('ban-user/<str:user_name>', BanUser.as_view(), name='ban_user'),
 
 
 ]
