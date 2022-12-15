@@ -278,6 +278,17 @@ button[disabled] {
     grid-column: 2 / 3;
 }
 
+.grid{
+    min-height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-inline-start: 2%;
+    margin-inline-end: 2%;
+    justify-content: center;
+    grid-gap:5%;
+}
+
 .modal-dialog {
     margin: 0;
     position: absolute;
@@ -293,11 +304,8 @@ button[disabled] {
 
 .card-item {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    margin-left: 5%;
-    margin-right: 5%;
     margin-bottom: 2%;
     border-radius: 20px;
-
     width: 35vw;
     height: 20vh;
     max-height: 400px;

@@ -82,11 +82,11 @@ function Publicacion(props) {
         }
         console.log("user: ", user)
         refreshReports()
-        
+
     }
 
     function refreshReports() {
-        if (! authTokens) return
+        if (!authTokens) return
         if (user.is_superuser) {
 
             fetch(
@@ -291,7 +291,7 @@ function Publicacion(props) {
                 )
             }
         } else {
-           
+
 
             return (
                 <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
@@ -328,10 +328,10 @@ function Publicacion(props) {
         }).then((res) => {
             LINK_FRONTENDProfile()
             return res.json()
-          })   
-        if(user.is_superuser == true){
+        })
+        if (user.is_superuser == true) {
             window.location.assign(LINK_FRONTEND + "/explore")
-        }else{
+        } else {
             LINK_FRONTENDProfile()
         }
         document.getElementById("toOpacity").style.opacity = "1";
@@ -407,7 +407,7 @@ function Publicacion(props) {
             } catch (error) { }
 
         } else {
-            window.location.assign(LINK_FRONTEND+"/login")
+            window.location.assign(LINK_FRONTEND + "/login")
         }
     }
     function LINK_FRONTENDProfile() {
@@ -502,41 +502,18 @@ function Publicacion(props) {
             <div id='toOpacity'>
                 <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
                     <div className="grid template" >
-                        <div className="card card-item ">
-                            <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
-                                <picture >
-                                    <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
-                                </picture>
-                                <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
-                                <div className="ratings">
-                                    <div className="empty-stars"></div>
-                                    <div className="full-stars" style={{ width: review }}></div>
-                                </div>
-                                <div className="card-body" style={{ paddingTop: "0%" }}>
-                                </div>
-                            </div>
-                            <hr></hr>
-                            <div style={{ marginLeft: "2%" }}>
-                                <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
-                                <p placeholder="Description not found.." className="card-text">{author.description}</p>
-                            </div>
-                            <hr></hr>
-                            <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
-                                <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Profile </span></button>
-                            </div>
-                        </div>
                         <div>
                             <div className="custom-container rounded">
                                 <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
-    
-                                <div className="carousel-indicators">
+
+                                    <div className="carousel-indicators">
                                         {card.images.map(renderButtons)}
                                     </div>
                                     <div className="carousel-inner " >
                                         {card.images.map(renderCard)}
                                     </div>
                                     {card.images.length > 1 ?
-                                    <div><button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                        <div><button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                                             <span className="carousel-control-prev-icon " aria-hidden="true"></span>
                                             <span className="visually-hidden">Previous</span>
                                         </button>
@@ -544,7 +521,7 @@ function Publicacion(props) {
                                                 <span className="carousel-control-next-icon" aria-hidden="true"></span>
                                                 <span className="visually-hidden">Next</span>
                                             </button> </div>
-                                    : <div></div>}
+                                        : <div></div>}
                                 </div>
                                 <div className="card-body custom-body ">
                                     <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
@@ -572,7 +549,29 @@ function Publicacion(props) {
                             </div>
                             {renderReportsUser()}
                         </div>
-
+                        <div className="card card-item ">
+                            <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
+                                <picture >
+                                    <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
+                                </picture>
+                                <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
+                                <div className="ratings">
+                                    <div className="empty-stars"></div>
+                                    <div className="full-stars" style={{ width: review }}></div>
+                                </div>
+                                <div className="card-body" style={{ paddingTop: "0%" }}>
+                                </div>
+                            </div>
+                            <hr></hr>
+                            <div style={{ marginLeft: "2%" }}>
+                                <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
+                                <p placeholder="Description not found.." className="card-text">{author.description}</p>
+                            </div>
+                            <hr></hr>
+                            <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
+                                <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Profile </span></button>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -588,7 +587,7 @@ function Publicacion(props) {
                         </div>
                         <div className="modal-body">
 
-                            <p><textarea style={{resize:"none"}} name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
+                            <p><textarea style={{ resize: "none" }} name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
 
                         </div>
 
@@ -619,7 +618,7 @@ function Publicacion(props) {
                             <h4 className="modal-title text-dark" id="modal_title">Reason for the complaint?</h4>
                         </div>
                         <div className="modal-body">
-                            <p><textarea style={{resize:"none"}} name="reason" className="reason-input" rows="5" cols="45" id="reason" maxlength="300" required ></textarea></p>
+                            <p><textarea style={{ resize: "none" }} name="reason" className="reason-input" rows="5" cols="45" id="reason" maxlength="300" required ></textarea></p>
                         </div>
                         <div className="modal-footer">
                             <button className="button" id="close_button" onClick={cancelComplaint} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
