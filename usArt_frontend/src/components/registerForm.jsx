@@ -54,17 +54,13 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormErrors(validate(formValues, checkValue));
+    let errors = validate(formValues, checkValue)
+    setFormErrors(errors);
     setIsSubmit(true);
-    registerUser(formValues.username, formValues.password, formValues.email)
+    if (Object.keys(errors).length === 0) {registerUser(formValues.username, formValues.password, formValues.email)}
   };
 
-  useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      //window.location.assign(LINK_FRONTEND + "/home")
-    }
-  }, [formErrors]);
-  const validate = (values, checkValue) => {
+   const validate = (values, checkValue) => {
     const errors = {};
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     var usernameRegex = /^[a-zA-Z0-9.\$]{3,30}$/;
@@ -90,7 +86,7 @@ function Register() {
       errors.password = "Password must be 8 characters or more";
     }
     else if (!strongRegex.test(values.password)) {
-      errors.password = "Password must contain an uppercase letter, a number, and a special character";
+      errors.password = "Password must contain an uppercase letter and a lowercase, a number, and a special character";
     }
     if (checkValue == false) {
       errors.check = "You need to accept terms and conditions";
