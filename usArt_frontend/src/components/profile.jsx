@@ -279,22 +279,31 @@ function Profile() {
     }
 
     function RenderPurchaseHistory() {
-
+        console.log(prof)
+        if (prof.length == 0){
+            return (<div className="btn-group px-4 py-5 ">
+            <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
+            <label className="btn btn-outline-dark" htmlFor="radio1">Products</label>
+            <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChangeRadio} />
+            <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
+        </div>)
+        }
+        let possesive = prof.user_name.charAt(prof.user_name.length - 1) === 's'? prof.user_name +'\'': prof.user_name+'\'s'
         if (prof.is_self) {
             return (<div className="btn-group px-4 py-5 ">
                 <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
-                <label className="btn btn-outline-dark" htmlFor="radio1">My products</label>
+                <label className="btn btn-outline-dark" htmlFor="radio1">{possesive} Products</label>
                 <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChangeRadio} />
-                <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
+                <label className="btn btn-outline-dark" htmlFor="radio2">{possesive} Reviews</label>
                 <input type="radio" className="btn-check" name="options" id="radio3" autoComplete="off" value="Purchase" checked={radioGender === 'Purchase'} onChange={handleChangeRadio} />
                 <label className="btn btn-outline-dark" htmlFor="radio3">Purchase History</label>
             </div>)
         } else {
             return (<div className="btn-group px-4 py-5 ">
                 <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
-                <label className="btn btn-outline-dark" htmlFor="radio1">My products</label>
+                <label className="btn btn-outline-dark" htmlFor="radio1">{possesive} Products</label>
                 <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChangeRadio} />
-                <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
+                <label className="btn btn-outline-dark" htmlFor="radio2">{possesive} Reviews</label>
             </div>)
         }
     }
