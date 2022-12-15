@@ -200,7 +200,7 @@ function Profile() {
         } else if (prof.status == "ALO") {
             return (
                 <div>
-                    <button type="button" class="btn btn-danger" onClick={showBanModal}>Ban user</button>
+                    <button type="button" class="btn btn-danger" id="banuser" onClick={showBanModal}>Ban user</button>
                 </div>
             )
         }
@@ -954,7 +954,7 @@ function Profile() {
                     </div>
                     <div class="modal-footer">
                         <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"}  type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
+                        <button type="button" class="btn btn-danger" id="confirm_ban" onClick={(e) => banUser(e, true)}>Yes</button>
                     </div>
                     </div>
                 </div>

@@ -192,13 +192,51 @@ def test_ar2_crear_publicacion():
 def test_ur5_favoritos_publicacion():
     pass
 
-
+#ToDo
 def test_ur7_participar_subasta():
-    pass
+    test_ur10_login_alum()
+
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="search-bar"]').send_keys('Subasta de prueba')
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="button-addon1"]').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[contains(text(), "Subasta de prueba")]').click()
+    driver.implicitly_wait(10)
+    bid_button = driver.find_element(by=By.XPATH, value='//*[@id="action-button"]')
+    driver.execute_script("arguments[0].click()", bid_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.ID, value='bidpost').send_keys('9')
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="bidbutton"]').click()
+    driver.implicitly_wait(10)
 
 
 def test_ur2_devolver_pedidos():
-    pass
+    test_ur10_login_alum()
+
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]').click()
+    driver.implicitly_wait(10)
+    purchases_button = driver.find_element(by=By.ID, value='radio3')
+    driver.execute_script("arguments[0].click()", purchases_button)
+    driver.implicitly_wait(10)
+    purchase = driver.find_element(by=By.XPATH,
+            value='//*[contains(text(), "As soon as I saw her, I knew I was going to end up drawing her.")]')
+    driver.execute_script("arguments[0].click()", purchase)
+    driver.implicitly_wait(10)
+    refund_button = driver.find_element(by=By.XPATH, value='//*[@id="button-refund"]')
+    driver.execute_script("arguments[0].click()", refund_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="button-cancel-refund"]').click()
+    driver.implicitly_wait(10)
+    refund_button = driver.find_element(by=By.XPATH, value='//*[@id="button-refund"]')
+    driver.execute_script("arguments[0].click()", refund_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.ID, value='modal_reason').send_keys('Because I want')
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="button-send-refund"]').click()
+    driver.implicitly_wait(10)
 
 
 def test_ar5_eliminar_publicacion():
@@ -206,7 +244,35 @@ def test_ar5_eliminar_publicacion():
 
 
 def test_a2_banear_usuario():
-    pass
+    driver.get('http://localhost:3000/home')
+    driver.implicitly_wait(10)
+    log_in_button = driver.find_element(by=By.XPATH, value='//*[@id="button_login"]')
+    log_in_button.click()
+    username = driver.find_element(by=By.ID, value='form2')
+    password = driver.find_element(by=By.ID, value='form3')
+    sign_in_button = driver.find_element(by=By.XPATH, value='//*[@id="login_button"]')
+    username.send_keys('admin')
+    password.send_keys('admin')
+    sign_in_button.click()
+
+    driver.find_element(by=By.XPATH, value='//*[@id="search-bar"]').send_keys('Alum')
+    driver.find_element(by=By.XPATH, value='//*[@id="button-addon1"]').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="SelectUsers"]').click()
+    driver.implicitly_wait(10)
+
+    driver.get('http://localhost:3000/profile/Alum/default')
+    driver.implicitly_wait(10)
+    ban_button = driver.find_element(by=By.XPATH, value='//*[@id="banuser"]')
+    driver.execute_script("arguments[0].click()", ban_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="confirm_ban"]').click()
+    driver.implicitly_wait(10)
+
+    username = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Alum")]').text
+    assert username == 'Alum'
+
+
 
 
 def test_ar7_eliminar_conversacion():
@@ -222,7 +288,29 @@ def test_ar6_bloquear_usuario():
 
 
 def test_ur8_denunciar_servicio():
-    pass
+    test_ur10_login_alum()
+
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="search-bar"]').send_keys('a')
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="button-addon1"]').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[contains(text(), "Boyfriends Comic Book Issue 1!")]').click()
+    driver.implicitly_wait(10)
+    complaint_button = driver.find_element(by=By.XPATH, value='//*[@id="button-complaint"]')
+    driver.execute_script("arguments[0].click()", complaint_button)
+    driver.implicitly_wait(10)
+    close = driver.find_element(by=By.XPATH, value='//*[@id="close_button"]')
+    driver.execute_script("arguments[0].click()", close)
+    driver.implicitly_wait(10)
+    complaint_button = driver.find_element(by=By.XPATH, value='//*[@id="button-complaint"]')
+    driver.execute_script("arguments[0].click()", complaint_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.ID, value='reason').send_keys('Because I want')
+    driver.implicitly_wait(10)
+    compl = driver.find_element(by=By.XPATH, value='//*[@id="send_button"]')
+    driver.execute_script("arguments[0].click()", compl)
+    driver.implicitly_wait(10)
 
 
 def test_ar4_modificar_publicacion():
