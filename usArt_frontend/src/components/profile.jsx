@@ -656,7 +656,16 @@ function Profile() {
     }
     function generateAbout() {
         if (user == null | username == null) {
-            return
+            return (
+                <div className="card-body p-4 text-black">
+                    <div className="mb-1">
+                        <p className="lead fw-normal mb-1">About</p>
+                        <div id="borderDes" className="p-4 rounded-top" style={{ backgroundColor: "#f5f5f5" }}>
+                            <p id="description" style={{ outline: "0px solid transparent" }} contentEditable={false} className="font-italic mb-1">{prof.description}</p>
+
+                        </div>
+                    </div>
+                </div>)
         }
         else if (username === user.username) {
             if (edit === "edit") {
@@ -684,6 +693,17 @@ function Profile() {
 
 
             }
+        }else{
+            return (
+                <div className="card-body p-4 text-black">
+                    <div className="mb-1">
+                        <p className="lead fw-normal mb-1">About</p>
+                        <div id="borderDes" className="p-4 rounded-top" style={{ backgroundColor: "#f5f5f5" }}>
+                            <p id="description" style={{ outline: "0px solid transparent" }} contentEditable={false} className="font-italic mb-1">{prof.description}</p>
+
+                        </div>
+                    </div>
+                </div>)
         }
     }
     function checkNumbers(e) {
