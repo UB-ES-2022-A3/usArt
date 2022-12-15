@@ -8,11 +8,11 @@ import Profile from './components/profile';
 import Publicacion from './components/publicacion';
 import Search from './components/search';
 import Compra from './components/compra';
-
+import Auction from './components/Auction';
 import Details from './components/purchaseDetails';
-
+import Error from './components/error';      
 import BuzonTest from './components/buzonChat';
-
+import LINK_FRONTEND from './components/LINK_FRONTEND';
 import TermsAndConditions from './components/termsAndConditions';
 import { AuthProvider } from './context/authcontext';
 import { useContext } from "react";
@@ -24,14 +24,16 @@ import {
   Route
 } from "react-router-dom";
 
+
 function VideoBG(){
   if(window.location.href.includes('home')){
     return (<video className="video"
     src = {video}
     autoPlay={true} muted={true}loop={true}
   ></video>);
-  }else{
-    //document.html.style.backgroundImage = "url('assets/image1.jpg')";
+  }
+  if ( window.location.href === LINK_FRONTEND+"/"){
+    window.location.assign(LINK_FRONTEND + "/home")
   }
 }
 
@@ -67,6 +69,8 @@ function App() {
               <Route path="/termsandconditions" element={<TermsAndConditions />}></Route>
               <Route path="/compra/:id" element={<Compra/>}></Route>
               <Route path="/purchasedetails/:id" element={<Details/>}></Route>
+              <Route path="/auction/:id" element={<Auction/>}></Route>
+              <Route path="*" element={<Error/>}></Route>
             </Routes>
         </div>
       </AuthProvider>

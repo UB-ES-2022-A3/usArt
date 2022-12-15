@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useEffect,useRef } from 'react';
-import { BsSearch, BsBrushFill, BsFillPersonFill, BsXLg } from "react-icons/bs";
+import { BsSearch, BsBrushFill, BsFillPersonFill } from "react-icons/bs";
 import { AiFillWechat } from "react-icons/ai";
 import { useParams } from "react-router-dom"
 import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
 import "./search.css"
 import Footer from './footer';
+import hammer from "../assets/auction.png"
 
 function Search() {
     const { search } = useParams()
@@ -146,6 +147,9 @@ function Search() {
         if (document.getElementById("box3").classList.contains("active")) {
             document.getElementById("box3").classList.toggle("active")
         }
+        if (document.getElementById("box4").classList.contains("active")) {
+            document.getElementById("box4").classList.toggle("active")
+        }
         if (document.getElementById("box1").classList.contains("active")) {
             return
         }
@@ -161,6 +165,9 @@ function Search() {
         }
         if (document.getElementById("box3").classList.contains("active")) {
             document.getElementById("box3").classList.toggle("active")
+        }
+        if (document.getElementById("box4").classList.contains("active")) {
+            document.getElementById("box4").classList.toggle("active")
         }
         if (document.getElementById("box2").classList.contains("active")) {
             return
@@ -179,6 +186,9 @@ function Search() {
         if (document.getElementById("box2").classList.contains("active")) {
             document.getElementById("box2").classList.toggle("active")
         }
+        if (document.getElementById("box4").classList.contains("active")) {
+            document.getElementById("box4").classList.toggle("active")
+        }
         if (document.getElementById("box3").classList.contains("active")) {
             return
         }
@@ -186,19 +196,41 @@ function Search() {
         setOption("US")
 
     }
+    function selectAuctions() {
+        if (document.getElementById("box1").classList.contains("active")) {
+            document.getElementById("box1").classList.toggle("active")
+        }
+        if (document.getElementById("box2").classList.contains("active")) {
+            document.getElementById("box2").classList.toggle("active")
+        }
+        if (document.getElementById("box3").classList.contains("active")) {
+            document.getElementById("box3").classList.toggle("active")
+        }
+        if (document.getElementById("box4").classList.contains("active")) {
+            console.log("Ha")
+            return
+        }
+        document.getElementById("box4").classList.toggle("active")
+        setOption("AU")
+        
+
+    }
 
     function removeFilter(e) {
-        if (option === "CO") document.getElementById("box1").classList.toggle("active")
-        else if (option === "AR") document.getElementById("box2").classList.toggle("active")
+        if (option==="CO") document.getElementById("box1").classList.toggle("active")
+        else if (option==="AR") document.getElementById("box2").classList.toggle("active")
+        else if (option==="AU") document.getElementById("box4").classList.toggle("active")
         else document.getElementById("box3").classList.toggle("active")
         setOption("All")
         setComponents([])
     }
     function addDeleteButton() {
         let text = ""
-        if (option === "CO") text = "Comission"
-        else if (option === "AR") text = "Art"
-        else text = "Users"
+        console.log(option)
+        if (option==="CO") text = "Comision"
+        else if (option==="AR") text = "Arte"
+        else if  (option==="AU") text = "Auctions"
+        else text = "Usuarios"
         setComponents([<button onClick={removeFilter} className='button-filters'>{text}<span className="remove-icon"> × </span></button>])
     }
     function renderButton(element) {
@@ -240,7 +272,6 @@ function Search() {
                         </div>
                         <div className='grid search-grid'>
                             <div className="box1" id="box1" onClick={selectComision}>
-
                                 <AiFillWechat className="icons" />
                             </div>
                             <div className="box2" id="box2" onClick={selectArt}>
@@ -248,6 +279,9 @@ function Search() {
                             </div>
                             <div className="box3" id="box3" onClick={selectUsers}>
                                 <BsFillPersonFill className="icons" />
+                            </div>
+                            <div className="box4" id="box4"  onClick={selectAuctions}>
+                                <img src={hammer}  className="icons" alt="Hammer"></img>
                             </div>
                         </div>
                         <div className="selected-filters">

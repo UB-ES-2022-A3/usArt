@@ -286,7 +286,7 @@ function Publicacion(props) {
                     <button onClick={deleteOnClick} className="button" style={{ verticalAlign: "middle" }}><span>Delete</span></button>
                 )
             } else {
-                return(
+                return (
                     <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
                 )
             }
@@ -308,7 +308,7 @@ function Publicacion(props) {
             return (
                 <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                    <i style={{ color: color, fontSize: "35px"  }} class='fa'>{heart}</i></button>
+                    <i style={{ color: color, width: "30px", height: "30px" }} class='fa'>{heart}</i></button>
             )
         } else {
             return (<div></div>)
@@ -325,20 +325,18 @@ function Publicacion(props) {
                 'Authorization': 'Bearer ' + authTokens.access,
                 'Content-Type': 'application/json'
             },
-        })
-            .then(data => {
-                console.log("esto es la data: ", data);
-            })
-            
-        
+        }).then((res) => {
+            LINK_FRONTENDProfile()
+            return res.json()
+          })   
         if(user.is_superuser == true){
             window.location.assign(LINK_FRONTEND + "/explore")
         }else{
             LINK_FRONTENDProfile()
         }
-        
         document.getElementById("toOpacity").style.opacity = "1";
     }
+
 
     function deleteOnClick() {
         let delModal = new Modal(document.getElementById('deleteModal'), {
@@ -392,19 +390,19 @@ function Publicacion(props) {
                         if (card.type === "CO") {
                             document.getElementById("toOpacity").style.opacity = "0.5";
                             coModal.show()
-                        } else {
+                        } else if (card.type === "AR") {
                             document.getElementById("toOpacity").style.opacity = "0.5";
                             const link = LINK_FRONTEND + "/compra/" + id
+                            window.location.assign(link)
+                        } else if (card.type === "AU") {
+                            document.getElementById("toOpacity").style.opacity = "0.5";
+                            const link = LINK_FRONTEND + "/auction/" + id
                             window.location.assign(link)
                         }
 
                     }
                 } else {
-
                     alert("This user blocked you")
-
-
-
                 }
             } catch (error) { }
 
@@ -421,10 +419,13 @@ function Publicacion(props) {
     }
     function Nameaux() {
         let name = ""
+        console.log(card.type)
         if (card.type == "CO") {
             name = "Contact"
-        } else {
+        } else if (card.type == "AR") {
             name = "Buy"
+        } else {
+            name = "Bid"
         }
         return name
     }
@@ -495,6 +496,7 @@ function Publicacion(props) {
             }
             )
     }
+
     return (
         <div>
             <div id='toOpacity'>
@@ -548,7 +550,7 @@ function Publicacion(props) {
                                     <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
                                         <h1 style={{ color: "black", marginTop: "3%" }}>{card.title}</h1>
                                     </div >
-                                    <h4 style={{ color: "black" }}>{card.price}€</h4>
+                                    <h4 style={{ color: "black" }}>{card.type === "AU" ? "Initial price: " + card.price : card.price}€</h4>
                                     <hr></hr>
                                     <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
 
@@ -563,7 +565,7 @@ function Publicacion(props) {
                                         </button>
                                     </div>
                                     <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
-                                        <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                                        {renderDelContactButton()}
                                     </div>
                                 </div>
 
@@ -627,8 +629,6 @@ function Publicacion(props) {
                 </div>
             </div>
         </div>
-    );
+    )
 }
-
-
 export default Publicacion;
