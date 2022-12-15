@@ -96,23 +96,14 @@ function Details(props) {
 
     function postComplain(description) {
         // Aqui hem de enviar el correu 
-        if(emailCreator != null && emailUser != null){
-            window.open('mailto:' + emailCreator + '?subject=Refund inquiry&body='+ description);
-            //window.location.href = 'mailto:'+emailCreator+'?cc='+''+'&subject='+'Refund inquiry'+'&body='+description;
+        if (emailCreator != null && emailUser != null) {
+            window.open('mailto:' + emailCreator + '?subject=Refund inquiry&body=' + description);
 
-            /*var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (xhttp.readyState == 4 && xhttp.status == 200) {
-                    console.log(xhttp.responseText);
-                }
-            }
-            xhttp.open('GET', 'https://mandrillapp.com/api/1.0/messages/send.json?message[from_email]=mail@7995.by&message[to][0][email]=zdanevich.vitaly@yaa.ru&message[subject]=Заявка%20с%207995.by&message[html]=xxxxxx&key=oxddROOvCpKCp6InvVDqiGw', true);
-            xhttp.send();*/
 
             alert("Your complain has been sent to the creator with email: " + emailCreator)
 
         }
-        else{
+        else {
             alert("There was an error sending your inquiri, contact us to resolve this issue.")
         }
     }
@@ -120,11 +111,11 @@ function Details(props) {
 
 
 
-    
+
 
 
     return (
-        
+
         <div className='body_register'>
             <MDBContainer className="vertical-center " >
                 <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '25px' }}>
@@ -162,17 +153,19 @@ function Details(props) {
 
 
                         </MDBRow>
-                        <div className="" style={{bottom:"0",position:"absolute",right:"0"}}>
-                            <button className="button" onClick={LINK_FRONTENDContact} style={{ verticalAlign: "middle", width: "100px" , backgroundColor:"darkred"}} >Refund</button>
+                        <div className="" style={{ bottom: "0", position: "absolute", right: "0" }}>
+                            <button className="button" onClick={LINK_FRONTENDContact} style={{ verticalAlign: "middle", width: "100px", backgroundColor: "darkred" }} >Refund</button>
                             <div class="modal" id="coModal" tabindex="-1">
                                 <div class="modal-dialog">
-                                    <div class="modal-content upload-modal">
+                                    <div class="modal-content upload-modal" style={{width:"fit-content"}}>
                                         <div class="modal-header" style={{ marginTop: "-5%" }} >
-                                            <h5 class="modal-title text-dark" style={{position:"relative"}}>Tell us why do you want to return this item</h5>
+                                            <h5 class="modal-title text-dark" style={{ position: "relative" }}>Tell us why do you want to return this item</h5>
                                         </div>
-                                        <p><textarea style={{position:"relative"}} name="reason" className="content-input" rows="5" cols="60" id="modal_reason" required ></textarea></p>
-                                        <button className="button" onClick={updateOutput} style={{ verticalAlign: "middle", width: "100px"}}>Send</button>
-                                        <button className="button" onClick={() => window.location.assign(LINK_FRONTEND + "/home")} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Cancel</button>
+                                        <p><textarea style={{ resize: "none", position: "relative" }} name="reason" className="content-input" rows="5" cols="60" id="modal_reason" required ></textarea></p>
+                                        <div style={{display:"flex",justifyContent:"space-between"}}>
+                                            <button className="button" onClick={() => window.location.assign(LINK_FRONTEND + "/home")} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Cancel</button>
+                                            <button className="button" onClick={updateOutput} style={{ right: "0", verticalAlign: "middle", width: "100px" }}>Send</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
