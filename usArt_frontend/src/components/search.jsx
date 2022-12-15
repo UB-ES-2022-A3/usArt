@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useEffect } from 'react';
+import { useEffect,useRef } from 'react';
 import { BsSearch, BsBrushFill, BsFillPersonFill } from "react-icons/bs";
 import { AiFillWechat } from "react-icons/ai";
 import { useParams } from "react-router-dom"
@@ -17,6 +17,7 @@ function Search() {
     const [content, setContent] = useState(search);
     const [component, setComponents] = useState([]);
     const [option, setOption] = useState("")
+    const [loaded, setLoaded] = useState(false)
 
 
     function goSearch() {
@@ -30,7 +31,14 @@ function Search() {
             goSearch()
         }
     }
-    useEffect(callApi, [])
+    const timelineLoaded = useRef (false);
+    useEffect(() => {
+        if (!timelineLoaded.current) {
+            callApi()
+            timelineLoaded.current = true;
+        }
+    }, []);
+
     useEffect(filter, [option])
 
     function filter() {
@@ -41,7 +49,7 @@ function Search() {
         }
         if (allCards.length === 0 || option === "") return
 
-        if (option === "US" & authors.length === 0) { callApi();  addDeleteButton();return }
+        if (option === "US" & authors.length === 0) { callApi(); addDeleteButton(); return }
 
 
         const asArray = Object.entries(allCards);
@@ -58,12 +66,10 @@ function Search() {
             let filtered = []
             arr.forEach(element => {
                 filtered[element[0]] = element[1]
-
-
             });
 
             setCards(filtered)
-            console.log(option)
+
             addDeleteButton()
         }
 
@@ -72,22 +78,23 @@ function Search() {
     }
     function callApi() {
         let link = ""
-
+        setLoaded(false)
         if (option === "US") {
             link = LINK_BACKEND + "/api/userprofile/users/?search=" + search
         } else {
             link = LINK_BACKEND + "/api/catalog/?search=" + search
         }
-        fetch(
-            link)
+        fetch(link)
             .then((res) => res.json())
             .then(data => {
                 if (option === "US") {
                     setAuthors(data)
-
+                    setLoaded(true)
                 } else {
+                    if (cards.length > 0) return
                     setCards(data);
                     setAllCards(data)
+                    setLoaded(true)
 
                 }
 
@@ -96,10 +103,11 @@ function Search() {
     }
 
 
+
     function RenderCard(card, index) {
         if (option === "US") {
             return (
-                <a style={{ margin: "0.5%", textDecoration: 'none' }} href={"/profile/" + card.user_name+"/default"} key={card.id}>
+                <a style={{ margin: "0.5%", textDecoration: 'none' }} href={"/profile/" + card.user_name + "/default"} key={card.id}>
                     <div className="card custom search-card">
                         <picture >
                             <img style={{ marginTop: "10px" }} id={index} src={card.photo} className="card-img-top size-img" alt="Sorry! not available at this time" ></img>
@@ -108,7 +116,7 @@ function Search() {
                             <div className='grid' style={{ justifyContent: "inherit" }}>
                                 <h5 style={{ color: "black" }}><strong>{card.user_name}</strong></h5>
                                 <p className="card-text max">{card.description}</p>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </a>
@@ -146,9 +154,9 @@ function Search() {
             return
         }
         document.getElementById("box1").classList.toggle("active")
-        
+
         setOption("CO")
-       
+
 
     }
     function selectArt() {
@@ -165,9 +173,9 @@ function Search() {
             return
         }
         document.getElementById("box2").classList.toggle("active")
-        
+
         setOption("AR")
-    
+
 
 
     }
@@ -216,7 +224,7 @@ function Search() {
         setOption("All")
         setComponents([])
     }
-    function addDeleteButton(){
+    function addDeleteButton() {
         let text = ""
         console.log(option)
         if (option==="CO") text = "Comision"
@@ -229,16 +237,31 @@ function Search() {
         return element
     }
 
+    function loader() {
 
 
+        return (
+            <div className='centerLoader body_register searchLoader'>
+                <div class="loader">
+                    <div className="loader-wheel"></div>
+                    <div style={{ color: "black" }} className="loader-text"></div>
+                </div>
+            </div>)
+
+    }
 
     return (
         <div>
             <div style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
                 <div style={{ paddingTop: "5%" }}>
                     <div className="header-container ">
-                        <h1 style={{ color: "black" }}>Resultados de {search}..</h1>
-                        <p >{cards.length} resultado/s encontrado/s</p>
+                        <h1 style={{ color: "black" }}>Results of {search}..</h1>
+                        <p >{(Object.keys(cards).length !== 0 & loaded === true & option !== "US") ? Object.keys(cards).length + " results found" :
+                            (Object.keys(cards).length === 0 & loaded === true & option !== "US") ? ("No results") :
+                                (Object.keys(authors).length !== 0 & loaded === true & option === "US") ? (Object.keys(authors).length + " results found") :
+                                    (Object.keys(authors).length === 0 & loaded === true & option === "US") ? ("No results") :
+                                        "Loading.."}
+                        </p>
                     </div>
                     <div className='grid input-grid'>
                         <div className="input-group custom-input">
@@ -267,7 +290,11 @@ function Search() {
                         </div>
                     </div>
                     <div className="grid custom-grid">
-                        {(option === "US") ? authors.map(RenderCard) : cards.map(RenderCard)}
+                        {Object.keys(cards).length !== 0 & loaded === true & option !== "US" ? cards.map(RenderCard) :
+                            (Object.keys(cards).length === 0 & loaded === true & option !== "US") ? <div> No results found :( </div> :
+                                (Object.keys(authors).length !== 0 & loaded === true & option === "US") ? authors.map(RenderCard) :
+                                    (Object.keys(authors).length === 0 & loaded === true & option === "US") ? <div>No results found :( </div> :
+                                        loader()}
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from catalog.models import Publication, Commission, PublicationImage, Auction, Bid
+from catalog.models import Publication, Commission, PublicationImage, Complaint, Auction, Bid
 import datetime
 from authentication.serializers import UsArtUserSerializer
 import base64
@@ -43,7 +43,7 @@ class PublicationPostSerializer(serializers.ModelSerializer):
             )
         for i, image in enumerate(validated_data['images']):
             imlist = image.split(",")
-            imageStr = imlist[1] #remove data:image/png;base64,
+            imageStr = imlist[1] # remove data:image/png;base64,
             extension = imlist[0].split(';')[0].split('/')[1]
             image_64_decode = base64.b64decode(imageStr)
             im = ImageFile(io.BytesIO(image_64_decode), name= str(publication.id)+'_'+str(i)+'.' + extension)
@@ -56,18 +56,29 @@ class CommissionListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Commission
         fields = '__all__'
-        extra_kwargs = {'description': {'required': False},"user_id":{"required":False}}
-        #extra_kwargs = {"user_id":{"required":False}}
+        extra_kwargs = {'description': {'required': False},"user_id": {"required":False}}
+        # extra_kwargs = {"user_id":{"required":False}}
+
 
 
 class ArtistCommissionListSerializer(serializers.ModelSerializer):
     user_id = UsArtUserSerializer(read_only=True)
+
     class Meta:
         model = Commission
         fields = '__all__'
 
-        extra_kwargs = {'description': {'required': False},"user_id":{"required":False}}
+        extra_kwargs = {'description': {'required': False}, "user_id": {"required":False}}
         #extra_kwargs = {"user_id":{"required":False}}
+
+class BiddingSerializer(serializers.ModelSerializer):
+    user_id = UsArtUserSerializer(read_only=True)
+
+    class Meta:
+        model = Bid
+        fields = ['auc_id', 'user_id', 'bid']
+
+        extra_kwargs = {"user_id":{"required":False},"auc_id":{"required":False}}
 
 class BiddingSerializer(serializers.ModelSerializer):
     user_id = UsArtUserSerializer(read_only=True)

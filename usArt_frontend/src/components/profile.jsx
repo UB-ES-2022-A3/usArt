@@ -8,13 +8,12 @@ import Footer from './footer'
 import empty from '../assets/suchEmpty.png'
 import LINK_FRONTEND from './LINK_FRONTEND';
 import { Modal } from 'bootstrap'
-import { BsFillTrashFill } from "react-icons/bs";
 
 function Profile() {
 
     const { username, edit } = useParams();
     let { user, authTokens } = useContext(AuthContext);
-    const [prof, setProfile] = useState([])
+    let [prof, setProfile] = useState([])
     const [products, setProducts] = useState([])
     const [historialProducts, setHistorialProducts] = useState([])
     const [reviews, setReviews] = useState([])
@@ -164,6 +163,65 @@ function Profile() {
             )
     }
 
+    function renderBanIfAdmin() {
+        console.log(user)
+        if (user == null) return
+        if (!user.is_superuser || user.username == username) return
+        if (prof.status == "BAN") {
+            return (
+                <div>
+                    <button type="button" class="btn btn-warning" onClick={(e) => banUser(e, false)}>Unban user</button>
+                </div>
+            )
+        } else if (prof.status == "ALO") {
+            return (
+                <div>
+                    <button type="button" class="btn btn-danger" onClick={showBanModal}>Ban user</button>
+                </div>
+            )
+        }
+    }
+
+    function showBanModal() {
+        document.getElementById("profileOpacity").style.opacity = "0.5"
+        var banModal = new Modal(document.getElementById('banModal'), {
+            keyboard: false
+        })
+        setModal(banModal)
+        banModal.show()
+    }
+
+    function banUser(e, ban) {
+        e.preventDefault();
+        let banUser = "ALO"
+        if (ban) {
+            banUser = "BAN"
+        }
+        fetch(LINK_BACKEND + "/api/userprofile/ban-user/" + username, {
+            method: 'PUT',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                'user_name': username,
+                'status': banUser,
+            }),
+        })
+            .then((res) => res.json())
+            .then(data => {
+                const profile = { ...prof, status: data.status }
+                setProfile(profile)
+                if (ban) {
+                    alert("The user has been banned") 
+                }
+                document.getElementById("profileOpacity").style.opacity = "1"
+                modal.hide()
+            })
+    }
+
     function renderIfRadio() {
 
         if (radioGender === 'Products') {
@@ -289,7 +347,7 @@ function Profile() {
 
         if (user == null) return
         if (user.username === username)
-            return (<button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
+            return (<button onClick={LINK_FRONTENDContact} className="button" style={{width:"150px", verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
     }
 
     const { data, fullScreen, loading } = stateImages;
@@ -300,7 +358,7 @@ function Profile() {
     //#TODO, En teoria habrá una fecha
     function RenderMyHistorialProducts(product) {
         return (
-            <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + product.id} key={product.id}>
+            <a style={{ margin: "1%", textDecoration: 'none' }} href={"/purchasedetails/" + product.id} key={product.id}>
                 <div className='d-flex rounded  p-3 productRow text-center align-items-center justify-content-center' style={{ backgroundColor: "white" }}>
                     <img src={product.pub_id.images[0]} className="imageProducts shadow rounded" alt="Sorry! not available at this time" ></img>
                     <div className='col-3  d-flex  justify-content-center'>
@@ -575,11 +633,10 @@ function Profile() {
         }
     }
     const handleClearClick = (e) => {
-
         let fileReader = stateImages.filter(function (value, index, arr) {
-
-            return value.target !== e.target.src & e.target.accessKey !== index;
+            return value.target !== e.src & e.accessKey !== index;
         });
+        console.log(fileReader)
         setStateImages(fileReader)
 
     };
@@ -588,8 +645,8 @@ function Profile() {
         if (stateImages.length === 0) return
         return (
             <div class="image-div">
-                <img key={key} accessKey={key} onClick={handleClearClick} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
-                <div class="trashContainer hidden_img">
+                <img key={key} id={"image"+key} accessKey={key} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
+                <div onClick={()=>handleClearClick(document.getElementById("image"+key))} class="trashContainer hidden_img">
                     <div class="trash">
                         <div class="tap">
                             <div class="tip"></div>
@@ -604,9 +661,6 @@ function Profile() {
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         )
     }
@@ -645,13 +699,13 @@ function Profile() {
                             <div className="col-lg-8">
                                 <div className="card-body  p-4 text-black text-center ">
                                     {loadUploadButton()}
-
                                     <div className="mb-5 rounded-top " style={{ backgroundColor: "#f5f5f5" }}>
                                         {RenderPurchaseHistory()}
                                         <div className="p-4" style={{ backgroundColor: "#f5f5f5" }}>
                                             {renderIfRadio()}
                                         </div>
                                     </div>
+                                    {renderBanIfAdmin()}
                                 </div>
                             </div>
                         </div>
@@ -774,6 +828,22 @@ function Profile() {
                             <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
                             <button onClick={updateOutput} class="button" id='sendButton' style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="banModal" tabIndex="-1" aria-labelledby="banModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="banModalLabel">Do you want to ban this user?</h5>
+                    </div>
+                    <div class="modal-body">
+                        <textarea style={{resize:"none"}} class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"}  type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
+                    </div>
                     </div>
                 </div>
             </div>

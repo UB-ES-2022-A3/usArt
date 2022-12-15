@@ -258,3 +258,16 @@
 .full-stars {
   color: #ECBE24;
 }
+.searchLoader{
+  overflow-y: hidden;
+  min-height: 100vh;
+  width: 100%;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1000px rgb(255 255 255 / 80%);
+  animation: 45s linear 0s normal none infinite animate;
+}
+.centerLoader{
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}

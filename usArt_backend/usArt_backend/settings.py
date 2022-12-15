@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-m(h-0tjc3h^y!ln5-n#5btp^q*0*stmr7*-y^2)d!!w@kge3j*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net', 'usart-backend-dev.azurewebsites.net','usart.redis.cache.windows.net', '169.254.132.3', '*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'usart-backend.azurewebsites.net',
+                 'usart-backend-dev.azurewebsites.net', 'usart.redis.cache.windows.net', '169.254.132.3', '*']
 
 
 # Application definition
@@ -59,7 +60,6 @@ INSTALLED_APPS = [
 ]
 
 
-
 THIRD_PARTY_APPS = [
     'channels',
 ]
@@ -85,7 +85,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ORIGIN_ALLOW_ALL=True
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ORIGIN_WHITELIST = [
@@ -108,7 +108,7 @@ ACCESS_CONTROL_ALLOW_METHODS = '*'
 ACCESS_CONTROL_ALLOW_HEADERS = '*'
 
 CSRF_COOKIE_PATH = '/'
-CSRF_COOKIE_SAMESITE = 'Strict'  
+CSRF_COOKIE_SAMESITE = 'Strict'
 CSRF_COOKIE_SECURE = True
 
 CSRF_TRUSTED_ORIGINS = [
@@ -151,8 +151,7 @@ if str(os.environ.get('ENV')) == 'PROD':
             'USER': 'usartadmin',
             'PASSWORD': '4GAg*JFY0!4!72%N',
             'HOST': 'usart-database.mysql.database.azure.com',
-            'PORT': '3306',
-            'OPTIONS': {}
+            'PORT': '3306'
         }
     }
 elif str(os.environ.get('ENV')) == 'DEV':
@@ -163,16 +162,15 @@ elif str(os.environ.get('ENV')) == 'DEV':
             'USER': 'usartadmin',
             'PASSWORD': '4GAg*JFY0!4!72%N',
             'HOST': 'usart-database.mysql.database.azure.com',
-            'PORT': '3306',
-            'OPTIONS': {}
+            'PORT': '3306'
         }
     }
 elif str(os.environ.get('ENV')) == 'TEST':
     DATABASES = {
-            'default': {
+        'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': 'db.sqlite3',
-            'USER': '',
+            'USER': ''
         }
     }
 else:
@@ -183,11 +181,9 @@ else:
             'USER': 'usartadmin',
             'PASSWORD': '4GAg*JFY0!4!72%N',
             'HOST': 'usart-database.mysql.database.azure.com',
-            'PORT': '3306',
-            'OPTIONS': {}
+            'PORT': '3306'
         }
     }
-
 
 
 # Password validation

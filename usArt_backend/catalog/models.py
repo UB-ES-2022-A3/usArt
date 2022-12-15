@@ -3,8 +3,6 @@ from authentication.models import UsArtUser
 import uuid
 
 
-
-
 class Publication(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100, blank=False)
@@ -79,3 +77,20 @@ class Commission(models.Model):
         ('DO', 'Done')
     ]
     status = models.CharField(choices=STATUS_CHOICES, max_length=2, default='PD')
+
+
+class Complaint(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    complainer_id = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name='complained')
+    pub_id = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='complainer')
+    reason = models.TextField()
+    creation_date = models.DateField(auto_now_add=True)
+    STATUS_CHOICES = [
+        ('PE', 'Pending'),
+        ('AP', 'Aproved'),
+    ]
+    status = models.CharField(
+        max_length=2,
+        choices=STATUS_CHOICES,
+        default='PE'
+    )

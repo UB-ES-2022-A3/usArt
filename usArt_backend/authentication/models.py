@@ -4,12 +4,12 @@ import uuid
 
 # Create your models here.
 
+
 class AccountManager(BaseUserManager):
 
     def create_superuser(self, email, user_name, password, **other_fields):
         other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_superuser', True)
-        other_fields.setdefault('is_active', True)
 
         if (other_fields.get('is_staff') is not True):
             raise ValueError('El super usuario debe de tener is_staff = True')
@@ -63,13 +63,13 @@ class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
         return self.user_name
 
 
-
-
 class idChats(models.Model):
 
     id_sala = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     id_1 = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name="user1")
     id_2 = models.ForeignKey(UsArtUser, on_delete=models.CASCADE,related_name="user2")
     chat = models.FileField(upload_to='chats/')
+    id_1_active = models.BooleanField(default=True)
+    id_2_active = models.BooleanField(default=True)
     
     
