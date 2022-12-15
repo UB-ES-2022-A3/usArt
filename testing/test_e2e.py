@@ -152,11 +152,16 @@ def test_ur7_participar_subasta():
     test_ur10_login_alum()
 
     driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[@id="action-button"]').click()
+    driver.find_element(by=By.XPATH, value='//*[@id="search-bar"]').send_keys('Subasta de prueba')
     driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[@id="action-button"]').click()
+    driver.find_element(by=By.XPATH, value='//*[@id="button-addon1"]').click()
     driver.implicitly_wait(10)
-    driver.find_element(by=By.ID, value='bidpost').send_keys('12')
+    driver.find_element(by=By.XPATH, value='//*[contains(text(), "Subasta de prueba")]').click()
+    driver.implicitly_wait(10)
+    bid_button = driver.find_element(by=By.XPATH, value='//*[@id="action-button"]')
+    driver.execute_script("arguments[0].click()", bid_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.ID, value='bidpost').send_keys('9')
     driver.implicitly_wait(10)
     driver.find_element(by=By.XPATH, value='//*[@id="bidbutton"]').click()
     driver.implicitly_wait(10)
@@ -210,7 +215,29 @@ def test_ar6_bloquear_usuario():
 
 
 def test_ur8_denunciar_servicio():
-    pass
+    test_ur10_login_alum()
+
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="search-bar"]').send_keys('a')
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="button-addon1"]').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[contains(text(), "Boyfriends Comic Book Issue 1!")]').click()
+    driver.implicitly_wait(10)
+    complaint_button = driver.find_element(by=By.XPATH, value='//*[@id="button-complaint"]')
+    driver.execute_script("arguments[0].click()", complaint_button)
+    driver.implicitly_wait(10)
+    close = driver.find_element(by=By.XPATH, value='//*[@id="close_button"]')
+    driver.execute_script("arguments[0].click()", close)
+    driver.implicitly_wait(10)
+    complaint_button = driver.find_element(by=By.XPATH, value='//*[@id="button-complaint"]')
+    driver.execute_script("arguments[0].click()", complaint_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.ID, value='reason').send_keys('Because I want')
+    driver.implicitly_wait(10)
+    compl = driver.find_element(by=By.XPATH, value='//*[@id="send_button"]')
+    driver.execute_script("arguments[0].click()", compl)
+    driver.implicitly_wait(10)
 
 
 def test_ar4_modificar_publicacion():

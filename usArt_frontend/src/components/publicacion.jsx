@@ -559,7 +559,7 @@ function Publicacion(props) {
                                 <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                                     <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
                                         {authTokens ? favButton : <div></div>}
-                                        <button onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
+                                        <button id="button-complaint" onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
                                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
                                             <i title="Report" style={{ color: "#000000", fontSize: "43px", marginTop: "2px" }} class='fa'>&#x1F5E3;</i>
                                         </button>
