@@ -26,7 +26,7 @@ function Footer() {
 
                             <div className="col-md-2">
                                 <h6 className="text-uppercase font-weight-bold">
-                                    <a href={LINK_FRONTEND +"/termsandconditions"} className="text-white" style={{textDecoration: "none"}}>Terms And Conditions</a>
+                                    <a id="terms-button" href={LINK_FRONTEND +"/termsandconditions"} className="text-white" style={{textDecoration: "none"}}>Terms And Conditions</a>
                                 </h6>
                             </div>
 

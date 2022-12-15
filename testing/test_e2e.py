@@ -6,12 +6,13 @@ from selenium.webdriver.chrome.options import Options
 chrome_options = Options()
 chrome_options.headless = True
 driver = webdriver.Chrome(options=chrome_options)
+driver.maximize_window()
 
 
 def test_u1_ver_catalogo():
     driver.get('http://localhost:3000/home')
 
-    explore_button = driver.find_element(by=By.ID, value='explore-button')
+    explore_button = driver.find_element(by=By.ID, value='explore_button')
     explore_button.click()
 
     driver.implicitly_wait(10)
@@ -87,45 +88,89 @@ def test_ur15_informacion_compra():
     driver.implicitly_wait(10)
     driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]').click()
     driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[@id="purchase-button"]').click()
+    button = driver.find_element(by=By.XPATH, value='//*[@id="radio3"]')
+    driver.execute_script("arguments[0].click();", button)
     driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[contains(text(), "As soon as I saw her, I knew I was going to end up drawing her.")]').click()
+    sale = driver.find_element(by=By.XPATH, value='//*[contains(text(), "As soon as I saw her, I knew I was going to end up drawing her.")]')
+    driver.execute_script("arguments[0].click();", sale)
+    driver.implicitly_wait(10)
+    username = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Alum")]').text
+    direction = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Muntaner 214")]').text
 
+    assert username == 'Nombre de usuario: Alum'
+    assert direction == 'Dirección: Muntaner 214'
 
 
 def test_ar9_aceptar_denegar_comision():
     pass
 
 
-def test_footer_ur16():
-    pass
-
-
 def test_ur17_terms_and_services():
-    pass
+    driver.get('http://localhost:3000/explore')
+
+    driver.implicitly_wait(10)
+    button = driver.find_element(by=By.XPATH, value='//*[@id="terms-button"]')
+    driver.execute_script("arguments[0].click();", button)
+    driver.implicitly_wait(10)
+    title = driver.find_element(by=By.XPATH, value='//*[contains(text(), "UsArt Terms of Use")]').text
+
+    assert title == 'UsArt Terms of Use'
 
 
 def test_ur11_logout():
-    test_ur10_login_alum()
     driver.implicitly_wait(10)
 
     driver.find_element(by=By.ID, value='logout_button').click()
 
 
 def test_ur4_comisionar():
-    pass
+    test_ur10_login_alum()
+
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="explore_button"]')
+
+    driver.get('http://localhost:3000/explore')
+    driver.implicitly_wait(10)
+    pub = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Bug Enthusiast Freestyle Commission")]')
+    driver.execute_script("arguments[0].click()", pub)
+    driver.implicitly_wait(10)
+    button = driver.find_element(by=By.XPATH, value='//*[@id="action-button"]')
+    driver.execute_script("arguments[0].click()", button)
+    driver.find_element(by=By.XPATH, value='//*[@id="modal_review"]').send_keys("test")
+    driver.find_element(by=By.XPATH, value='//*[@id="send_button"]').click()
 
 
 def test_ur12_historial_compras():
-    pass
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]').click()
+    driver.implicitly_wait(10)
+    button = driver.find_element(by=By.XPATH, value='//*[@id="radio3"]')
+    driver.execute_script("arguments[0].click();", button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[contains(text(), "As soon as I saw her, I knew I was going to end up drawing her.")]')
 
 
 def test_ur14_editar_perfil():
-    pass
+    driver.implicitly_wait(10)
+    button = driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]')
+    driver.execute_script("arguments[0].click();", button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="editButton"]').click()
+    driver.find_element(by=By.XPATH, value='//*[@id="saveBtn"]').click()
 
 
 def test_ur1_puntuar_artista():
-    pass
+    test_ur10_login_alum()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="explore_button"]')
+
+    driver.get('http://localhost:3000/explore')
+    pub = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Bug Enthusiast Freestyle Commission")]')
+    driver.execute_script("arguments[0].click();", pub)
+    driver.implicitly_wait(10)
+    button = driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]')
+    driver.execute_script("arguments[0].click();", button)
+    driver.implicitly_wait(10)
 
 
 def test_ur3_perfil():

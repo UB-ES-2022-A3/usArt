@@ -287,7 +287,7 @@ function Profile() {
                 <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChangeRadio} />
                 <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
                 <input type="radio" className="btn-check" name="options" id="radio3" autoComplete="off" value="Purchase" checked={radioGender === 'Purchase'} onChange={handleChangeRadio} />
-                <label id="purchase-button" className="btn btn-outline-dark" htmlFor="radio3">Purchase History</label>
+                <label className="btn btn-outline-dark" htmlFor="radio3">Purchase History</label>
             </div>)
         } else {
             return (<div className="btn-group px-4 py-5 ">
@@ -595,7 +595,7 @@ function Profile() {
         if (user == null) return
         if (username !== user.username) {
 
-            return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal" onClick={() => document.getElementById("profileOpacity").style.opacity = "0.5"} data-bs-target="#staticBackdrop" class="btn btn-dark">Rate me!</button>
+            return <button id="rate-button" style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal" onClick={() => document.getElementById("profileOpacity").style.opacity = "0.5"} data-bs-target="#staticBackdrop" class="btn btn-dark">Rate me!</button>
         }
     }
     function is_blockbutton() {
