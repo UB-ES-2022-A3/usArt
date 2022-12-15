@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 
-from authentication.models import UsArtUser
+from authentication.models import UsArtUser,idChats
 
 from django.shortcuts import get_object_or_404
 
@@ -14,10 +14,14 @@ from rest_framework import filters, generics
 
 
 from rest_framework.response import Response
+
+from userprofile.models import Block
+from userprofile.serializers import BlockSerializer
+from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.views import APIView
-
-
+from django.db.models import Q
 
 import base64
 import io
@@ -128,6 +132,7 @@ class ReviewList(generics.ListAPIView):
 
     def get_queryset(self):
         return Review.objects.filter(reviewed_id__user_name=self.kwargs['author'])
+
         
 
 class FavList(generics.ListCreateAPIView):
@@ -153,8 +158,70 @@ class FavGetDelete(generics.RetrieveDestroyAPIView):
         return get_object_or_404(Fav, user_id=self.request.user, pub_id=pub)
 
 
+
+
+class UserBlocPut(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = BlockSerializer
+    permission_classes = [IsAuthenticated]
+
+    
+
+    def put(self, request, *args, **kwargs):
+        queryset = self.get_object()
+        if queryset:
+            self.perform_destroy(queryset)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            request.data['blocked_id'] = kwargs['id']
+            request.data['blocker_id'] = request.user.id
+            blocked_id = UsArtUser.objects.get(id=kwargs['id'])
+            blocker_id = UsArtUser.objects.get(id=request.user.id)
+            serializer = BlockSerializer(queryset, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(blocked_id=blocked_id,blocker_id=blocker_id)
+            criterion1 = Q(id_1=request.user.id)
+            criterion2 = Q(id_2=self.kwargs["id"])
+
+            criterion3 = Q(id_1=self.kwargs["id"])
+            criterion4 = Q(id_2=request.user.id)
+            response = idChats.objects.filter(criterion1 & criterion2 | criterion3 & criterion4).delete()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_object(self):
+        try:
+            block = Block.objects.get(blocked_id=self.kwargs['id'],
+                                      blocker_id=self.request.user.id)
+        except:
+            block = None
+
+        return block
+
+
+class UserBlockedGET(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = BlockSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = "id"
+
+    def get_object(self):
+
+        block = get_object_or_404(Block, blocked_id=self.request.user.id, blocker_id=self.kwargs['id'])
+
+        return block
+
+class UserBlockerGET(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = BlockSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = "id"
+
+    def get_object(self):
+
+        block = get_object_or_404(Block, blocked_id=self.kwargs['id'], blocker_id=self.request.user.id)
+
+        return block
+
 class BanUser(generics.UpdateAPIView):
     queryset = UsArtUser.objects.all()
     permission_classes = [IsAdminUser]
     serializer_class = serializers.UsArtUserStatusSerializer
     lookup_field = 'user_name'
+

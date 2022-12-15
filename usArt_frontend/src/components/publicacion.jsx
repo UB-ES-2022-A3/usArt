@@ -288,6 +288,8 @@ function Publicacion(props) {
                 )
             }
         } else {
+           
+
             return (
                 <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
             )
@@ -341,6 +343,7 @@ function Publicacion(props) {
         delModal.show()
     }
 
+
     function complaintPopUp() {
         let compModal = new Modal(document.getElementById('complaintModal'), {
             keyboard: false, backdrop: 'static'
@@ -349,29 +352,60 @@ function Publicacion(props) {
         compModal.show()
     }
 
-    function LINK_FRONTENDContact() {
+    async function LINK_FRONTENDContact() {
+
         if (authTokens) {
             let coModal = new Modal(document.getElementById('coModal'), {
                 keyboard: false, backdrop: 'static'
             })
+            try {
+                const response = await fetch(
+                    LINK_BACKEND + "/api/userprofile/blocked/" + author.id, {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Bearer ' + authTokens.access,
+                        'Content-Type': 'application/json'
+                    },
+                })
+                if (!response.ok) {
+                    const response = await fetch(
+                        LINK_BACKEND + "/api/userprofile/blocker/" + author.id, {
+                        method: 'GET',
+                        withCredentials: true,
+                        credentials: 'include',
+                        headers: {
+                            'Authorization': 'Bearer ' + authTokens.access,
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    if (response.ok) {
+                        alert("You block this user")
 
-            if (card.type === "CO") {
-                document.getElementById("toOpacity").style.opacity = "0.5";
+                    } else {
+                        if (card.type === "CO") {
+                            document.getElementById("toOpacity").style.opacity = "0.5";
+                            coModal.show()
+                        } else if (card.type === "AR") {
+                            document.getElementById("toOpacity").style.opacity = "0.5";
+                            const link = LINK_FRONTEND + "/compra/" + id
+                            window.location.assign(link)
+                        } else if (card.type === "AU") {
+                            document.getElementById("toOpacity").style.opacity = "0.5";
+                            const link = LINK_FRONTEND + "/auction/" + id
+                            window.location.assign(link)
+                        }
 
-                coModal.show()
-            } else if (card.type === "AR") {
-                document.getElementById("toOpacity").style.opacity = "0.5";
-                const link = LINK_FRONTEND + "/compra/" + id
-                window.location.assign(link)
-            } else if (card.type === "AU") {
-                document.getElementById("toOpacity").style.opacity = "0.5";
-                const link = LINK_FRONTEND + "/auction/" + id
-                window.location.assign(link)
-            }
+                    }
+                } else {
+                    alert("This user blocked you")
+                }
+            } catch (error) { }
+
         } else {
             alert("You must be logged!")
         }
-
     }
     function LINK_FRONTENDProfile() {
 
