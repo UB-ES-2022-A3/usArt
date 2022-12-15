@@ -1,30 +1,36 @@
 
 from rest_framework import filters, generics, status
 from rest_framework.generics import get_object_or_404
-from catalog.models import Publication, PublicationImage, UsArtUser, Commission
-from catalog.serializers import PublicationListSerializer, PublicationPostSerializer,CommissionListSerializer,ArtistCommissionListSerializer
-from django.shortcuts import get_object_or_404
-from authentication.models import UsArtUser
+from rest_framework.utils import json
+
+from catalog.models import Publication, PublicationImage, Commission, Complaint
+from catalog.serializers import PublicationListSerializer, PublicationPostSerializer, CommissionListSerializer, \
+    ArtistCommissionListSerializer, ComplaintGetPutSerializer
 
 
 from authentication.models import UsArtUser
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 
 
-
-
+from catalog.models import Publication, UsArtUser, Commission, Auction, Bid
+from catalog.serializers import PublicationListSerializer, PublicationPostSerializer, CommissionListSerializer,ArtistCommissionListSerializer, BiddingSerializer, AuctionSerializer
+from django.shortcuts import get_object_or_404
+from authentication.models import UsArtUser
 import django_filters.rest_framework
-
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+
+from pusher import Pusher
+
+pusher = Pusher(app_id=u'1519042', key=u'464bf9750a028fa769ca', secret=u'215b58084e762c8107c6', cluster=u'eu')
 
 
 class PublicationList(generics.ListAPIView):
     queryset = Publication.objects.all()
     serializer_class = PublicationListSerializer
-    filter_backends = (filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend)
+    filter_backends = (filters.SearchFilter,
+                       django_filters.rest_framework.DjangoFilterBackend)
     search_fields = ['title', 'description', 'author__user_name']
     filterset_fields = ['type']
 
@@ -48,11 +54,13 @@ class PublicationDelete(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def destroy(self, request, *args, **kwargs):
-        pub = Publication.objects.get(author=self.request.user, id=self.kwargs["pub_id"])
-        self.perform_destroy(pub)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        pub = Publication.objects.get(id=self.kwargs["pub_id"])
+        if (request.user == pub.author or request.user.is_superuser):
+            self.perform_destroy(pub)
+            return Response(status=status.HTTP_204_NO_CONTENT)            
+        return Response(status=status.HTTP_403_NO_CONTENT)
 
- 
+
 class CommissionPost(generics.CreateAPIView):
     queryset = Commission.objects.all()
     serializer_class = CommissionListSerializer
@@ -60,7 +68,8 @@ class CommissionPost(generics.CreateAPIView):
 
     def put(self, request):
         pub = get_object_or_404(Publication, id=request.data['pub_id'])
-        com = Commission.objects.filter(pub_id = request.data['pub_id'],user_id=request.user.id)
+        com = Commission.objects.filter(
+            pub_id=request.data['pub_id'], user_id=request.user.id)
         if len(com) == 0:
             serialiser = CommissionListSerializer(data=request.data)
         else:
@@ -76,8 +85,8 @@ class CommissionList(generics.ListAPIView):
 
     def get_queryset(self):
         pub_id = self.kwargs['pub_id']
-        print(pub_id)
-        commissions = Commission.objects.filter(pub_id__author=self.request.user, pub_id__id=pub_id)
+        commissions = Commission.objects.filter(
+            pub_id__author=self.request.user, pub_id__id=pub_id)
         return commissions
 
 
@@ -90,7 +99,8 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
         commission = self.get_object()
         request.data['pub_id'] = self.kwargs['pub_id']
         request.data['user_id'] = self.kwargs['user_id']
-        serializer = CommissionListSerializer(commission, data=self.request.data)
+        serializer = CommissionListSerializer(
+            commission, data=self.request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -106,8 +116,9 @@ class ArtistCommissionList(generics.ListAPIView):
     serializer_class = ArtistCommissionListSerializer
 
     def get_queryset(self):
-        
-        commissions = Commission.objects.filter(pub_id__author=self.request.user,status="PD")
+
+        commissions = Commission.objects.filter(
+            pub_id__author=self.request.user, status="PD")
         return commissions
 
 
@@ -119,3 +130,159 @@ class PublicationPosting(generics.CreateAPIView):
         author = get_object_or_404(UsArtUser, id=self.request.user.id)
         serializer.save(author=author, images=self.request.data['images'])
 
+
+class ComplaintGetPost(generics.ListCreateAPIView):
+    queryset = Complaint.objects.all()
+    serializer_class = ComplaintGetPutSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        com = Complaint.objects.filter(pub_id=self.kwargs["pub_id"])
+        data = [ComplaintGetPutSerializer(x).data for x in list(com)]
+        return Response(data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        complainer = request.user
+        pub = get_object_or_404(Publication, id=self.kwargs["pub_id"])
+        if complainer.id == pub.author.id:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        self.request.data["complainer_id"] = complainer.id
+        self.request.data["pub_id"] = pub.id
+        serializer = ComplaintGetPutSerializer(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(complainer_id=complainer, pub_id=pub)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ComplaintPutDelete(generics.UpdateAPIView, generics.DestroyAPIView):
+    queryset = Complaint.objects.all()
+    serializer_class = ComplaintGetPutSerializer
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            com = get_object_or_404(Complaint, id=self.kwargs["complaint_id"])
+            self.request.data["complainer_id"] = com.complainer_id.id
+            self.request.data["pub_id"] = com.pub_id.id
+            self.request.data["reason"] = com.reason
+            serializer = ComplaintGetPutSerializer(com, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            com = get_object_or_404(Complaint, id=self.kwargs["complaint_id"])
+            self.perform_destroy(com)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+
+
+class ComplaintGetPost(generics.ListCreateAPIView):
+    queryset = Complaint.objects.all()
+    serializer_class = ComplaintGetPutSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        com = Complaint.objects.filter(pub_id=self.kwargs["pub_id"])
+        data = [ComplaintGetPutSerializer(x).data for x in list(com)]
+        return Response(data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        complainer = request.user
+        pub = get_object_or_404(Publication, id=self.kwargs["pub_id"])
+        if complainer.id == pub.author.id:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        self.request.data["complainer_id"] = complainer.id
+        self.request.data["pub_id"] = pub.id
+        serializer = ComplaintGetPutSerializer(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(complainer_id=complainer, pub_id=pub)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ComplaintPutDelete(generics.UpdateAPIView, generics.DestroyAPIView):
+    queryset = Complaint.objects.all()
+    serializer_class = ComplaintGetPutSerializer
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            com = get_object_or_404(Complaint, id=self.kwargs["complaint_id"])
+            self.request.data["complainer_id"] = com.complainer_id.id
+            self.request.data["pub_id"] = com.pub_id.id
+            self.request.data["reason"] = com.reason
+            serializer = ComplaintGetPutSerializer(com, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            com = get_object_or_404(Complaint, id=self.kwargs["complaint_id"])
+            self.perform_destroy(com)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+
+
+class Bidding(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        auc = get_object_or_404(Auction, pub_id=request.data['pub_id'])
+        bid = Bid.objects.filter(auc_id = auc,user_id=request.user.id)
+        if len(bid) == 0:
+            serializer = BiddingSerializer(data=request.data)
+        else:
+            serializer = BiddingSerializer(bid[0], data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user_id=request.user, auc_id=auc)
+
+        if auc.min_bid < float(request.data['bid']):
+            Auction.objects.filter(pub_id=auc.pub_id).update(min_bid=float(request.data['bid']))
+
+        dic = {
+            "auc_id": str(serializer.data['auc_id']),
+            "user_id": {
+                "id": serializer.data['user_id']['id'],
+                "email": serializer.data['user_id']['email'],
+                "user_name": serializer.data['user_id']['user_name'],
+                "description": serializer.data['user_id']['description'],
+                "photo": serializer.data['user_id']['photo']
+            },
+            "bid": str(serializer.data['bid'])
+        }
+        pusher.trigger(str(request.data['pub_id']), u'subasta', dic)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+class BidList(generics.ListAPIView):
+    queryset = Bid.objects.all()
+    serializer_class = BiddingSerializer
+
+    def get_queryset(self):
+        pub_id = self.kwargs['pub_id']
+        bids = Bid.objects.filter(auc_id=pub_id).order_by('-bid')
+        return bids
+
+class AuctionGet(generics.ListAPIView):
+    queryset = Auction.objects.all()
+
+    def get(self, request, pub_id):
+        auction = Auction.objects.get(pub_id=pub_id)
+        serializer = AuctionSerializer(auction)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
