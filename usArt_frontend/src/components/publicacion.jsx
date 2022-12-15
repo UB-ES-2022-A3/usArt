@@ -435,7 +435,7 @@ function Publicacion(props) {
             alert("La descripción no puede estar vacia")
             input_textarea.value = ""
         }
-        console.log(description)
+       
         postPetCom(id, description)
         alert("Petición hecha!")
         document.getElementById("toOpacity").style.opacity = "1"
@@ -487,7 +487,8 @@ function Publicacion(props) {
             },
             body: JSON.stringify({
                 'pub_id': pub_id,
-                'description': description
+                'description': description,
+                'status':"PD",
             }),
         })
             .then((res) => res.json())

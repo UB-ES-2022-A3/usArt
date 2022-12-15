@@ -96,6 +96,7 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request, *args, **kwargs):
+
         commission = self.get_object()
         request.data['pub_id'] = self.kwargs['pub_id']
         request.data['user_id'] = self.kwargs['user_id']

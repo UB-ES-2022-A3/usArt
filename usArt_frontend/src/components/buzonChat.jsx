@@ -50,7 +50,7 @@ function BuzonChat() {
   }, [channel]);
 
   const saveChat = (data) => {
-    
+
     setlastMessage(JSON.stringify(data))
   };
 
@@ -137,7 +137,7 @@ function BuzonChat() {
         </div>
       </div>)
     } if (document.getElementById("btnradio2").checked) {
-      if (user.user_id == undefined) return 
+      if (user.user_id == undefined) return
       return (
         <div className='userChat' onClick={() => createchat(user)}>
           <img src={user.user_id.photo} alt="" style={{ height: "50px", width: "50px", objectFit: "cover", borderRadius: "50%" }} />
@@ -242,27 +242,24 @@ function BuzonChat() {
         'Authorization': 'Bearer ' + authTokens.access,
         'Content-Type': 'application/json',
       }, body: JSON.stringify({ "status": "AC" })
-    })
-      .then((res) =>{
+    }).then((res) => {
+      setActiveUser()
+      setMeUser()
+      fetch(LINK_BACKEND + "/auth/chats/" + activeUser.user_id.id, {
+        method: 'GET',
+        withCredentials: true,
+        credentials: 'include',
+        headers: {
+          'Authorization': 'Bearer ' + authTokens.access,
+        }
+      }).then((res) => res.json()).then((res) => {
         setActiveUser()
         setMeUser()
-        fetch(LINK_BACKEND + "/auth/chats/" + activeUser.user_id.id, {
-          method: 'GET',
-          withCredentials: true,
-          credentials: 'include',
-          headers: {
-            'Authorization': 'Bearer ' + authTokens.access,
-          }
-        })
-          .then((res) => res.json())
-          .then(data => {
-
-          }
-          )
-        pendingComisions()
+        callApi()
         return res.json()
-      } )
-      
+      })
+    })
+
   }
   function deleteComission() {
     fetch(
@@ -274,11 +271,12 @@ function BuzonChat() {
         'Authorization': 'Bearer ' + authTokens.access,
         'Content-Type': 'application/json',
       }
+    }).then((res) => {
+      setActiveUser()
+      setMeUser()
+      callApi()
+      return res.json()
     })
-      .then((res) => {
-        pendingComisions()
-        return res.json()
-      })
 
 
   }
@@ -298,11 +296,12 @@ function BuzonChat() {
       }, body: JSON.stringify({ "id_sala": idSala })
     })
       .then((res) => {
-        if(res.status === 204){
-        setActiveUser()
-        setMeUser()
-        callApi()
-      }
+        if (res.status === 204) {
+          setActiveUser()
+          setMeUser()
+          callApi()
+          document.getElementById("btnradio1").click()
+        }
         return res.json()
       })
       .then(data => {
