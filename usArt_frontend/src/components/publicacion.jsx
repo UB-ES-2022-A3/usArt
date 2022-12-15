@@ -86,6 +86,7 @@ function Publicacion(props) {
     }
 
     function refreshReports() {
+        if (! authTokens) return
         if (user.is_superuser) {
 
             fetch(
@@ -114,6 +115,7 @@ function Publicacion(props) {
     }
 
     function renderReportsUser() {
+        if (!authTokens) return
         if (user.is_superuser && report.length != 0) {
             return (
 
@@ -278,6 +280,7 @@ function Publicacion(props) {
     function renderDelContactButton() {
         console.log("este es el user", user)
         if (authTokens) {
+
             if (author['id'] == user['user_id'] || user.is_superuser === true) {
                 return (
                     <button onClick={deleteOnClick} className="button" style={{ verticalAlign: "middle" }}><span>Delete</span></button>
