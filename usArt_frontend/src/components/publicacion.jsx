@@ -407,7 +407,7 @@ function Publicacion(props) {
             } catch (error) { }
 
         } else {
-            alert("You must be logged!")
+            window.location.assign(LINK_FRONTEND+"/login")
         }
     }
     function LINK_FRONTENDProfile() {

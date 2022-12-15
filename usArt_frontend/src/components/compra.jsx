@@ -12,6 +12,7 @@ import LINK_BACKEND from "./LINK_BACKEND"
 import { useParams } from "react-router-dom"
 
 
+import { useNavigate} from 'react-router-dom';
 
 
 import {
@@ -54,17 +55,12 @@ function Compra(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setFormErrors(validate(formValues, checkValue));
+        let errors = (validate(formValues, checkValue));
+        setFormErrors(errors)
         setIsSubmit(true);
-        console.log(formValues.username)
-        console.log(formValues.email)
-        console.log(formValues.CodigoPostal)
-        console.log(formValues.Direccion)
-        console.log(formValues.Num)
-        console.log(formValues.Fecha)
-        console.log(formValues.ccv)
-        postCompra(formValues.username, formValues.email, formValues.Direccion, formValues.CodigoPostal, formValues.Num, formValues.Fecha, formValues.ccv)
-
+        if (Object.keys(errors).length === 0) {
+            postCompra(formValues.username, formValues.email, formValues.Direccion, formValues.CodigoPostal, formValues.Num, formValues.Fecha, formValues.ccv)
+        }
     };
     function postCompra(user_name, email, CodigoPostal, Direccion, Num, Fecha, ccv) {
         if (Object.keys(validate(formValues, checkValue)).length === 0) {
@@ -95,17 +91,17 @@ function Compra(props) {
                         })
                     })
 
-                        .then(function(response){ 
-                            if (response.status === 201){
+                        .then(function (response) {
+                            if (response.status === 201) {
                                 return response.json();
-                            }else{
+                            } else {
                                 alert("No se ha podido realizar la compra")
                             }
-                                })
-                        .then(function(data) {
+                        })
+                        .then(function (data) {
                             const items = data;
                             console.log(items.id)
-                            const link = LINK_FRONTEND + "/purchasedetails/"+items.id
+                            const link = LINK_FRONTEND + "/purchasedetails/" + items.id
 
                             window.location.assign(link)
 
@@ -118,11 +114,6 @@ function Compra(props) {
         }
     }
 
-    useEffect(() => {
-        if (Object.keys(formErrors).length === 0 && isSubmit) {
-            //window.location.assign(LINK_FRONTEND + "/home")
-        }
-    }, [formErrors]);
     const validate = (values, checkValue) => {
         const errors = {};
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -168,13 +159,13 @@ function Compra(props) {
         console.log(errors)
         return errors;
     };
-
+    const navigate = useNavigate();
     return (
         <div className='body_register'>
             <MDBContainer className="vertical-center " >
                 <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '25px' }}>
                     <MDBCardBody className='shadow'>
-                        <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
+                        <a onClick={() => navigate(-1)} style={{cursor:"pointer"}} ><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
                         <MDBRow>
                             <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
                                 <p id="title_signup" className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Realiza tu compra</p>
