@@ -324,7 +324,6 @@ function Publicacion(props) {
             LINK_FRONTENDProfile()
             return res.json()
           })   
-        }   
         if(user.is_superuser == true){
             window.location.assign(LINK_FRONTEND + "/explore")
         }else{
@@ -460,6 +459,7 @@ function Publicacion(props) {
             }
             )
     }
+
     return (
         <div>
             <div id='toOpacity'>
@@ -528,7 +528,7 @@ function Publicacion(props) {
                                         </button>
                                     </div>
                                     <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
-                                        <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>Contactar </span></button>
+                                        {renderDelContactButton()}
                                     </div>
                                 </div>
 
@@ -592,8 +592,6 @@ function Publicacion(props) {
                 </div>
             </div>
         </div>
-    );
+    )
 }
-
-
 export default Publicacion;

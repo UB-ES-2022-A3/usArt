@@ -17,8 +17,7 @@ urlpatterns = [
     path('manage/post/', views.PublicationPosting.as_view(), name='post_publication'),
     path('auction/bid/', views.Bidding.as_view(), name='bidding'),
     path('auction/get/<str:pub_id>', views.AuctionGet.as_view(), name='auction_get'),
-    path('auction/bidlist/<str:pub_id>', views.BidList.as_view(), name='bid_list')
-
+    path('auction/bidlist/<str:pub_id>', views.BidList.as_view(), name='bid_list'),
     path('complaint/get/post/<str:pub_id>', views.ComplaintGetPost.as_view(), name='complaint_get_post'),
-    path('complaint/put/delete/<str:complaint_id>', views.ComplaintPutDelete.as_view(), name='complaint_put_delete')
+    path('complaint/put/delete/<str:complaint_id>', views.ComplaintPutDelete.as_view(), name='complaint_put_delete'),
 ]

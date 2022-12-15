@@ -95,3 +95,10 @@ class AuctionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Auction
         fields = ['pub_id','closure_date','staus', 'last_updated']
+class ComplaintGetPutSerializer(serializers.ModelSerializer):
+    complainer_id = UsArtUserSerializer(read_only=True)
+    pub_id = PublicationListSerializer(read_only=True)
+
+    class Meta:
+        model = Complaint
+        fields = '__all__'
