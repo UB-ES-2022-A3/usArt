@@ -224,9 +224,9 @@ function Search() {
                 <div style={{ paddingTop: "5%" }}>
                     <div className="header-container ">
                         <h1 style={{ color: "black" }}>Results of {search}..</h1>
-                        <p >{(Object.keys(cards).length !== 0 & loaded === true & option !== "US") ? Object.keys(cards).length + " results founded" :
+                        <p >{(Object.keys(cards).length !== 0 & loaded === true & option !== "US") ? Object.keys(cards).length + " results found" :
                             (Object.keys(cards).length === 0 & loaded === true & option !== "US") ? ("No results") :
-                                (Object.keys(authors).length !== 0 & loaded === true & option === "US") ? (Object.keys(authors).length + " results founded") :
+                                (Object.keys(authors).length !== 0 & loaded === true & option === "US") ? (Object.keys(authors).length + " results found") :
                                     (Object.keys(authors).length === 0 & loaded === true & option === "US") ? ("No results") :
                                         "Loading.."}
                         </p>
@@ -257,9 +257,9 @@ function Search() {
                     </div>
                     <div className="grid custom-grid">
                         {Object.keys(cards).length !== 0 & loaded === true & option !== "US" ? cards.map(RenderCard) :
-                            (Object.keys(cards).length === 0 & loaded === true & option !== "US") ? <div> No results founded :( </div> :
+                            (Object.keys(cards).length === 0 & loaded === true & option !== "US") ? <div> No results found :( </div> :
                                 (Object.keys(authors).length !== 0 & loaded === true & option === "US") ? authors.map(RenderCard) :
-                                    (Object.keys(authors).length === 0 & loaded === true & option === "US") ? <div>No results founded :( </div> :
+                                    (Object.keys(authors).length === 0 & loaded === true & option === "US") ? <div>No results found :( </div> :
                                         loader()}
                     </div>
                 </div>
