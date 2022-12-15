@@ -10,16 +10,19 @@ from catalog.models import Publication
 from userprofile import serializers
 from userprofile.models import PurchaseHistory, Review, Fav
 
-from rest_framework import filters, generics, status
+from rest_framework import filters, generics
+
 
 from rest_framework.response import Response
+
 from userprofile.models import Block
 from userprofile.serializers import BlockSerializer
 from rest_framework.permissions import IsAuthenticated
 
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.views import APIView
 from django.db.models import Q
+
 import base64
 import io
 from django.core.files.images import ImageFile
@@ -53,7 +56,6 @@ class PurchaseHistoryDetail(generics.RetrieveAPIView):
         id = self.kwargs["id"]
         return get_object_or_404(PurchaseHistory,id = id)
         
-
 
 class UserDetail(generics.RetrieveAPIView):
     queryset = UsArtUser.objects.all()
@@ -124,6 +126,7 @@ class ReviewUserStars(APIView):
             total = 0
         return Response({'average': total}, status=status.HTTP_200_OK)
 
+
 class ReviewList(generics.ListAPIView):
     serializer_class = serializers.ReviewerUserSerializer
 
@@ -153,6 +156,7 @@ class FavGetDelete(generics.RetrieveDestroyAPIView):
     def get_object(self):
         pub = Publication.objects.get(id=self.kwargs['pub_id'])
         return get_object_or_404(Fav, user_id=self.request.user, pub_id=pub)
+
 
 
 
@@ -214,3 +218,10 @@ class UserBlockerGET(generics.RetrieveUpdateDestroyAPIView):
         block = get_object_or_404(Block, blocked_id=self.kwargs['id'], blocker_id=self.request.user.id)
 
         return block
+
+class BanUser(generics.UpdateAPIView):
+    queryset = UsArtUser.objects.all()
+    permission_classes = [IsAdminUser]
+    serializer_class = serializers.UsArtUserStatusSerializer
+    lookup_field = 'user_name'
+

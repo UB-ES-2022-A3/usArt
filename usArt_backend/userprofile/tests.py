@@ -34,6 +34,8 @@ class TestPublicationAPI(APITestCase):
         user = UsArtUser.objects.create_user(email='test@test.com', user_name='test', password='test')
         user2 = UsArtUser.objects.create_user(email='test2@test.com', user_name='test2', password='test2')
         user3 = UsArtUser.objects.create_user(email='test3@test.com', user_name='test3', password='test3')
+        admin = UsArtUser.objects.create_user(email='admin@test.com', user_name='admin', password='admin',
+                                              is_staff=True)
         UsArtUser.objects.create_user(email='test4@test.com', user_name='test4', password='test4')
         publication = Publication.objects.create(title='Title test', description='Description test',
                                                  author_id=user.id, price=5.0)
@@ -315,6 +317,22 @@ class TestPublicationAPI(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
 
-       
-
+    def test_ban_user(self):
+        url_post_login = reverse('api:token_obtain_pair')
+        login_data = {
+            'user_name': 'admin',
+            'password': 'admin'
+        }
+        response = self.client.post(url_post_login, login_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('access' in response.data)
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(token))
+        ban_data = {
+            'user_name': 'test',
+            'status': 'BAN'
+        }
+        url = reverse('userprofile:ban_user', kwargs={'user_name': 'test'})
+        response = self.client.put(url, ban_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
