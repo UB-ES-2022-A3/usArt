@@ -30,6 +30,6 @@ urlpatterns = [
     path('review-list/<str:author>', ReviewList.as_view(), name='review_artist_list'),
     path('bloc/<str:id>', UserBlocPut.as_view(), name = 'bloqued_user'),
     path('blocked/<str:id>', UserBlockedGET.as_view(), name='Userbloqued'),
-    path('blocker/<str:id>', UserBlockerGET.as_view(), name='Userbloquer')
+    path('blocker/<str:id>', UserBlockerGET.as_view(), name='Userbloquer'),
 
 ]
