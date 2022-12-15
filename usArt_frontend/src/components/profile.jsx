@@ -521,7 +521,7 @@ function Profile() {
             })
         }).then((res) => res.json())
             .then(data => {
-
+                callApiReviews()
                 takeReview()
             }
             )
