@@ -583,12 +583,12 @@ function Publicacion(props) {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title text-dark" id="modal_title">Que servicio quieres adquirir del artista?</h5>
+                            <h5 className="modal-title text-dark" id="modal_title">Which service would you like to contract?</h5>
                             <button type="button" className="btn-close" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
 
-                            <p><textarea name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
+                            <p><textarea style={{resize:"none"}} name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
 
                         </div>
 
@@ -619,7 +619,7 @@ function Publicacion(props) {
                             <h4 className="modal-title text-dark" id="modal_title">Reason for the complaint?</h4>
                         </div>
                         <div className="modal-body">
-                            <p><textarea name="reason" className="reason-input" rows="5" cols="45" id="reason" maxlength="300" required ></textarea></p>
+                            <p><textarea style={{resize:"none"}} name="reason" className="reason-input" rows="5" cols="45" id="reason" maxlength="300" required ></textarea></p>
                         </div>
                         <div className="modal-footer">
                             <button className="button" id="close_button" onClick={cancelComplaint} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>

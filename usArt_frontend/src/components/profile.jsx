@@ -364,7 +364,8 @@ function Profile() {
     function LINK_FRONTENDContact() {
         document.getElementById("profileOpacity").style.opacity = "0.5"
         var coModal = new Modal(document.getElementById('coModal'), {
-            keyboard: false
+            keyboard: false,
+            backdrop: "static"
         })
         setModal(coModal)
         coModal.show()
