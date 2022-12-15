@@ -31,6 +31,7 @@ function Auction(props) {
                 filtered.push(element[1])
             });
             filtered.sort(function(a, b){return b.bid- a.bid});
+            setBestBid(filtered[0].bid)
             
             setbidHistory(filtered);
         }
@@ -198,7 +199,7 @@ function Auction(props) {
                         </div>
                         <div class="input-group field">
                             <input  defaultValue={ card.pub_id.price} type="number" id="bidpost" onChange={checkNumbers} placeholder="Place your bid" />
-                            <button onClick={postBid} disabled={user == undefined} type="button" id="bidbutton">Bid</button>
+                            <button onClick={postBid} disabled={user == undefined | user.username == card.pub_id.author.user_name} type="button" id="bidbutton">Bid</button>
                         </div>
                     </div>
                     <div className="auctionsList" id="scrollbar-3">
