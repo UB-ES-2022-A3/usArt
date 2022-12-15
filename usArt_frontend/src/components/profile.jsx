@@ -24,7 +24,7 @@ function Profile() {
     const [radioGender, setRadioProduct] = useState('Products');
     const [buttonPopup, setButtonPopup] = useState(false)
     const [block, setBlock] = useState('')
-    
+
     var input_textarea_title = document.getElementById('titlepost');
     var input_textarea_description = document.getElementById('descriptionpost');
     var input_textarea_price = document.getElementById('pricepost');
@@ -40,10 +40,17 @@ function Profile() {
     //----------------------------------------------------------------------------
 
     const [stateImages, setStateImages] = useState([]);
-
+    const [warning, setWarning] = useState(false)
     const handleFileChange = (event) => {
         const { target } = event;
         const { files } = target;
+        let fileExtension = files[0].name.replace(/^.*\./, '');
+        let imagesExtension = ["png", "jpg", "jpeg"];
+        if (imagesExtension.indexOf(fileExtension) === -1) {
+            setWarning(true)
+            return
+        }
+
         if (files && files[0]) {
             var reader = new FileReader();
             reader.onloadstart = () => setStateImages([{ loading: true }]);
@@ -118,22 +125,22 @@ function Profile() {
                             'Content-Type': 'application/json'
                         },
                     })
-                    .then(data => {
-                        console.log(data)
-                        
-                        if (!data.ok) {
-        
-                            setBlock("Block")
-                            
-                        } else {
-                            
-                            setBlock("Unblock")
-                        }
-                    })
+                        .then(data => {
+                            console.log(data)
+
+                            if (!data.ok) {
+
+                                setBlock("Block")
+
+                            } else {
+
+                                setBlock("Unblock")
+                            }
+                        })
 
                 }
                 )
-            
+
         } else {
             fetch(
                 LINK_BACKEND + "/api/userprofile/" + username)
@@ -239,7 +246,7 @@ function Profile() {
                 const profile = { ...prof, status: data.status }
                 setProfile(profile)
                 if (ban) {
-                    alert("The user has been banned") 
+                    alert("The user has been banned")
                 }
                 document.getElementById("profileOpacity").style.opacity = "1"
                 modal.hide()
@@ -323,6 +330,9 @@ function Profile() {
     }
     const [modal, setModal] = useState()
     function postArt(title, description, price, type, images) {
+
+
+
         fetch(LINK_BACKEND + "/api/catalog/manage/post/", {
             method: 'POST',
             withCredentials: true,
@@ -378,15 +388,15 @@ function Profile() {
             },
         })
         if (!response.ok) {
-            
+
             modalfade.show()
-            
-           
-       } else {
+
+
+        } else {
             PutBlock()
             setBlock("Block")
         }
-       
+
     }
 
     const handleChangePosting = (e) => {
@@ -398,7 +408,7 @@ function Profile() {
 
         if (user == null) return
         if (user.username === username)
-            return (<button onClick={LINK_FRONTENDContact} className="button" style={{width:"150px", verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
+            return (<button onClick={LINK_FRONTENDContact} className="button" style={{ width: "150px", verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
     }
 
     const { data, fullScreen, loading } = stateImages;
@@ -591,7 +601,7 @@ function Profile() {
 
 
     }
-    
+
     function is_other() {
         if (user == null) return
         if (username !== user.username) {
@@ -607,7 +617,7 @@ function Profile() {
         }
     }
 
-   
+
 
     function buttonsTogether() {
 
@@ -694,7 +704,7 @@ function Profile() {
 
 
             }
-        }else{
+        } else {
             return (
                 <div className="card-body p-4 text-black">
                     <div className="mb-1">
@@ -727,8 +737,8 @@ function Profile() {
         if (stateImages.length === 0) return
         return (
             <div class="image-div">
-                <img key={key} id={"image"+key} accessKey={key} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
-                <div onClick={()=>handleClearClick(document.getElementById("image"+key))} class="trashContainer hidden_img">
+                <img key={key} id={"image" + key} accessKey={key} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
+                <div onClick={() => handleClearClick(document.getElementById("image" + key))} class="trashContainer hidden_img">
                     <div class="trash">
                         <div class="tap">
                             <div class="tip"></div>
@@ -746,9 +756,14 @@ function Profile() {
             </div>
         )
     }
+    function showWarning(images, key) {
+
+        if (warning) return <div><p style={{color:"red"}}>Warning! We only accept :  "png", "jpg", "jpeg";</p></div>
+
+    }
     function PutBlock() {
-        
-        fetch(LINK_BACKEND + "/api/userprofile/bloc/"+prof.id, {
+
+        fetch(LINK_BACKEND + "/api/userprofile/bloc/" + prof.id, {
             method: 'PUT',
             withCredentials: true,
             credentials: 'include',
@@ -758,21 +773,21 @@ function Profile() {
             },
         })
             .then((res) => res.json())
-            .then(data => {})
+            .then(data => { })
 
         console.log(data)
 
-        alert("User "+ block +"ed")
-        if (block == "Block"){
+        alert("User " + block + "ed")
+        if (block == "Block") {
             setBlock("Unblock")
         }
-            
+
         document.getElementById("profileOpacity").style.opacity = "1"
-            
-        
+
+
         return
     }
-    
+
     return (
         <div>
             <div id='profileOpacity'>
@@ -833,8 +848,8 @@ function Profile() {
                             <h4 className="modal-title text-dark" id="modal_title">Are you sure you want to block this user?</h4>
                         </div>
                         <div className="modal-footer">
-                        <button className="button" id="close_button" onClick={() =>document.getElementById("profileOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
-                            <button onClick={PutBlock } id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Block</button>
+                            <button className="button" id="close_button" onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
+                            <button onClick={PutBlock} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Block</button>
                         </div>
                     </div>
                 </div>
@@ -877,7 +892,7 @@ function Profile() {
                 </div>
 
             </div>
-            
+
 
             <div className="modal" id="coModal" tabindex="-1">
                 <div class="modal-dialog">
@@ -909,6 +924,7 @@ function Profile() {
                                 </p>
                             </div>
                             <p>Attach some images:</p>
+                            {showWarning()}
                             <div style={{ display: "flex" }}>
                                 <input
                                     type="file"
@@ -967,16 +983,16 @@ function Profile() {
             <div class="modal fade" id="banModal" tabIndex="-1" aria-labelledby="banModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-dark" id="banModalLabel">Do you want to ban this user?</h5>
-                    </div>
-                    <div class="modal-body">
-                        <textarea style={{resize:"none"}} class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"}  type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
-                    </div>
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="banModalLabel">Do you want to ban this user?</h5>
+                        </div>
+                        <div class="modal-body">
+                            <textarea style={{ resize: "none" }} class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
+                        </div>
                     </div>
                 </div>
             </div>
