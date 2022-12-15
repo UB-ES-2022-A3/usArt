@@ -18,7 +18,7 @@ def test_u1_ver_catalogo():
     driver.implicitly_wait(10)
 
     title = driver.find_element(by=By.ID, value='explore-title').text
-    assert title == 'Explore el talento en UsArt'
+    assert title == 'Explore the talent at UsArt'
 
 
 def test_u3_register_user():
