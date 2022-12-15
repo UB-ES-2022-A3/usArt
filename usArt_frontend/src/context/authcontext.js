@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }) => {
       })
     });
     const data = await response.json();
-    console.log(response);
 
     if (response.status === 200) {
       setAuthTokens(data);
@@ -46,12 +45,12 @@ export const AuthProvider = ({ children }) => {
         navigate(-1)
       } else {
         alert("You have been banned and cannot access")
-      }  
+      }
     } else {
       alert("Something went wrong!");
     }
   };
-  
+
   const registerUser = async (user_name, password, email) => {
     const response = await fetch(LINK_BACKEND + "/api/register/", {
       method: "POST",
@@ -65,9 +64,16 @@ export const AuthProvider = ({ children }) => {
       })
     });
     if (response.status === 201) {
-      history("/login");
+      loginUser(user_name, password)
     } else {
-      alert("Something went wrong!");
+      const data = await response.json();
+      console.log(Object.keys(data))
+      if (Object.keys(data).length === 1) { 
+        alert(data[Object.keys(data)]) }
+      else {
+        console.log("si aqui")
+        alert(data[Object.keys(data)[0]] + "\n" + data[Object.keys(data)[1]])
+      }
     }
   };
 

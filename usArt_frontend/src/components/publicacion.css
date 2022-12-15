@@ -170,6 +170,22 @@
     margin: 5px;
 }
 
+.button_update {
+    display: inline-block;
+    border-radius: 20px;
+    background-color: #001a1a;
+
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 15px;
+    padding: 10px;
+    height: 50px;
+    width: 100px;
+    cursor: pointer;
+    margin: 5px;
+}
+
 .button:disabled,
 button[disabled] {
     background-color: #373737;
@@ -321,5 +337,27 @@ button[disabled] {
     height: 140px;
     margin-left: 3%;
     margin-top: 10px;
+
+}
+
+.image-div {
+    position: relative;
+    float: left;
+}
+.image-div:hover .stack-images{
+    opacity: 0.4;
+}
+
+.image-div:hover .hidden_img {
+    display: block;
+    cursor: pointer;
+    
+}
+.image-div .hidden_img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
 
 }

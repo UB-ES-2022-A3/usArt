@@ -25,6 +25,12 @@ function Publicacion(props) {
     const [fav, setFavorite] = useState(false)
     const [heart, setHeart] = useState(<span>&#xf08a;</span>)
     const [color, setColor] = useState('black')
+    const [formValues, setFormValues] = useState({})
+    const [stateImages, setStateImages] = useState([])
+    const [modal, setModal] = useState()
+
+    const { data, fullScreen, loading } = stateImages;
+    const previewClasses = ['preview', fullScreen ? 'preview--fullscreen' : ''].join(' ');
     const [report, setReport] = useState([])
 
 
@@ -301,17 +307,23 @@ function Publicacion(props) {
     }
 
     function renderFavButtons() {
+
         if (!authTokens) {
             return (<div></div>)
         }
         if (author['id'] != user['user_id'] && user.is_superuser == false) {
-            return (
-                <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
+            return (<div>
+                {favButton}
+                <button onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                    <i style={{ color: color, width: "30px", height: "30px" }} class='fa'>{heart}</i></button>
+                    <i title="Report" style={{ color: "#000000", fontSize: "43px", marginTop: "2px" }} class='fa'>&#x1F5E3;</i>
+                </button>
+            </div>
             )
         } else {
-            return (<div></div>)
+            return (
+                <button onClick={LINKUpdate} className="button_update" style={{ verticalAlign: "middle" }}><span>Update</span></button>
+            )
         }
     }
 
@@ -497,6 +509,141 @@ function Publicacion(props) {
             )
     }
 
+    //-----------------------------------------update
+    let input_textarea_title = document.getElementById('titlepost');
+    let input_textarea_description = document.getElementById('descriptionpost');
+    let input_textarea_price = document.getElementById('pricepost');
+
+    const handleFileChange = (event) => {
+        const { target } = event;
+        const { files } = target;
+        if (files && files[0]) {
+            var reader = new FileReader();
+            reader.onloadstart = () => setStateImages([{ loading: true }]);
+            reader.onload = event => {
+                setStateImages([...stateImages, {
+                    data: event.target.result,
+                    loading: false,
+                    target: URL.createObjectURL(files[0])
+                }])
+            };
+        };
+
+        reader.readAsDataURL(files[0]);
+    }
+
+    const handlePreviewClick = () => {
+        const { data, fullScreen } = stateImages;
+        if (!data) {
+            return;
+        }
+        setStateImages({ fullScreen: !fullScreen });
+    };
+
+    function updateOutputUpdate() {
+        var title = input_textarea_title.value
+        var description = input_textarea_description.value
+        var price = input_textarea_price.value
+        let images = []
+        if (stateImages.length > 0) {
+            stateImages.forEach(element => {
+                images.push(element.data)
+            });
+        }
+        if (title.length === 0 || description.length === 0 || price.length === 0) {
+            alert("Fields cannot be empty!")
+
+        }
+        else {
+            updateArt(title, description, price, images)
+
+        }
+    }
+    function updateArt(title, description, price, images) {
+        fetch(LINK_BACKEND + "/api/catalog/manage/update/", {
+            method: 'PUT',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'pub_id': id,
+                'title': title,
+                'description': description,
+                'price': price,
+                'images': images
+            }),
+        })
+            .then((res) => {
+                if (res.status !== 201) alert("Error uploading")
+                callApi()
+                modal.hide()
+                return res.json()
+            })
+        document.getElementById("toOpacity").style.opacity = "1";
+    }
+
+    function LINKUpdate() {
+        document.getElementById("toOpacity").style.opacity = "0.5"
+        var coModal = new Modal(document.getElementById('coModalUpdate'), {
+            keyboard: false
+        })
+        setModal(coModal)
+        coModal.show()
+
+    }
+    const handleChangePosting = (e) => {
+        const { type, value } = e.target;
+        setFormValues({ ...formValues, [type]: value });
+    };
+    function checkNumbers(e) {
+
+        if (input_textarea_price.value > 6) {
+            if (input_textarea_price.value[5] === ".") input_textarea_price.value = input_textarea_price.value.slice(0, 4);
+            else { input_textarea_price.value = input_textarea_price.value.slice(0, 6); }
+        }
+    }
+    const handleClearClick = (e) => {
+        let fileReader = stateImages.filter(function (value, index, arr) {
+
+            return value.target !== e.src & e.accessKey !== index;
+        });
+        setStateImages(fileReader)
+
+    };
+    function showImages(images, key) {
+
+        if (stateImages.length === 0) return
+        return (
+            <div class="image-div">
+                <img key={key} id={"image" + key} accessKey={key} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
+                <div onClick={() => handleClearClick(document.getElementById("image" + key))} class="trashContainer hidden_img">
+                    <div class="trash">
+                        <div class="tap">
+                            <div class="tip"></div>
+                            <div class="top"></div>
+                        </div>
+                        <div class="tap2">
+                            <div class="bottom">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    function showWarning(images, key) {
+
+        if (stateImages.length === 0) return
+        return (<div><p>Warning! This images will substitute your publication images</p></div>
+        )
+    }
     return (
         <div>
             <div id='toOpacity'>
@@ -535,11 +682,7 @@ function Publicacion(props) {
                                 <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
                                 <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                                     <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
-                                        {authTokens ? favButton : <div></div>}
-                                        <button onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
-                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                                            <i title="Report" style={{ color: "#000000", fontSize: "43px", marginTop: "2px" }} class='fa'>&#x1F5E3;</i>
-                                        </button>
+                                        {renderFavButtons()}
                                     </div>
                                     <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
                                         {renderDelContactButton()}
@@ -607,6 +750,81 @@ function Publicacion(props) {
                         <div className="modal-footer">
                             <button className="button" id="close_button" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
                             <button onClick={deleteConfirm} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal" id="coModalUpdate" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content upload-modal">
+                        <div class="modal-header" style={{ marginTop: "-5%" }} >
+                            <h5 class="modal-title text-dark">Update</h5>
+                            <button onClick={() => document.getElementById("toOpacity").style.opacity = "1"} type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div >
+                                <p>Title:</p>
+                                <input defaultValue={card.title} style={{ marginBottom: "2%" }} name="title" type="text" class="content-input-title" id="titlepost" required />
+                            </div>
+                            <div>
+                                <p>Description:</p>
+                                <textarea defaultValue={card.description} name="description" class="content-input" id="descriptionpost" rows="4" cols="50" required ></textarea>
+                            </div>
+                            <div>
+                                <p>Price:</p>
+                                <p><input defaultValue={card.price} name="price" type="number" onInput={checkNumbers} id='pricepost'  ></input> €</p>
+                            </div>
+                            <p>Attach some images:</p>
+                            {showWarning()}
+                            <div style={{ display: "flex" }}>
+                                <input
+                                    type="file"
+                                    name="file-input"
+                                    id="file-input"
+                                    class="file-input__input"
+                                    accept="image/*"
+                                    capture="camera"
+                                    onChange={handleFileChange}
+                                />
+                                <label class="file-input__label" for="file-input" style={{ padding: "0", marginRight: "2%" }}>
+                                    <svg
+                                        aria-hidden="true"
+                                        focusable="false"
+                                        data-prefix="fas"
+                                        data-icon="upload"
+                                        accept="image/*"
+                                        class="svg-inline--fa fa-upload fa-w-16"
+                                        role="img"
+                                        capture="camera"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 512 512"
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"
+                                        ></path>
+                                    </svg>
+                                    <div
+                                        className={previewClasses}
+                                        onClick={handlePreviewClick}
+                                    >
+
+                                        {loading &&
+                                            <span>Loading...</span>
+                                        }
+                                    </div>
+                                    <span>Upload new picture </span></label>
+                            </div>
+                            <div className='row'>
+                                <div className="col-sm" style={{ margin: "1%" }}>
+                                    {stateImages.map(showImages)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer" style={{ marginBottom: "-8%" }}>
+                            <button onClick={() => document.getElementById("toOpacity").style.opacity = "1"} class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
+                            <button onClick={updateOutputUpdate} class="button" id='sendButton' style={{ verticalAlign: "middle", width: "100px" }}>Update</button>
                         </div>
                     </div>
                 </div>
