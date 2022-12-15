@@ -23,7 +23,8 @@ function Profile() {
     const [components, setComponents] = useState([]);
     const [radioGender, setRadioProduct] = useState('Products');
     const [buttonPopup, setButtonPopup] = useState(false)
-
+    const [block, setBlock] = useState('')
+    
     var input_textarea_title = document.getElementById('titlepost');
     var input_textarea_description = document.getElementById('descriptionpost');
     var input_textarea_price = document.getElementById('pricepost');
@@ -108,16 +109,39 @@ function Profile() {
                 .then((res) => res.json())
                 .then(data => {
                     setProfile(data);
+                    fetch(LINK_BACKEND + "/api/userprofile/blocker/" + data.id, {
+                        method: 'GET',
+                        withCredentials: true,
+                        credentials: 'include',
+                        headers: {
+                            'Authorization': 'Bearer ' + authTokens.access,
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    .then(data => {
+                        console.log(data)
+                        
+                        if (!data.ok) {
+        
+                            setBlock("Block")
+                            
+                        } else {
+                            
+                            setBlock("Unblock")
+                        }
+                    })
 
                 }
                 )
-
+            
         } else {
             fetch(
                 LINK_BACKEND + "/api/userprofile/" + username)
                 .then((res) => res.json())
                 .then(data => {
+
                     setProfile(data);
+
                 }
 
                 )
@@ -337,6 +361,32 @@ function Profile() {
         coModal.show()
 
     }
+    async function LINK_FRONTENDBloc() {
+        document.getElementById("profileOpacity").style.opacity = "0.5"
+        var modalfade = new Modal(document.getElementById('blockmodal'), {
+            keyboard: false
+        })
+        const response = await fetch(
+            LINK_BACKEND + "/api/userprofile/blocker/" + prof.id, {
+            method: 'GET',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+        })
+        if (!response.ok) {
+            
+            modalfade.show()
+            
+           
+       } else {
+            PutBlock()
+            setBlock("Block")
+        }
+       
+    }
 
     const handleChangePosting = (e) => {
         const { type, value } = e.target;
@@ -540,12 +590,23 @@ function Profile() {
 
 
     }
+    
     function is_other() {
         if (user == null) return
         if (username !== user.username) {
+
             return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal" onClick={() => document.getElementById("profileOpacity").style.opacity = "0.5"} data-bs-target="#staticBackdrop" class="btn btn-dark">Rate me!</button>
         }
     }
+    function is_blockbutton() {
+        if (user == null) return
+        if (username !== user.username) {
+
+            return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal-fade" id="block button" onClick={LINK_FRONTENDBloc} data-bs-target="#blockmodal" class="btn btn-dark"><span>{block} </span></button>
+        }
+    }
+
+   
 
     function buttonsTogether() {
 
@@ -664,6 +725,33 @@ function Profile() {
             </div>
         )
     }
+    function PutBlock() {
+        
+        fetch(LINK_BACKEND + "/api/userprofile/bloc/"+prof.id, {
+            method: 'PUT',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+        })
+            .then((res) => res.json())
+            .then(data => {})
+
+        console.log(data)
+
+        alert("User "+ block +"ed")
+        if (block == "Block"){
+            setBlock("Unblock")
+        }
+            
+        document.getElementById("profileOpacity").style.opacity = "1"
+            
+        
+        return
+    }
+    
     return (
         <div>
             <div id='profileOpacity'>
@@ -686,11 +774,16 @@ function Profile() {
 
                                 </div>
                                 <div class="input-group" id='input-group' >
+                                    {is_blockbutton()}
+                                    <div style={{ marginLeft: "30px" }} className="ratings">
+
+                                    </div>
                                     {is_other()}
                                     <div style={{ marginLeft: "25px" }} className="ratings">
                                         <div className="empty-stars"></div>
                                         <div className="full-stars" style={{ width: review }} ></div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -711,6 +804,19 @@ function Profile() {
                         </div>
                     </div>
                 </section>
+            </div>
+            <div className="modal fade" id="blockmodal" tabIndex="-1">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title text-dark" id="modal_title">Are you sure you want to block this user?</h4>
+                        </div>
+                        <div className="modal-footer">
+                        <button className="button" id="close_button" onClick={() =>document.getElementById("profileOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
+                            <button onClick={PutBlock } id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Block</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div className="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div className="modal-dialog">
@@ -746,9 +852,13 @@ function Profile() {
                             <button id="search-btn" onClick={sendReview} disabled={stars === 0 | message.length === 0} data-bs-dismiss="modal" aria-label="Close" className='btn2'>Rate</button>
                         </div>
                     </div>
+
                 </div>
+
             </div>
-            <div class="modal" id="coModal" tabindex="-1">
+            
+
+            <div className="modal" id="coModal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content upload-modal">
                         <div class="modal-header" style={{ marginTop: "-5%" }} >
@@ -828,9 +938,11 @@ function Profile() {
                             <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
                             <button onClick={updateOutput} class="button" id='sendButton' style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
                         </div>
+
                     </div>
                 </div>
             </div>
+
             <div class="modal fade" id="banModal" tabIndex="-1" aria-labelledby="banModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -847,6 +959,7 @@ function Profile() {
                     </div>
                 </div>
             </div>
+
             <Footer />
         </div >
 
