@@ -8,13 +8,12 @@ import Footer from './footer'
 import empty from '../assets/suchEmpty.png'
 import LINK_FRONTEND from './LINK_FRONTEND';
 import { Modal } from 'bootstrap'
-import { BsFillTrashFill } from "react-icons/bs";
 
 function Profile() {
 
     const { username, edit } = useParams();
     let { user, authTokens } = useContext(AuthContext);
-    const [prof, setProfile] = useState([])
+    let [prof, setProfile] = useState([])
     const [products, setProducts] = useState([])
     const [historialProducts, setHistorialProducts] = useState([])
     const [reviews, setReviews] = useState([])
@@ -24,7 +23,8 @@ function Profile() {
     const [components, setComponents] = useState([]);
     const [radioGender, setRadioProduct] = useState('Products');
     const [buttonPopup, setButtonPopup] = useState(false)
-
+    const [block, setBlock] = useState('')
+    
     var input_textarea_title = document.getElementById('titlepost');
     var input_textarea_description = document.getElementById('descriptionpost');
     var input_textarea_price = document.getElementById('pricepost');
@@ -109,16 +109,39 @@ function Profile() {
                 .then((res) => res.json())
                 .then(data => {
                     setProfile(data);
+                    fetch(LINK_BACKEND + "/api/userprofile/blocker/" + data.id, {
+                        method: 'GET',
+                        withCredentials: true,
+                        credentials: 'include',
+                        headers: {
+                            'Authorization': 'Bearer ' + authTokens.access,
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    .then(data => {
+                        console.log(data)
+                        
+                        if (!data.ok) {
+        
+                            setBlock("Block")
+                            
+                        } else {
+                            
+                            setBlock("Unblock")
+                        }
+                    })
 
                 }
                 )
-
+            
         } else {
             fetch(
                 LINK_BACKEND + "/api/userprofile/" + username)
                 .then((res) => res.json())
                 .then(data => {
+
                     setProfile(data);
+
                 }
 
                 )
@@ -162,6 +185,65 @@ function Profile() {
                 setReviews(data);
             }
             )
+    }
+
+    function renderBanIfAdmin() {
+        console.log(user)
+        if (user == null) return
+        if (!user.is_superuser || user.username == username) return
+        if (prof.status == "BAN") {
+            return (
+                <div>
+                    <button type="button" class="btn btn-warning" onClick={(e) => banUser(e, false)}>Unban user</button>
+                </div>
+            )
+        } else if (prof.status == "ALO") {
+            return (
+                <div>
+                    <button type="button" class="btn btn-danger" onClick={showBanModal}>Ban user</button>
+                </div>
+            )
+        }
+    }
+
+    function showBanModal() {
+        document.getElementById("profileOpacity").style.opacity = "0.5"
+        var banModal = new Modal(document.getElementById('banModal'), {
+            keyboard: false
+        })
+        setModal(banModal)
+        banModal.show()
+    }
+
+    function banUser(e, ban) {
+        e.preventDefault();
+        let banUser = "ALO"
+        if (ban) {
+            banUser = "BAN"
+        }
+        fetch(LINK_BACKEND + "/api/userprofile/ban-user/" + username, {
+            method: 'PUT',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                'user_name': username,
+                'status': banUser,
+            }),
+        })
+            .then((res) => res.json())
+            .then(data => {
+                const profile = { ...prof, status: data.status }
+                setProfile(profile)
+                if (ban) {
+                    alert("The user has been banned") 
+                }
+                document.getElementById("profileOpacity").style.opacity = "1"
+                modal.hide()
+            })
     }
 
     function renderIfRadio() {
@@ -279,6 +361,32 @@ function Profile() {
         coModal.show()
 
     }
+    async function LINK_FRONTENDBloc() {
+        document.getElementById("profileOpacity").style.opacity = "0.5"
+        var modalfade = new Modal(document.getElementById('blockmodal'), {
+            keyboard: false
+        })
+        const response = await fetch(
+            LINK_BACKEND + "/api/userprofile/blocker/" + prof.id, {
+            method: 'GET',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+        })
+        if (!response.ok) {
+            
+            modalfade.show()
+            
+           
+       } else {
+            PutBlock()
+            setBlock("Block")
+        }
+       
+    }
 
     const handleChangePosting = (e) => {
         const { type, value } = e.target;
@@ -289,7 +397,7 @@ function Profile() {
 
         if (user == null) return
         if (user.username === username)
-            return (<button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
+            return (<button onClick={LINK_FRONTENDContact} className="button" style={{width:"150px", verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
     }
 
     const { data, fullScreen, loading } = stateImages;
@@ -300,7 +408,7 @@ function Profile() {
     //#TODO, En teoria habrá una fecha
     function RenderMyHistorialProducts(product) {
         return (
-            <a style={{ margin: "1%", textDecoration: 'none' }} href={"/publicacion/" + product.id} key={product.id}>
+            <a style={{ margin: "1%", textDecoration: 'none' }} href={"/purchasedetails/" + product.id} key={product.id}>
                 <div className='d-flex rounded  p-3 productRow text-center align-items-center justify-content-center' style={{ backgroundColor: "white" }}>
                     <img src={product.pub_id.images[0]} className="imageProducts shadow rounded" alt="Sorry! not available at this time" ></img>
                     <div className='col-3  d-flex  justify-content-center'>
@@ -482,12 +590,23 @@ function Profile() {
 
 
     }
+    
     function is_other() {
         if (user == null) return
         if (username !== user.username) {
+
             return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal" onClick={() => document.getElementById("profileOpacity").style.opacity = "0.5"} data-bs-target="#staticBackdrop" class="btn btn-dark">Rate me!</button>
         }
     }
+    function is_blockbutton() {
+        if (user == null) return
+        if (username !== user.username) {
+
+            return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal-fade" id="block button" onClick={LINK_FRONTENDBloc} data-bs-target="#blockmodal" class="btn btn-dark"><span>{block} </span></button>
+        }
+    }
+
+   
 
     function buttonsTogether() {
 
@@ -585,9 +704,9 @@ function Profile() {
     }
     const handleClearClick = (e) => {
         let fileReader = stateImages.filter(function (value, index, arr) {
-
-            return value.target !== e.target.src & e.target.accessKey !== index;
+            return value.target !== e.src & e.accessKey !== index;
         });
+        console.log(fileReader)
         setStateImages(fileReader)
 
     };
@@ -596,8 +715,8 @@ function Profile() {
         if (stateImages.length === 0) return
         return (
             <div class="image-div">
-                <img key={key} accessKey={key} onClick={handleClearClick} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
-                <div class="trashContainer hidden_img">
+                <img key={key} id={"image"+key} accessKey={key} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
+                <div onClick={()=>handleClearClick(document.getElementById("image"+key))} class="trashContainer hidden_img">
                     <div class="trash">
                         <div class="tap">
                             <div class="tip"></div>
@@ -612,12 +731,36 @@ function Profile() {
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         )
     }
+    function PutBlock() {
+        
+        fetch(LINK_BACKEND + "/api/userprofile/bloc/"+prof.id, {
+            method: 'PUT',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+        })
+            .then((res) => res.json())
+            .then(data => {})
+
+        console.log(data)
+
+        alert("User "+ block +"ed")
+        if (block == "Block"){
+            setBlock("Unblock")
+        }
+            
+        document.getElementById("profileOpacity").style.opacity = "1"
+            
+        
+        return
+    }
+    
     return (
         <div>
             <div id='profileOpacity'>
@@ -640,11 +783,16 @@ function Profile() {
 
                                 </div>
                                 <div class="input-group" id='input-group' >
+                                    {is_blockbutton()}
+                                    <div style={{ marginLeft: "30px" }} className="ratings">
+
+                                    </div>
                                     {is_other()}
                                     <div style={{ marginLeft: "25px" }} className="ratings">
                                         <div className="empty-stars"></div>
                                         <div className="full-stars" style={{ width: review }} ></div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -653,18 +801,31 @@ function Profile() {
                             <div className="col-lg-8">
                                 <div className="card-body  p-4 text-black text-center ">
                                     {loadUploadButton()}
-
                                     <div className="mb-5 rounded-top " style={{ backgroundColor: "#f5f5f5" }}>
                                         {RenderPurchaseHistory()}
                                         <div className="p-4" style={{ backgroundColor: "#f5f5f5" }}>
                                             {renderIfRadio()}
                                         </div>
                                     </div>
+                                    {renderBanIfAdmin()}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
+            </div>
+            <div className="modal fade" id="blockmodal" tabIndex="-1">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title text-dark" id="modal_title">Are you sure you want to block this user?</h4>
+                        </div>
+                        <div className="modal-footer">
+                        <button className="button" id="close_button" onClick={() =>document.getElementById("profileOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
+                            <button onClick={PutBlock } id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Block</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div className="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div className="modal-dialog">
@@ -700,9 +861,13 @@ function Profile() {
                             <button id="search-btn" onClick={sendReview} disabled={stars === 0 | message.length === 0} data-bs-dismiss="modal" aria-label="Close" className='btn2'>Rate</button>
                         </div>
                     </div>
+
                 </div>
+
             </div>
-            <div class="modal" id="coModal" tabindex="-1">
+            
+
+            <div className="modal" id="coModal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content upload-modal">
                         <div class="modal-header" style={{ marginTop: "-5%" }} >
@@ -782,9 +947,28 @@ function Profile() {
                             <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} class="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Close</button>
                             <button onClick={updateOutput} class="button" id='sendButton' style={{ verticalAlign: "middle", width: "100px" }}>Send </button>
                         </div>
+
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="banModal" tabIndex="-1" aria-labelledby="banModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="banModalLabel">Do you want to ban this user?</h5>
+                    </div>
+                    <div class="modal-body">
+                        <textarea style={{resize:"none"}} class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"}  type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
             <Footer />
         </div >
 

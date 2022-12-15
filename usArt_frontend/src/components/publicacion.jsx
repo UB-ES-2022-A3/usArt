@@ -8,10 +8,14 @@ import LINK_BACKEND from "./LINK_BACKEND"
 import LINK_FRONTEND from "./LINK_FRONTEND"
 import Footer from './footer'
 
+import { HiArchive } from "react-icons/hi";
+import { AiFillDelete } from "react-icons/ai";
+
 import { Modal } from 'bootstrap'
 import AuthContext from "../context/authcontext";
 
 function Publicacion(props) {
+
 
     let { user, authTokens } = useContext(AuthContext);
     const { id } = useParams()
@@ -27,8 +31,18 @@ function Publicacion(props) {
 
     const { data, fullScreen, loading } = stateImages;
     const previewClasses = ['preview', fullScreen ? 'preview--fullscreen' : ''].join(' ');
+    const [report, setReport] = useState([])
+
+
 
     let input_textarea = document.querySelector('.content-input');
+    let input_reason = document.querySelector('.reason-input');
+
+    const favButton = (
+        <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+            <i style={{ color: color, width: "30px", height: "30px" }} class='fa'>{heart}</i></button>
+    )
 
     useEffect(callApi, [])
 
@@ -72,6 +86,114 @@ function Publicacion(props) {
                     }
                 })
         }
+        console.log("user: ", user)
+        refreshReports()
+        
+    }
+
+    function refreshReports() {
+        if (! authTokens) return
+        if (user.is_superuser) {
+
+            fetch(
+
+                LINK_BACKEND + "/api/catalog/complaint/get/post/" + id, {
+                method: 'GET',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then((res) => res.json())
+                .then(data => {
+                    let finalReports = []
+                    data.forEach(async (rep) => {
+                        if (rep.status === 'PE') {
+                            finalReports.push(rep);
+                        }
+                    });
+                    setReport(finalReports);
+                }
+                )
+        }
+    }
+
+    function renderReportsUser() {
+        if (!authTokens) return
+        if (user.is_superuser && report.length != 0) {
+            return (
+
+                <div className='rounded listdenuncia justify-content-center  text-center pt-3 mt-5 mb-5 text-align-center'>
+                    <h1 style={{ color: "black", fontWeight: "600", fontSize: "30px" }}>Complains</h1>
+                    <div className=' text-center justify-content-center  '>
+                        {report.map(renderAllReports)}
+                    </div>
+
+                </div>
+            )
+        }
+    }
+
+    function onArchive(e) {
+        fetch(
+            LINK_BACKEND + "/api/catalog/complaint/put/delete/" + e, {
+            method: 'PUT',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                status: 'AP',
+            }),
+        })
+            .then(data => {
+                if (data.status === 403) {
+                    alert("ERROR: Something went wrong")
+                }
+            })
+
+        refreshReports()
+        window.location.assign(LINK_FRONTEND + "/publicacion/" + id)
+
+    }
+    function onDelete(e) {
+        console.log("entro en el delete")
+        fetch(
+            LINK_BACKEND + "/api/catalog/complaint/put/delete/" + e, {
+            method: 'DELETE',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + authTokens.access,
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(data => {
+                console.log(data);
+            })
+        refreshReports()
+        window.location.assign(LINK_FRONTEND + "/publicacion/" + id)
+
+    }
+
+    function renderAllReports(reports) {
+        return (
+            <div className='d-flex justify-content-between '>
+                <div className="rounded  justify-content-center pt-3 mt-4 shadow w-75 align-items-center quejas" style={{ backgroundColor: "RGBA(255,0,0,0.61)" }}>
+                    <p>{reports.reason}</p>
+                </div>
+                <div className='d-flex justify-content-center text-center align-items-center acceptDel'>
+                    < HiArchive style={{ fontSize: "35", margin: "10px", cursor: "pointer", name: reports.id }} onClick={onArchive.bind(this, reports.id)} />
+                    < AiFillDelete style={{ fontSize: "35", margin: "10px", cursor: "pointer" }} onClick={onDelete.bind(this, reports.id)} />
+                </div>
+
+            </div>
+
+        )
     }
 
     function toggleFavorite() {
@@ -129,6 +251,7 @@ function Publicacion(props) {
     }
 
     function renderCard(card, index) {
+
         if (index === 0) return (
             <div className="carousel-item active" data-bs-interval="30000">
                 <img id={index} src={card} className="img-slider" alt="Sorry! not available at this time" ></img>
@@ -161,8 +284,10 @@ function Publicacion(props) {
     }
 
     function renderDelContactButton() {
+        console.log("este es el user", user)
         if (authTokens) {
-            if (author['id'] == user['user_id']) {
+
+            if (author['id'] == user['user_id'] || user.is_superuser === true) {
                 return (
                     <button onClick={deleteOnClick} className="button" style={{ verticalAlign: "middle" }}><span>Delete</span></button>
                 )
@@ -172,6 +297,8 @@ function Publicacion(props) {
                 )
             }
         } else {
+           
+
             return (
                 <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
             )
@@ -183,7 +310,7 @@ function Publicacion(props) {
         if (!authTokens) {
             return (<div></div>)
         }
-        if (author['id'] != user['user_id']) {
+        if (author['id'] != user['user_id'] && user.is_superuser == false) {
             return (
                 <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
@@ -206,13 +333,18 @@ function Publicacion(props) {
                 'Authorization': 'Bearer ' + authTokens.access,
                 'Content-Type': 'application/json'
             },
-        })
-            .then(data => {
-                console.log(data);
-            })
-        LINK_FRONTENDProfile()
+        }).then((res) => {
+            LINK_FRONTENDProfile()
+            return res.json()
+          })   
+        if(user.is_superuser == true){
+            window.location.assign(LINK_FRONTEND + "/explore")
+        }else{
+            LINK_FRONTENDProfile()
+        }
         document.getElementById("toOpacity").style.opacity = "1";
     }
+
 
     function deleteOnClick() {
         let delModal = new Modal(document.getElementById('deleteModal'), {
@@ -222,25 +354,69 @@ function Publicacion(props) {
         delModal.show()
     }
 
-    function LINK_FRONTENDContact() {
+
+    function complaintPopUp() {
+        let compModal = new Modal(document.getElementById('complaintModal'), {
+            keyboard: false, backdrop: 'static'
+        })
+        document.getElementById("toOpacity").style.opacity = "0.5";
+        compModal.show()
+    }
+
+    async function LINK_FRONTENDContact() {
+
         if (authTokens) {
             let coModal = new Modal(document.getElementById('coModal'), {
                 keyboard: false, backdrop: 'static'
             })
+            try {
+                const response = await fetch(
+                    LINK_BACKEND + "/api/userprofile/blocked/" + author.id, {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Bearer ' + authTokens.access,
+                        'Content-Type': 'application/json'
+                    },
+                })
+                if (!response.ok) {
+                    const response = await fetch(
+                        LINK_BACKEND + "/api/userprofile/blocker/" + author.id, {
+                        method: 'GET',
+                        withCredentials: true,
+                        credentials: 'include',
+                        headers: {
+                            'Authorization': 'Bearer ' + authTokens.access,
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    if (response.ok) {
+                        alert("You block this user")
 
-            if (card.type === "CO") {
-                document.getElementById("toOpacity").style.opacity = "0.5";
+                    } else {
+                        if (card.type === "CO") {
+                            document.getElementById("toOpacity").style.opacity = "0.5";
+                            coModal.show()
+                        } else if (card.type === "AR") {
+                            document.getElementById("toOpacity").style.opacity = "0.5";
+                            const link = LINK_FRONTEND + "/compra/" + id
+                            window.location.assign(link)
+                        } else if (card.type === "AU") {
+                            document.getElementById("toOpacity").style.opacity = "0.5";
+                            const link = LINK_FRONTEND + "/auction/" + id
+                            window.location.assign(link)
+                        }
 
-                coModal.show()
-            } else {
-                document.getElementById("toOpacity").style.opacity = "0.5";
-                const link = LINK_FRONTEND + "/compra/" + id
-                window.location.assign(link)
-            }
+                    }
+                } else {
+                    alert("This user blocked you")
+                }
+            } catch (error) { }
+
         } else {
             alert("You must be logged!")
         }
-
     }
     function LINK_FRONTENDProfile() {
 
@@ -251,10 +427,13 @@ function Publicacion(props) {
     }
     function Nameaux() {
         let name = ""
+        console.log(card.type)
         if (card.type == "CO") {
             name = "Contact"
-        } else {
+        } else if (card.type == "AR") {
             name = "Buy"
+        } else {
+            name = "Bid"
         }
         return name
     }
@@ -262,12 +441,47 @@ function Publicacion(props) {
         let description = input_textarea.value
         if (description.length === 0) {
             alert("La descripción no puede estar vacia")
+            input_textarea.value = ""
         }
         console.log(description)
         postPetCom(id, description)
         alert("Petición hecha!")
         document.getElementById("toOpacity").style.opacity = "1"
+        input_textarea.value = ""
+    }
 
+    function complaintConfirm() {
+        let reason = input_reason.value
+        if (reason.length === 0) {
+            complaintPopUp()
+            alert("Reason can't be empty")
+        } else {
+            fetch(LINK_BACKEND + "/api/catalog/complaint/get/post/" + id, {
+                method: 'POST',
+                withCredentials: true,
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + authTokens.access,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'reason': reason
+                }),
+            })
+                .then((res) => res.json())
+                .then(data => {
+                    console.log(data)
+                }
+                )
+            alert("Complaint done!")
+            document.getElementById("toOpacity").style.opacity = "1"
+            input_reason.value = ""
+        }
+    }
+
+    function cancelComplaint() {
+        document.getElementById("toOpacity").style.opacity = "1"
+        input_reason.value = ""
     }
 
     function postPetCom(pub_id, description) {
@@ -430,8 +644,8 @@ function Publicacion(props) {
         <div>
             <div id='toOpacity'>
                 <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
-                    <div className="grid template"  >
-                        <div className="card card-item">
+                    <div className="grid template" >
+                        <div className="card card-item ">
                             <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
                                 <picture >
                                     <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
@@ -454,49 +668,59 @@ function Publicacion(props) {
                                 <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Profile </span></button>
                             </div>
                         </div>
-                        <div className="custom-container">
-                            <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
-
+                        <div>
+                            <div className="custom-container rounded">
+                                <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
+    
                                 <div className="carousel-indicators">
-                                    {card.images.map(renderButtons)}
-                                </div>
-                                <div className="carousel-inner " >
-                                    {card.images.map(renderCard)}
-                                </div>
-                                {card.images.length > 1 ?
+                                        {card.images.map(renderButtons)}
+                                    </div>
+                                    <div className="carousel-inner " >
+                                        {card.images.map(renderCard)}
+                                    </div>
+                                    {card.images.length > 1 ?
                                     <div><button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                        <span className="carousel-control-prev-icon " aria-hidden="true"></span>
-                                        <span className="visually-hidden">Previous</span>
-                                    </button>
-                                        <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span className="visually-hidden">Next</span>
-                                        </button> </div>
+                                            <span className="carousel-control-prev-icon " aria-hidden="true"></span>
+                                            <span className="visually-hidden">Previous</span>
+                                        </button>
+                                            <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span className="visually-hidden">Next</span>
+                                            </button> </div>
                                     : <div></div>}
-                            </div>
-                            <div className="card-body custom-body ">
-                                <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
-                                    <h1 style={{ color: "black", marginTop: "3%" }}>{card.title}</h1>
-                                </div >
-                                <h4 style={{ color: "black" }}>{card.price}€</h4>
-                                <hr></hr>
-                                <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
+                                </div>
+                                <div className="card-body custom-body ">
+                                    <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
+                                        <h1 style={{ color: "black", marginTop: "3%" }}>{card.title}</h1>
+                                    </div >
+                                    <h4 style={{ color: "black" }}>{card.type === "AU" ? "Initial price: " + card.price : card.price}€</h4>
+                                    <hr></hr>
+                                    <p placeholder="Description not found.." style={{ color: "black" }}>{card.description}</p>
+
+                                </div>
+                                <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
+                                <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                                    <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
+                                        {authTokens ? favButton : <div></div>}
+                                        <button onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
+                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                                            <i title="Report" style={{ color: "#000000", fontSize: "43px", marginTop: "2px" }} class='fa'>&#x1F5E3;</i>
+                                        </button>
+                                    </div>
+                                    <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
+                                        {renderDelContactButton()}
+                                    </div>
+                                </div>
 
                             </div>
-                            <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
-                            <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-                                <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
-                                    {renderFavButtons()}
-                                </div>
-                                <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
-                                    {renderDelContactButton()}
-                                </div>
-                            </div>
+                            {renderReportsUser()}
                         </div>
-                    </div>
-                    <Footer />
-                </div>
 
+
+                    </div>
+
+                </div>
+                <Footer />
             </div>
             <div className="modal fade" id="coModal" tabIndex="-1">
                 <div className="modal-dialog">
@@ -606,9 +830,23 @@ function Publicacion(props) {
                     </div>
                 </div>
             </div>
+            <div className="modal fade" id="complaintModal" tabIndex="-1">
+                <div className="modal-dialog" style={{ width: '400px', textAlign: "center" }}>
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title text-dark" id="modal_title">Reason for the complaint?</h4>
+                        </div>
+                        <div className="modal-body">
+                            <p><textarea name="reason" className="reason-input" rows="5" cols="45" id="reason" maxlength="300" required ></textarea></p>
+                        </div>
+                        <div className="modal-footer">
+                            <button className="button" id="close_button" onClick={cancelComplaint} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
+                            <button onClick={complaintConfirm} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Complaint</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    );
+    )
 }
-
-
 export default Publicacion;

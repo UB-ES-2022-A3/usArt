@@ -1,14 +1,8 @@
 import io
 from authentication.models import UsArtUser
 from django.http import JsonResponse
-from catalog.models import Publication
-from rest_framework.parsers import JSONParser
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.decorators import login_required
 from authentication.models import UsArtUser, idChats
-from authentication.serializers import UsArtUserSerializer, SalaChatSerializer
+from authentication.serializers import UsArtUserSerializer, SalaChatSerializer,DeleteChatSerializer
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -38,12 +32,14 @@ class ChatsActivos(generics.RetrieveAPIView):
             chats = []
             for c in response:
                 if c.id_2.id == request.user.id:
+                    if c.id_2_active == False: continue
                     chats.append({'user':{
                             'id':c.id_1.id,
                             'user_name': c.id_1.user_name,
                             'photo': c.id_1.photo.url
                         } ,'id_sala': c.id_sala})
                 elif c.id_1.id  == request.user.id:
+                    if c.id_1_active == False: continue
                     chats.append({'user':{
                             'id':c.id_2.id,
                             'user_name': c.id_2.user_name,
@@ -68,9 +64,18 @@ class SalaChat(generics.RetrieveAPIView):
 
         criterion3 = Q(id_1=id)
         criterion4 = Q(id_2=request.user.id)
+
+       
+
         try:
             response = idChats.objects.get(
-                criterion1 & criterion2 | criterion3 & criterion4)
+                criterion1 & criterion2| criterion3 & criterion4)
+            if response.id_1_active == 0:
+                idChats.objects.filter(
+                criterion1 & criterion2| criterion3 & criterion4).update(id_1_active=1)
+            if response.id_2_active == 0:
+                idChats.objects.filter(
+                criterion1 & criterion2| criterion3 & criterion4).update(id_2_active=1)
             return Response(response.id_sala, status=status.HTTP_200_OK)
 
         except:
@@ -126,6 +131,26 @@ class ChatPost(generics.ListCreateAPIView):
        
         pusher.trigger(str(id_sala), u'my-event',  dic)
         return Response(dic, status=status.HTTP_201_CREATED)
+
+class ChatDelete(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = idChats.objects.all()
+    
+    def put(self, request):
+        id_sala = request.data["id_sala"]
+        response = get_object_or_404(idChats, id_sala=id_sala)
+        if (response.id_1.id == request.user.id):
+            response.id_1_active = False
+            response.save()
+            if response.id_2_active == False: response.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        else:
+            response.id_2_active = False
+            response.save()
+            if response.id_1_active == False: response.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)     
+    
 
 class ChatHistory(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]

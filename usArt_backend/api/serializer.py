@@ -6,6 +6,7 @@ from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from authentication.models import UsArtUser
 
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -13,8 +14,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['username'] = user.user_name
         token['email'] = user.email
+        token['is_superuser'] = user.is_superuser
+        token['status'] = user.status
         # ...
         return token
+
 
 class RegisterSerializer(serializers.ModelSerializer):
 
