@@ -396,7 +396,7 @@ function Publicacion(props) {
                         },
                     })
                     if (response.ok) {
-                        alert("You block this user")
+                        alert("You blocked this user")
 
                     } else {
                         if (card.type === "CO") {
@@ -444,7 +444,7 @@ function Publicacion(props) {
     function updateOutput() {
         let description = input_textarea.value
         if (description.length === 0) {
-            alert("La descripción no puede estar vacia")
+            alert("Description must not be empty")
             input_textarea.value = ""
         }
        
@@ -708,7 +708,7 @@ function Publicacion(props) {
                             </div>
                             <hr></hr>
                             <div style={{ marginLeft: "2%" }}>
-                                <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
+                                <h5 className="card-title" style={{ color: "black" }}>Description</h5>
                                 <p placeholder="Description not found.." className="card-text">{author.description}</p>
                             </div>
                             <hr></hr>

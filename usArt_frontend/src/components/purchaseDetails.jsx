@@ -49,15 +49,13 @@ function Details(props) {
         })
             .then((res) => res.json())
             .then(data => {
-
-                console.log(id)
-                console.log(data)
                 setImagen(data.pub_id.images[0])
                 setEmailCreator(data.pub_id.author.email)
                 setEmailUser(data.user_id.email)
                 setUsername(data.user_id.user_name)
                 setPrice(data.price)
                 setFecha(data.date)
+                setDireccion(data.address)
                 //setImagen(data.Imagen)
 
             }
@@ -123,29 +121,29 @@ function Details(props) {
 
                         <MDBCardImage src={Imagen} style={{ width: "400px", height: "340px" }} fluid />
                         <MDBRow>
-                            <p id="title_signup" className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Detalles de tu compra</p>
+                            <p id="title_signup" className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Purchase Details</p>
 
 
                             <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
                                 <div className="" >
-                                    <p><strong>Nombre de usuario: </strong>{username}</p>
+                                    <p><strong>Username: </strong>{username}</p>
                                 </div>
                                 <div className="" >
-                                    <p><strong>Dirección: </strong>Muntaner 214</p>
+                                    <p><strong>Address: </strong>{Direccion}</p>
                                 </div>
 
                                 <div className="" >
-                                    <p><strong>Fecha de la compra: </strong>{fecha}</p>
+                                    <p><strong>Date of Purchase: </strong>{fecha}</p>
                                 </div>
 
                             </MDBCol>
                             <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
                                 <div className="w-50 text-center align-items-center">
                                     <div className="" >
-                                        <p><strong>Precio: </strong>{price}</p>
+                                        <p><strong>Price: </strong>{price}</p>
                                     </div>
                                     <div className="" >
-                                        <p><strong>Status: </strong>Procesando</p>
+                                        <p><strong>Status: </strong>Processing</p>
                                     </div>
 
                                 </div>

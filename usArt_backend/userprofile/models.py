@@ -11,6 +11,7 @@ class PurchaseHistory(models.Model):
     price = models.FloatField(blank=False)
     user_id = models.ForeignKey(UsArtUser, on_delete=models.CASCADE, related_name='customer')
     date = models.DateField(auto_now_add=True)
+    address = models.CharField(max_length=1000,null=False)
     STATUS_CHOICES = [
         ('PR', 'Processing'),
         ('IT', 'In Transit'),
