@@ -88,11 +88,11 @@ function Publicacion(props) {
         }
         console.log("user: ", user)
         refreshReports()
-        
+
     }
 
     function refreshReports() {
-        if (! authTokens) return
+        if (!authTokens) return
         if (user.is_superuser) {
 
             fetch(
@@ -297,7 +297,7 @@ function Publicacion(props) {
                 )
             }
         } else {
-           
+
 
             return (
                 <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
@@ -307,14 +307,18 @@ function Publicacion(props) {
     }
 
     function renderFavButtons() {
+
         if (!authTokens) {
             return (<div></div>)
         }
         if (author['id'] != user['user_id'] && user.is_superuser == false) {
-            return (
-                <button onClick={toggleFavorite} className="button_heart" style={{ verticalAlign: "middle" }}>
+            return (<div>
+                {favButton}
+                <button onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                    <i style={{ color: color, width: "30px", height: "30px" }} class='fa'>{heart}</i></button>
+                    <i title="Report" style={{ color: "#000000", fontSize: "43px", marginTop: "2px" }} class='fa'>&#x1F5E3;</i>
+                </button>
+            </div>
             )
         } else {
             return (
@@ -336,10 +340,10 @@ function Publicacion(props) {
         }).then((res) => {
             LINK_FRONTENDProfile()
             return res.json()
-          })   
-        if(user.is_superuser == true){
+        })
+        if (user.is_superuser == true) {
             window.location.assign(LINK_FRONTEND + "/explore")
-        }else{
+        } else {
             LINK_FRONTENDProfile()
         }
         document.getElementById("toOpacity").style.opacity = "1";
@@ -614,8 +618,8 @@ function Publicacion(props) {
         if (stateImages.length === 0) return
         return (
             <div class="image-div">
-                <img key={key} id={"image"+key} accessKey={key} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
-                <div onClick={()=>handleClearClick(document.getElementById("image"+key))} class="trashContainer hidden_img">
+                <img key={key} id={"image" + key} accessKey={key} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
+                <div onClick={() => handleClearClick(document.getElementById("image" + key))} class="trashContainer hidden_img">
                     <div class="trash">
                         <div class="tap">
                             <div class="tip"></div>
@@ -671,15 +675,15 @@ function Publicacion(props) {
                         <div>
                             <div className="custom-container rounded">
                                 <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
-    
-                                <div className="carousel-indicators">
+
+                                    <div className="carousel-indicators">
                                         {card.images.map(renderButtons)}
                                     </div>
                                     <div className="carousel-inner " >
                                         {card.images.map(renderCard)}
                                     </div>
                                     {card.images.length > 1 ?
-                                    <div><button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                        <div><button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                                             <span className="carousel-control-prev-icon " aria-hidden="true"></span>
                                             <span className="visually-hidden">Previous</span>
                                         </button>
@@ -687,7 +691,7 @@ function Publicacion(props) {
                                                 <span className="carousel-control-next-icon" aria-hidden="true"></span>
                                                 <span className="visually-hidden">Next</span>
                                             </button> </div>
-                                    : <div></div>}
+                                        : <div></div>}
                                 </div>
                                 <div className="card-body custom-body ">
                                     <div className="grid" style={{ justifyContent: "left", marginInlineStart: "0%", alignItems: "center" }}>
@@ -701,11 +705,7 @@ function Publicacion(props) {
                                 <hr style={{ marginInlineStart: "30px", marginInlineEnd: "30px" }}></hr>
                                 <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                                     <div class="btn-group" role="group" aria-label="First group" style={{ marginBottom: "1%", marginLeft: "1%" }}>
-                                        {authTokens ? favButton : <div></div>}
-                                        <button onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
-                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                                            <i title="Report" style={{ color: "#000000", fontSize: "43px", marginTop: "2px" }} class='fa'>&#x1F5E3;</i>
-                                        </button>
+                                        {renderFavButtons()}
                                     </div>
                                     <div class="input-group" style={{ marginBottom: "1%", marginRight: "1%" }}>
                                         {renderDelContactButton()}
