@@ -199,7 +199,35 @@ def test_ar5_eliminar_publicacion():
 
 
 def test_a2_banear_usuario():
-    pass
+    driver.get('http://localhost:3000/home')
+    driver.implicitly_wait(10)
+    log_in_button = driver.find_element(by=By.XPATH, value='//*[@id="button_login"]')
+    log_in_button.click()
+    username = driver.find_element(by=By.ID, value='form2')
+    password = driver.find_element(by=By.ID, value='form3')
+    sign_in_button = driver.find_element(by=By.XPATH, value='//*[@id="login_button"]')
+    username.send_keys('admin')
+    password.send_keys('admin')
+    sign_in_button.click()
+
+    driver.find_element(by=By.XPATH, value='//*[@id="search-bar"]').send_keys('Alum')
+    driver.find_element(by=By.XPATH, value='//*[@id="button-addon1"]').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="SelectUsers"]').click()
+    driver.implicitly_wait(10)
+
+    driver.get('http://localhost:3000/profile/Alum/default')
+    driver.implicitly_wait(10)
+    ban_button = driver.find_element(by=By.XPATH, value='//*[@id="banuser"]')
+    driver.execute_script("arguments[0].click()", ban_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="confirm_ban"]').click()
+    driver.implicitly_wait(10)
+
+    username = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Alum")]').text
+    assert username == 'Alum'
+
+
 
 
 def test_ar7_eliminar_conversacion():
