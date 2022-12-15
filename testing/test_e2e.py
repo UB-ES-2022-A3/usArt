@@ -147,13 +147,46 @@ def test_ar2_crear_publicacion():
 def test_ur5_favoritos_publicacion():
     pass
 
-
+#ToDo
 def test_ur7_participar_subasta():
-    pass
+    test_ur10_login_alum()
+
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="action-button"]').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="action-button"]').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.ID, value='bidpost').send_keys('12')
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="bidbutton"]').click()
+    driver.implicitly_wait(10)
 
 
 def test_ur2_devolver_pedidos():
-    pass
+    test_ur10_login_alum()
+
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]').click()
+    driver.implicitly_wait(10)
+    purchases_button = driver.find_element(by=By.ID, value='radio3')
+    driver.execute_script("arguments[0].click()", purchases_button)
+    driver.implicitly_wait(10)
+    purchase = driver.find_element(by=By.XPATH,
+            value='//*[contains(text(), "As soon as I saw her, I knew I was going to end up drawing her.")]')
+    driver.execute_script("arguments[0].click()", purchase)
+    driver.implicitly_wait(10)
+    refund_button = driver.find_element(by=By.XPATH, value='//*[@id="button-refund"]')
+    driver.execute_script("arguments[0].click()", refund_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="button-cancel-refund"]').click()
+    driver.implicitly_wait(10)
+    refund_button = driver.find_element(by=By.XPATH, value='//*[@id="button-refund"]')
+    driver.execute_script("arguments[0].click()", refund_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.ID, value='modal_reason').send_keys('Because I want')
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="button-send-refund"]').click()
+    driver.implicitly_wait(10)
 
 
 def test_ar5_eliminar_publicacion():

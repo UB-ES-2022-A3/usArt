@@ -287,7 +287,7 @@ function Publicacion(props) {
                 )
             } else {
                 return (
-                    <button onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
+                    <button id="action-button" onClick={LINK_FRONTENDContact} className="button" style={{ verticalAlign: "middle" }}><span>{Nameaux()}</span></button>
                 )
             }
         } else {
