@@ -4,12 +4,12 @@ import uuid
 
 # Create your models here.
 
+
 class AccountManager(BaseUserManager):
 
     def create_superuser(self, email, user_name, password, **other_fields):
         other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_superuser', True)
-        other_fields.setdefault('is_active', True)
 
         if (other_fields.get('is_staff') is not True):
             raise ValueError('El super usuario debe de tener is_staff = True')
@@ -61,8 +61,6 @@ class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
 
     def __str__(self):
         return self.user_name
-
-
 
 
 class idChats(models.Model):

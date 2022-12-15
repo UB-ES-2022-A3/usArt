@@ -66,7 +66,7 @@ function LoggedNavBar() {
                   <a id="explore_button" className="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
                 </li>
                 <li className="nav-item px-3">
-                  <a  className="nav-link underL px-3" href="/buzon">Buzon</a>
+                  <a  className="nav-link underL px-3" href="/buzon">Inbox</a>
                 </li>
                 <li className="nav-item px-3">
                   <a id="profile-button" className="nav-link underL px-3" href={"/profile/"+user.username+"/default"}>Mi perfil</a>

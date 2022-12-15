@@ -5,7 +5,10 @@ from catalog.serializers import PublicationListSerializer
 
 from rest_framework import serializers
 
+
 from userprofile.models import PurchaseHistory, Review, Fav
+
+from userprofile.models import PurchaseHistory, Review, Block
 
 
 class UsArtUserSerializer(serializers.ModelSerializer):
@@ -14,7 +17,13 @@ class UsArtUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UsArtUser
-        fields = ('id', 'user_name', 'email', 'description', 'photo', 'is_self')
+        fields = ('id', 'user_name', 'email', 'description', 'photo', 'is_self', 'status')
+
+
+class UsArtUserStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsArtUser
+        fields = ['user_name', 'status']
 
 
 class PurchaseHistorySerializer(serializers.ModelSerializer):
@@ -40,7 +49,7 @@ class ExternalUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UsArtUser
-        fields = ('id', 'user_name', 'description', 'photo', 'is_self')
+        fields = ('id', 'user_name', 'description', 'photo', 'is_self', 'status')
 
 
 class ReviewUserSerializer(serializers.ModelSerializer):
@@ -50,12 +59,14 @@ class ReviewUserSerializer(serializers.ModelSerializer):
         model = Review
         fields = ['reviewed_id', 'stars', 'review']
 
+
 class ReviewerUserSerializer(serializers.ModelSerializer):
     reviewer_id = UsArtUserSerializer(read_only=True)
 
     class Meta:
         model = Review
         fields = ['reviewer_id', 'stars', 'review']
+
 
 
 class FavSerializer(serializers.ModelSerializer):
@@ -75,3 +86,10 @@ class FavDelGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fav
         fields = ['user_id', 'pub_id']
+
+class BlockSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Block
+        fields = ['blocker_id', 'blocked_id']
+

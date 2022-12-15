@@ -21,7 +21,7 @@ function BuzonChat() {
 
   useEffect(callApi, []);
 
-  const [c, setC] = useState(0)
+
 
 
   useEffect(() => {
@@ -50,7 +50,8 @@ function BuzonChat() {
   }, [channel]);
 
   const saveChat = (data) => {
-    if (c === 0) setlastMessage(JSON.stringify(data))
+    
+    setlastMessage(JSON.stringify(data))
   };
 
   useEffect(() => {
@@ -242,8 +243,7 @@ function BuzonChat() {
         'Content-Type': 'application/json',
       }, body: JSON.stringify({ "status": "AC" })
     })
-      .then((res) => res.json())
-      .then(data => {
+      .then((res) =>{
         setActiveUser()
         setMeUser()
         fetch(LINK_BACKEND + "/auth/chats/" + activeUser.user_id.id, {
@@ -260,8 +260,9 @@ function BuzonChat() {
           }
           )
         pendingComisions()
-      }
-      )
+        return res.json()
+      } )
+      
   }
   function deleteComission() {
     fetch(
