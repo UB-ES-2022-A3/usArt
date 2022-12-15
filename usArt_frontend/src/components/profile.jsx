@@ -204,7 +204,7 @@ function Profile() {
                 <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChangeRadio} />
                 <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
                 <input type="radio" className="btn-check" name="options" id="radio3" autoComplete="off" value="Purchase" checked={radioGender === 'Purchase'} onChange={handleChangeRadio} />
-                <label className="btn btn-outline-dark" htmlFor="radio3">Purchase History</label>
+                <label id="purchase-button" className="btn btn-outline-dark" htmlFor="radio3">Purchase History</label>
             </div>)
         } else {
             return (<div className="btn-group px-4 py-5 ">

@@ -58,8 +58,10 @@ def test_u4_buscar_producto():
     driver.find_element(by=By.XPATH, value='//*[contains(text(), "Lookie Uppies Sketchbook")]').click()
     driver.implicitly_wait(10)
     title = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Lookie Uppies Sketchbook")]').text
+    username = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Alum")]').text
 
     assert title == 'Lookie Uppies Sketchbook'
+    assert username == 'Alum'
 
 
 def test_ur10_login_alum():
@@ -79,8 +81,104 @@ def test_ur10_login_alum():
     sign_in_button.click()
 
 
-def test_ur10_logout():
+def test_ur15_informacion_compra():
+    test_ur10_login_alum()
+
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="purchase-button"]').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[contains(text(), "As soon as I saw her, I knew I was going to end up drawing her.")]').click()
+
+
+
+def test_ar9_aceptar_denegar_comision():
+    pass
+
+
+def test_footer_ur16():
+    pass
+
+
+def test_ur17_terms_and_services():
+    pass
+
+
+def test_ur11_logout():
     test_ur10_login_alum()
     driver.implicitly_wait(10)
 
     driver.find_element(by=By.ID, value='logout_button').click()
+
+
+def test_ur4_comisionar():
+    pass
+
+
+def test_ur12_historial_compras():
+    pass
+
+
+def test_ur14_editar_perfil():
+    pass
+
+
+def test_ur1_puntuar_artista():
+    pass
+
+
+def test_ur3_perfil():
+    pass
+
+
+def test_ur13_visualizar_chat():
+    pass
+
+
+def test_ur9_comprar_art():
+    pass
+
+
+def test_ar2_crear_publicacion():
+    pass
+
+
+def test_ur5_favoritos_publicacion():
+    pass
+
+
+def test_ur7_participar_subasta():
+    pass
+
+
+def test_ur2_devolver_pedidos():
+    pass
+
+
+def test_ar5_eliminar_publicacion():
+    pass
+
+
+def test_a2_banear_usuario():
+    pass
+
+
+def test_ar7_eliminar_conversacion():
+    pass
+
+
+def test_a1_eliminar_post_admin():
+    pass
+
+
+def test_ar6_bloquear_usuario():
+    pass
+
+
+def test_ur8_denunciar_servicio():
+    pass
+
+
+def test_ar4_modificar_publicacion():
+    pass
