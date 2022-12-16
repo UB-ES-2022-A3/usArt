@@ -32,7 +32,7 @@ function VideoBG(){
     autoPlay={true} muted={true}loop={true}
   ></video>);
   }
-  if ( window.location.href === LINK_FRONTEND+"/"){
+  if ( window.location.href === LINK_FRONTEND+"/" | window.location.href === LINK_FRONTEND){
     window.location.assign(LINK_FRONTEND + "/home")
   }
 }
