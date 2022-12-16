@@ -313,7 +313,7 @@ function Publicacion(props) {
         if (author['id'] != user['user_id'] && user.is_superuser == false) {
             return (<div>
                 {favButton}
-                <button onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
+                <button id="button-complaint" onClick={complaintPopUp} className="button_heart" style={{ verticalAlign: "middle" }}>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
                     <i title="Report" style={{ color: "#000000", fontSize: "43px", marginTop: "2px" }} class='fa'>&#x1F5E3;</i>
                 </button>
@@ -714,7 +714,7 @@ function Publicacion(props) {
                             </div>
                             <hr></hr>
                             <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
-                                <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Profile </span></button>
+                                <button id="pub-profile-button" onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Profile </span></button>
                             </div>
                         </div>
 

@@ -151,7 +151,7 @@ function Details(props) {
 
                             </MDBRow>
                             <div className="" style={{ bottom: "0", position: "absolute", right: "0" }}>
-                                <button className="button" onClick={LINK_FRONTENDContact} style={{ verticalAlign: "middle", width: "100px", backgroundColor: "darkred" }} >Refund</button>
+                                <button id="button-refund" className="button" onClick={LINK_FRONTENDContact} style={{ verticalAlign: "middle", width: "100px", backgroundColor: "darkred" }} >Refund</button>
                                 <button className="button" onClick={() => navigate(-1)} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Close</button>
                             </div>
                         </MDBCardBody>
@@ -169,8 +169,8 @@ function Details(props) {
                         </div>
                         <p><textarea style={{ resize: "none", position: "relative" }} name="reason" className="content-input" rows="5" cols="60" id="modal_reason" required ></textarea></p>
                         <div style={{display:"flex",justifyContent:"space-between"}}>
-                            <button className="button" onClick={() =>  navigate(-1)} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Cancel</button>
-                            <button className="button" onClick={updateOutput} style={{ right: "0", verticalAlign: "middle", width: "100px" }}>Send</button>
+                            <button id="button-cancel-refund" className="button" onClick={() =>  navigate(-1)} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Cancel</button>
+                            <button id="button-send-refund" className="button" onClick={updateOutput} style={{ right: "0", verticalAlign: "middle", width: "100px" }}>Send</button>
                         </div>
                     </div>
                 </div>

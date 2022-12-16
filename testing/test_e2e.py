@@ -19,6 +19,7 @@ def test_u1_ver_catalogo():
 
     title = driver.find_element(by=By.ID, value='explore-title').text
     assert title == 'Explore the talent at UsArt'
+    driver.implicitly_wait(20)
 
 
 def test_u3_register_user():
@@ -36,6 +37,7 @@ def test_u3_register_user():
     driver.find_element(by=By.XPATH, value='//*[@id="flexCheckDefault"]').click()
     register_button = driver.find_element(by=By.ID, value='register_button')
     driver.execute_script("arguments[0].click()", register_button)
+    driver.implicitly_wait(20)
 
 
 def test_u2_ver_publicacion():
@@ -44,10 +46,11 @@ def test_u2_ver_publicacion():
     driver.find_element(by=By.XPATH, value='//*[contains(text(), "Boyfriends Comic Book Issue 1!")]').click()
     driver.implicitly_wait(10)
     username = driver.find_element(by=By.XPATH, value='//*[contains(text(), "refrainbow")]').text
-    profile_button = driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]')
+    profile_button = driver.find_element(by=By.XPATH, value='//*[@id="pub-profile-button"]')
 
     assert username == 'refrainbow'
     assert profile_button.text == 'Profile'
+    driver.implicitly_wait(20)
 
 
 def test_u4_buscar_producto():
@@ -63,6 +66,20 @@ def test_u4_buscar_producto():
 
     assert title == 'Lookie Uppies Sketchbook'
     assert username == 'Alum'
+    driver.implicitly_wait(20)
+
+
+def test_ur17_terms_and_services():
+    driver.get('http://localhost:3000/explore')
+
+    driver.implicitly_wait(10)
+    button = driver.find_element(by=By.XPATH, value='//*[@id="terms-button"]')
+    driver.execute_script("arguments[0].click();", button)
+    driver.implicitly_wait(10)
+    title = driver.find_element(by=By.XPATH, value='//*[contains(text(), "UsArt Terms of Use")]').text
+
+    assert title == 'UsArt Terms of Use'
+    driver.implicitly_wait(20)
 
 
 def test_ur10_login_alum():
@@ -80,13 +97,15 @@ def test_ur10_login_alum():
     username.send_keys('Alum')
     password.send_keys('Alum123-')
     sign_in_button.click()
+    driver.implicitly_wait(20)
 
 
 def test_ur15_informacion_compra():
     test_ur10_login_alum()
 
     driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]').click()
+    button = driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]')
+    driver.execute_script("arguments[0].click();", button)
     driver.implicitly_wait(10)
     button = driver.find_element(by=By.XPATH, value='//*[@id="radio3"]')
     driver.execute_script("arguments[0].click();", button)
@@ -95,41 +114,19 @@ def test_ur15_informacion_compra():
     driver.execute_script("arguments[0].click();", sale)
     driver.implicitly_wait(10)
     username = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Alum")]').text
-    direction = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Muntaner 214")]').text
+    direction = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Josep Serrano, 24 bj1a")]').text
 
-    assert username == 'Nombre de usuario: Alum'
-    assert direction == 'Dirección: Muntaner 214'
-
-
-def test_ar9_aceptar_denegar_comision():
-    pass
-
-
-def test_ur17_terms_and_services():
-    driver.get('http://localhost:3000/explore')
-
-    driver.implicitly_wait(10)
-    button = driver.find_element(by=By.XPATH, value='//*[@id="terms-button"]')
-    driver.execute_script("arguments[0].click();", button)
-    driver.implicitly_wait(10)
-    title = driver.find_element(by=By.XPATH, value='//*[contains(text(), "UsArt Terms of Use")]').text
-
-    assert title == 'UsArt Terms of Use'
-
-
-def test_ur11_logout():
-    driver.implicitly_wait(10)
-
-    driver.find_element(by=By.ID, value='logout_button').click()
+    assert username == 'Username: Alum'
+    assert direction == 'Address: Josep Serrano, 24 bj1a'
+    driver.implicitly_wait(20)
 
 
 def test_ur4_comisionar():
-    test_ur10_login_alum()
+    driver.get('http://localhost:3000/home')
 
     driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[@id="explore_button"]')
+    driver.find_element(by=By.XPATH, value='//*[@id="explore_button"]').click()
 
-    driver.get('http://localhost:3000/explore')
     driver.implicitly_wait(10)
     pub = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Bug Enthusiast Freestyle Commission")]')
     driver.execute_script("arguments[0].click()", pub)
@@ -138,63 +135,50 @@ def test_ur4_comisionar():
     driver.execute_script("arguments[0].click()", button)
     driver.find_element(by=By.XPATH, value='//*[@id="modal_review"]').send_keys("test")
     driver.find_element(by=By.XPATH, value='//*[@id="send_button"]').click()
+    driver.implicitly_wait(20)
 
 
 def test_ur12_historial_compras():
+    driver.get('http://localhost:3000/home')
+
     driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]').click()
+    button = driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]')
+    driver.execute_script("arguments[0].click();", button)
     driver.implicitly_wait(10)
     button = driver.find_element(by=By.XPATH, value='//*[@id="radio3"]')
     driver.execute_script("arguments[0].click();", button)
     driver.implicitly_wait(10)
     driver.find_element(by=By.XPATH, value='//*[contains(text(), "As soon as I saw her, I knew I was going to end up drawing her.")]')
+    driver.implicitly_wait(20)
 
 
 def test_ur14_editar_perfil():
+    driver.get('http://localhost:3000/home')
+
     driver.implicitly_wait(10)
     button = driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]')
     driver.execute_script("arguments[0].click();", button)
     driver.implicitly_wait(10)
     driver.find_element(by=By.XPATH, value='//*[@id="editButton"]').click()
     driver.find_element(by=By.XPATH, value='//*[@id="saveBtn"]').click()
+    driver.implicitly_wait(20)
 
 
 def test_ur1_puntuar_artista():
-    test_ur10_login_alum()
-    driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[@id="explore_button"]')
+    driver.get('http://localhost:3000/home')
 
-    driver.get('http://localhost:3000/explore')
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="explore_button"]').click()
     pub = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Bug Enthusiast Freestyle Commission")]')
     driver.execute_script("arguments[0].click();", pub)
     driver.implicitly_wait(10)
-    button = driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]')
+    button = driver.find_element(by=By.XPATH, value='//*[@id="pub-profile-button"]')
     driver.execute_script("arguments[0].click();", button)
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(20)
+    
 
-
-def test_ur3_perfil():
-    pass
-
-
-def test_ur13_visualizar_chat():
-    pass
-
-
-def test_ur9_comprar_art():
-    pass
-
-
-def test_ar2_crear_publicacion():
-    pass
-
-
-def test_ur5_favoritos_publicacion():
-    pass
-
-#ToDo
 def test_ur7_participar_subasta():
-    test_ur10_login_alum()
+    driver.get('http://localhost:3000/home')
 
     driver.implicitly_wait(10)
     driver.find_element(by=By.XPATH, value='//*[@id="search-bar"]').send_keys('Subasta de prueba')
@@ -209,11 +193,11 @@ def test_ur7_participar_subasta():
     driver.find_element(by=By.ID, value='bidpost').send_keys('9')
     driver.implicitly_wait(10)
     driver.find_element(by=By.XPATH, value='//*[@id="bidbutton"]').click()
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(20)
 
 
 def test_ur2_devolver_pedidos():
-    test_ur10_login_alum()
+    driver.get('http://localhost:3000/home')
 
     driver.implicitly_wait(10)
     driver.find_element(by=By.XPATH, value='//*[@id="profile-button"]').click()
@@ -230,17 +214,54 @@ def test_ur2_devolver_pedidos():
     driver.implicitly_wait(10)
     driver.find_element(by=By.XPATH, value='//*[@id="button-cancel-refund"]').click()
     driver.implicitly_wait(10)
+    purchases_button = driver.find_element(by=By.ID, value='radio3')
+    driver.execute_script("arguments[0].click()", purchases_button)
+    driver.implicitly_wait(10)
+    purchase = driver.find_element(by=By.XPATH,
+            value='//*[contains(text(), "As soon as I saw her, I knew I was going to end up drawing her.")]')
+    driver.execute_script("arguments[0].click()", purchase)
+    driver.implicitly_wait(10)
     refund_button = driver.find_element(by=By.XPATH, value='//*[@id="button-refund"]')
     driver.execute_script("arguments[0].click()", refund_button)
     driver.implicitly_wait(10)
     driver.find_element(by=By.ID, value='modal_reason').send_keys('Because I want')
     driver.implicitly_wait(10)
     driver.find_element(by=By.XPATH, value='//*[@id="button-send-refund"]').click()
+    driver.implicitly_wait(20)
+
+
+def test_ur8_denunciar_servicio():
+    driver.get('http://localhost:3000/home')
+
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="search-bar"]').send_keys('a')
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[@id="button-addon1"]').click()
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.XPATH, value='//*[contains(text(), "Boyfriends Comic Book Issue 1!")]').click()
+    driver.implicitly_wait(10)
+    complaint_button = driver.find_element(by=By.XPATH, value='//*[@id="button-complaint"]')
+    driver.execute_script("arguments[0].click()", complaint_button)
+    driver.implicitly_wait(10)
+    close = driver.find_element(by=By.XPATH, value='//*[@id="close_button"]')
+    driver.execute_script("arguments[0].click()", close)
+    driver.implicitly_wait(10)
+    complaint_button = driver.find_element(by=By.XPATH, value='//*[@id="button-complaint"]')
+    driver.execute_script("arguments[0].click()", complaint_button)
+    driver.implicitly_wait(10)
+    driver.find_element(by=By.ID, value='reason').send_keys('Because I want')
+    driver.implicitly_wait(10)
+    compl = driver.find_element(by=By.XPATH, value='//*[@id="send_button"]')
+    driver.execute_script("arguments[0].click()", compl)
+    driver.implicitly_wait(20)
+
+
+def test_ur11_logout():
     driver.implicitly_wait(10)
 
-
-def test_ar5_eliminar_publicacion():
-    pass
+    out = driver.find_element(by=By.ID, value='logout_button')
+    driver.execute_script("arguments[0].click()", out)
+    driver.implicitly_wait(20)
 
 
 def test_a2_banear_usuario():
@@ -271,47 +292,4 @@ def test_a2_banear_usuario():
 
     username = driver.find_element(by=By.XPATH, value='//*[contains(text(), "Alum")]').text
     assert username == 'Alum'
-
-
-
-
-def test_ar7_eliminar_conversacion():
-    pass
-
-
-def test_a1_eliminar_post_admin():
-    pass
-
-
-def test_ar6_bloquear_usuario():
-    pass
-
-
-def test_ur8_denunciar_servicio():
-    test_ur10_login_alum()
-
-    driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[@id="search-bar"]').send_keys('a')
-    driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[@id="button-addon1"]').click()
-    driver.implicitly_wait(10)
-    driver.find_element(by=By.XPATH, value='//*[contains(text(), "Boyfriends Comic Book Issue 1!")]').click()
-    driver.implicitly_wait(10)
-    complaint_button = driver.find_element(by=By.XPATH, value='//*[@id="button-complaint"]')
-    driver.execute_script("arguments[0].click()", complaint_button)
-    driver.implicitly_wait(10)
-    close = driver.find_element(by=By.XPATH, value='//*[@id="close_button"]')
-    driver.execute_script("arguments[0].click()", close)
-    driver.implicitly_wait(10)
-    complaint_button = driver.find_element(by=By.XPATH, value='//*[@id="button-complaint"]')
-    driver.execute_script("arguments[0].click()", complaint_button)
-    driver.implicitly_wait(10)
-    driver.find_element(by=By.ID, value='reason').send_keys('Because I want')
-    driver.implicitly_wait(10)
-    compl = driver.find_element(by=By.XPATH, value='//*[@id="send_button"]')
-    driver.execute_script("arguments[0].click()", compl)
-    driver.implicitly_wait(10)
-
-
-def test_ar4_modificar_publicacion():
-    pass
+    driver.implicitly_wait(20)
