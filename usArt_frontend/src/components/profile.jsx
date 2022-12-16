@@ -133,7 +133,7 @@ function Profile() {
                         },
                     })
                         .then(data => {
-                            
+
 
                             if (!data.ok) {
 
@@ -202,7 +202,7 @@ function Profile() {
     }
 
     function renderBanIfAdmin() {
-        
+
         if (user == null) return
         if (!user.is_superuser || user.username == username) return
         if (prof.status == "BAN") {
@@ -214,7 +214,7 @@ function Profile() {
         } else if (prof.status == "ALO") {
             return (
                 <div>
-                    <button type="button" class="btn btn-danger" onClick={showBanModal}>Ban user</button>
+                    <button type="button" class="btn btn-danger" id="banuser" onClick={showBanModal}>Ban user</button>
                 </div>
             )
         }
@@ -291,7 +291,7 @@ function Profile() {
     }
 
     function RenderPurchaseHistory() {
-        
+
         if (prof.length == 0){
             return (<div className="btn-group px-4 py-5 ">
                 <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
@@ -635,7 +635,7 @@ function Profile() {
         if (user == null) return
         if (username !== user.username) {
 
-            return <button style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal" onClick={() => document.getElementById("profileOpacity").style.opacity = "0.5"} data-bs-target="#staticBackdrop" class="btn btn-dark">Rate me!</button>
+            return <button id="rate-button" style={{ borderRadius: "0.375rem" }} type="button" data-bs-toggle="modal" onClick={() => document.getElementById("profileOpacity").style.opacity = "0.5"} data-bs-target="#staticBackdrop" class="btn btn-dark">Rate me!</button>
         }
     }
     function is_blockbutton() {
@@ -757,7 +757,7 @@ function Profile() {
         let fileReader = stateImages.filter(function (value, index, arr) {
             return value.target !== e.src & e.accessKey !== index;
         });
-        
+
         setStateImages(fileReader)
 
     };
@@ -809,7 +809,7 @@ function Profile() {
             .then((res) => res.json())
             .then(data => { })
 
-        
+
 
 
         if (block == "Block") {
@@ -1026,7 +1026,7 @@ function Profile() {
                         </div>
                         <div class="modal-footer">
                             <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
-                            <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
+                            <button type="button" class="btn btn-danger" id="confirm_ban" onClick={(e) => banUser(e, true)}>Yes</button>
                         </div>
                     </div>
                 </div>

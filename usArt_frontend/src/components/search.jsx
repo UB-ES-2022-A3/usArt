@@ -278,7 +278,7 @@ function Search() {
                                 <BsBrushFill className="icons " />
                             </div>
                             <div className="box3" id="box3" onClick={selectUsers}>
-                                <BsFillPersonFill className="icons" />
+                                <BsFillPersonFill className="icons" id="SelectUsers" />
                             </div>
                             <div className="box4" id="box4"  onClick={selectAuctions}>
                                 <img src={hammer}  className="icons" alt="Hammer"></img>
