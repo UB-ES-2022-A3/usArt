@@ -27,7 +27,7 @@ function BuzonChat() {
   useEffect(() => {
     if (lastMessage != null) {
       setMessageHistory([...messageHistory, JSON.parse(lastMessage)]);
-      document.getElementById("lastMessage").innerHTML = JSON.parse(lastMessage).message
+      
     }
   }, [lastMessage]);
 
@@ -133,7 +133,6 @@ function BuzonChat() {
         <img src={user.user.photo} alt="" style={{ height: "50px", width: "50px", objectFit: "cover", borderRadius: "50%" }} />
         <div className="userChatInfo">
           <span className='chatsFirstName'>{user.user.user_name}</span>
-          <p id="lastMessage" className='chatsMessage'>No new messages</p>
         </div>
       </div>)
     } if (document.getElementById("btnradio2").checked) {
