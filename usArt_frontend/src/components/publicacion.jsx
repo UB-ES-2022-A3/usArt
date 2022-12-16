@@ -87,7 +87,7 @@ function Publicacion(props) {
                     }
                 })
         }
-        console.log("user: ", user)
+        
         refreshReports()
 
     }
@@ -160,7 +160,7 @@ function Publicacion(props) {
 
     }
     function onDelete(e) {
-        console.log("entro en el delete")
+        
         fetch(
             LINK_BACKEND + "/api/catalog/complaint/put/delete/" + e, {
             method: 'DELETE',
@@ -172,7 +172,7 @@ function Publicacion(props) {
             },
         })
             .then(data => {
-                console.log(data);
+                ;
             })
         refreshReports()
         window.location.assign(LINK_FRONTEND + "/publicacion/" + id)
@@ -215,7 +215,7 @@ function Publicacion(props) {
                 })
                     .then((res) => res.json())
                     .then(data => {
-                        console.log(data)
+                        
                     }
                     )
             } else {
@@ -233,7 +233,7 @@ function Publicacion(props) {
                     },
                 })
                     .then(data => {
-                        console.log(data);
+                        ;
                     })
             }
         }
@@ -283,7 +283,7 @@ function Publicacion(props) {
     }
 
     function renderDelContactButton() {
-        console.log("este es el user", user)
+        
         if (authTokens) {
 
             if (author['id'] == user['user_id'] || user.is_superuser === true) {
@@ -437,7 +437,7 @@ function Publicacion(props) {
     }
     function Nameaux() {
         let name = ""
-        console.log(card.type)
+        
         if (card.type == "CO") {
             name = "Contact"
         } else if (card.type == "AR") {
@@ -477,7 +477,7 @@ function Publicacion(props) {
             })
                 .then((res) => res.json())
                 .then(data => {
-                    console.log(data)
+                    
                 }
                 )
             document.getElementById("toOpacity").style.opacity = "1"
@@ -507,7 +507,7 @@ function Publicacion(props) {
         })
             .then((res) => res.json())
             .then(data => {
-                console.log(data)
+                
             }
             )
     }

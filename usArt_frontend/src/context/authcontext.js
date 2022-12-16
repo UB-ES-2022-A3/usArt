@@ -67,11 +67,11 @@ export const AuthProvider = ({ children }) => {
       loginUser(user_name, password)
     } else {
       const data = await response.json();
-      console.log(Object.keys(data))
+      
       if (Object.keys(data).length === 1) { 
         alert(data[Object.keys(data)]) }
       else {
-        console.log("si aqui")
+        
         alert(data[Object.keys(data)[0]] + "\n" + data[Object.keys(data)[1]])
       }
     }

@@ -91,7 +91,7 @@ function Compra(props) {
                         }).then(data => {
                             if (data.id != undefined) {
                                 const items = data
-                                console.log(items)
+                                
                                 const link = LINK_FRONTEND + "/purchasedetails/" + items.id
                                 window.location.assign(link)
                             }
@@ -145,7 +145,7 @@ function Compra(props) {
         } else if (values.ccv.length != 3) {
             errors.ccv = "CCV has diferent length than expected"
         }
-        console.log(errors)
+        
         return errors;
     };
     const navigate = useNavigate();

@@ -45,7 +45,7 @@ function BuzonChat() {
 
   useEffect(() => {
     if (channel == null) return
-    console.log("channel creado");
+    ;
     channel.bind('my-event', saveChat);
   }, [channel]);
 
@@ -223,7 +223,7 @@ function BuzonChat() {
       .then((res) => res.json())
       .then(data => {
         document.getElementById("btnradio1").checked = false;
-        console.log(data)
+        
         setRenderList(data)
 
       }

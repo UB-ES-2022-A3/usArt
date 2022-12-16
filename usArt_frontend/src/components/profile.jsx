@@ -126,7 +126,7 @@ function Profile() {
                         },
                     })
                         .then(data => {
-                            console.log(data)
+                            
 
                             if (!data.ok) {
 
@@ -195,7 +195,7 @@ function Profile() {
     }
 
     function renderBanIfAdmin() {
-        console.log(user)
+        
         if (user == null) return
         if (!user.is_superuser || user.username == username) return
         if (prof.status == "BAN") {
@@ -286,7 +286,7 @@ function Profile() {
     }
 
     function RenderPurchaseHistory() {
-        console.log(prof)
+        
         if (prof.length == 0){
             return (<div className="btn-group px-4 py-5 ">
             <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
@@ -737,7 +737,7 @@ function Profile() {
         let fileReader = stateImages.filter(function (value, index, arr) {
             return value.target !== e.src & e.accessKey !== index;
         });
-        console.log(fileReader)
+        
         setStateImages(fileReader)
 
     };
@@ -784,7 +784,7 @@ function Profile() {
             .then((res) => res.json())
             .then(data => { })
 
-        console.log(data)
+        
 
         alert("User " + block + "ed")
         if (block == "Block") {

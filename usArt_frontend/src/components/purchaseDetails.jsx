@@ -36,7 +36,7 @@ function Details(props) {
     const [Direccion, setDireccion] = useState("")
     const [Tiempodeentrega, setTiempodeentrega] = useState("")
     const [Imagen, setImagen] = useState([])
-    console.log(id)
+    
     useEffect(getCompra, [])
     function getCompra() {
         fetch(LINK_BACKEND + "/api/userprofile/purchases/" + id, {
