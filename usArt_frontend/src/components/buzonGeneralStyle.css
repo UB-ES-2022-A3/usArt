@@ -5,6 +5,7 @@
     min-height: 86%;
     max-height: 86%;
     display: flex;
+    margin-bottom: 2%;
     
 }
 
@@ -131,18 +132,18 @@
 .chat .owner p {
     border-radius: 10px 0px 10px 10px !important;
     line-break: anywhere;
-    width: 10vw;
+    width: 35vw;
 }
 
 .chat .otherside {
     flex-direction: row !important;
-
+    
 }
 
 .chat .otherside p {
     border-radius: 0px 10px 10px 10px !important;
+    width: 35vw;
     line-break: anywhere;
-    width: 10vw;
 }
 
 .messages {
@@ -170,7 +171,6 @@
 .chat .messages .message .messageContent {
     max-width: 80%;
     display: flex;
-
     gap: 10px;
 
 }
@@ -235,7 +235,9 @@
 
 .chats{
     overflow-y: scroll;
+    max-height: 65%;
 }
+
 .chats {
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
@@ -264,5 +266,90 @@
     background: rgb(255, 147, 128);
     box-shadow: 0 4px 0 0 #EF8282;
   }
-  /*<button href="#" class="accept">ACCEPT <span class="fa fa-check"></span></button>
-            <button href="#" class="deny">DENY <span class="fa fa-close"></span></button>*/
+  .icons-buzon{
+    position: unset;
+    transform: unset;
+    cursor: pointer;
+  }
+  .modal-confirm {		
+	color: #636363;
+	width: 400px;
+}
+.modal-confirm .modal-content {
+	padding: 20px;
+	border-radius: 5px;
+	border: none;
+	text-align: center;
+	font-size: 14px;
+}
+.modal-confirm .modal-header {
+	border-bottom: none;   
+	position: relative;
+}
+.modal-confirm h4 {
+	text-align: center;
+	font-size: 26px;
+	margin: 30px 0 -10px;
+}
+.modal-confirm .close {
+	position: absolute;
+	top: -5px;
+	right: -2px;
+}
+.modal-confirm .modal-body {
+	color: #999;
+}
+.modal-confirm .modal-footer {
+	border: none;
+	text-align: center;		
+	border-radius: 5px;
+	font-size: 13px;
+	padding: 10px 15px 25px;
+}
+.modal-confirm .modal-footer a {
+	color: #999;
+}		
+.modal-confirm .icon-box {
+	width: 80px;
+	height: 80px;
+	margin: 0 auto;
+	border-radius: 50%;
+	z-index: 9;
+	text-align: center;
+	border: 3px solid #f15e5e;
+}
+.modal-confirm .icon-box i {
+	color: #f15e5e;
+	font-size: 46px;
+	display: inline-block;
+	margin-top: 13px;
+}
+.modal-confirm .btn, .modal-confirm .btn:active {
+	color: #fff;
+	border-radius: 4px;
+	background: #60c7c1;
+	text-decoration: none;
+	transition: all 0.4s;
+	line-height: normal;
+	min-width: 120px;
+	border: none;
+	min-height: 40px;
+	border-radius: 3px;
+	margin: 0 5px;
+}
+.modal-confirm .btn-secondary {
+	background: #c1c1c1;
+}
+.modal-confirm .btn-secondary:hover, .modal-confirm .btn-secondary:focus {
+	background: #a8a8a8;
+}
+.modal-confirm .btn-danger {
+	background: #f15e5e;
+}
+.modal-confirm .btn-danger:hover, .modal-confirm .btn-danger:focus {
+	background: #ee3535;
+}
+.trigger-btn {
+	display: inline-block;
+	margin: 100px auto;
+}

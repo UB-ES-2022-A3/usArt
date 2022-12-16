@@ -9,7 +9,7 @@ import { useContext } from "react";
 
 import AuthContext from "../context/authcontext";
 
-
+import { useNavigate} from 'react-router-dom';
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 
 import {
@@ -39,13 +39,13 @@ function Login() {
     setIsSubmit(true);
     username.length > 0 && loginUser(username, password)
   };
-
+  const navigate = useNavigate();
   return (
     <div className="body_register">
     <MDBContainer className="items-align-center justify-content-center vertical-center " >
       <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '26px' }}>
         <MDBCardBody className='shadow'>
-          <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
+          <a onClick={() => navigate(-1)} style={{cursor:"pointer"}}><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
           <MDBRow>
             <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
               <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Log In.</p>

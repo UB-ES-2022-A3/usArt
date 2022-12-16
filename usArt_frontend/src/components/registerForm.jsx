@@ -54,17 +54,13 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormErrors(validate(formValues, checkValue));
+    let errors = validate(formValues, checkValue)
+    setFormErrors(errors);
     setIsSubmit(true);
-    registerUser(formValues.username, formValues.password, formValues.email)
+    if (Object.keys(errors).length === 0) {registerUser(formValues.username, formValues.password, formValues.email)}
   };
 
-  useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      //window.location.assign(LINK_FRONTEND + "/home")
-    }
-  }, [formErrors]);
-  const validate = (values, checkValue) => {
+   const validate = (values, checkValue) => {
     const errors = {};
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     var usernameRegex = /^[a-zA-Z0-9.\$]{3,30}$/;
@@ -90,7 +86,7 @@ function Register() {
       errors.password = "Password must be 8 characters or more";
     }
     else if (!strongRegex.test(values.password)) {
-      errors.password = "Password must contain an uppercase letter, a number, and a special character";
+      errors.password = "Password must contain an uppercase letter and a lowercase, a number, and a special character";
     }
     if (checkValue == false) {
       errors.check = "You need to accept terms and conditions";
@@ -99,13 +95,13 @@ function Register() {
     }
     return errors;
   };
-
+  const navigate = useNavigate();
   return (
     <div className='body_register'>
       <MDBContainer className="vertical-center " >
         <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '25px' }}>
           <MDBCardBody className='shadow'>
-            <a href="/home"><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
+            <a onClick={() => navigate(-1)} style={{cursor:"pointer"}}><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
             <MDBRow>
               <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
                 <p id="title_signup" className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Sign up.</p>

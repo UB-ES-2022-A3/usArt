@@ -1,6 +1,7 @@
 asgiref==3.5.2
-coverage==6.5.0
+django
 Django==4.1.2
+coverage==6.5.0
 django-cors-headers==3.13.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
@@ -25,3 +26,4 @@ flake8==6.0.0
 python-dotenv==0.21.0
 tqdm==4.64.1
 webdriver-manager==3.8.5
+pusher==3.3.0

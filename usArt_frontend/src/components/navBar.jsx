@@ -8,7 +8,7 @@ import AuthContext from "../context/authcontext";
 //#TODO: Poner lo de underL en la NoLogged
 function NoLoggedNavBar() {
   return (
-    <nav className="navbar navbar-expand-sm navbar-light " aria-label="Offcanvas navbar small">
+    <nav className="navbar navbar-expand-sm navbar-light " style={{zIndex:"100"}} aria-label="Offcanvas navbar small">
       <div className="container-fluid">
         <a className="navbar-brand i p-4" id="navBar-brand" href="/home"><h1>UsArt</h1></a>
         <button className="navbar-toggler"
@@ -44,7 +44,7 @@ function NoLoggedNavBar() {
 function LoggedNavBar() {
   let { user, logoutUser } = useContext(AuthContext);
   return (
-    <nav className="navbar navbar-expand-sm navbar-light" aria-label="Offcanvas navbar small">
+    <nav className="navbar navbar-expand-sm navbar-light" style={{zIndex:"100"}} aria-label="Offcanvas navbar small">
       <div className="container-fluid">
         <a className="navbar-brand p-4 " href="/home"><h1>UsArt</h1></a>
         <button style={{background:"white"}} className="navbar-toggler" id="button"
@@ -66,10 +66,10 @@ function LoggedNavBar() {
                   <a id="explore_button" className="nav-link active underL px-3" aria-current="page" href="/explore">Explore</a>
                 </li>
                 <li className="nav-item px-3">
-                  <a  className="nav-link underL px-3" href="/buzon">Buzon</a>
+                  <a  className="nav-link underL px-3" href="/buzon">Inbox</a>
                 </li>
                 <li className="nav-item px-3">
-                  <a  className="nav-link underL px-3" href={"/profile/"+user.username+"/default"}>Mi perfil</a>
+                  <a  className="nav-link underL px-3" href={"/profile/"+user.username+"/default"}>Profile</a>
                 </li>
                 <li className="nav-item px-3 ">
                   <a  className="nav-link underL px-3" href="/home" id="logout_button" onClick={logoutUser}>Log Out</a>
