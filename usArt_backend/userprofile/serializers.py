@@ -32,7 +32,7 @@ class PurchaseHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PurchaseHistory
-        fields = ('id','pub_id','price','user_id','date')
+        fields = ('id','pub_id','price','user_id','date', 'address')
 
 
 class UsArtUserFilterSerializer(serializers.ModelSerializer):
