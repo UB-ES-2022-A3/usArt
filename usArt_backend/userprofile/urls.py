@@ -35,5 +35,4 @@ urlpatterns = [
 
     path('ban-user/<str:user_name>', BanUser.as_view(), name='ban_user'),
 
-
 ]
