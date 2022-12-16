@@ -28,6 +28,7 @@ function Publicacion(props) {
     const [formValues, setFormValues] = useState({})
     const [stateImages, setStateImages] = useState([])
     const [modal, setModal] = useState()
+    const [serverError, setServerError] = useState()
 
     const { data, fullScreen, loading } = stateImages;
     const previewClasses = ['preview', fullScreen ? 'preview--fullscreen' : ''].join(' ');
@@ -151,9 +152,7 @@ function Publicacion(props) {
             }),
         })
             .then(data => {
-                if (data.status === 403) {
-                    alert("ERROR: Something went wrong")
-                }
+
             })
 
         refreshReports()
@@ -396,25 +395,32 @@ function Publicacion(props) {
                         },
                     })
                     if (response.ok) {
-                        alert("You blocked this user")
-
+                        setServerError("You have this user blocked!")
+                        let blockModal = new Modal(document.getElementById('errorModal'), {
+                            keyboard: false, backdrop: 'static'
+                        })
+                        document.getElementById("toOpacity").style.opacity = "0.5";
+                        blockModal.show()
                     } else {
                         if (card.type === "CO") {
                             document.getElementById("toOpacity").style.opacity = "0.5";
                             coModal.show()
                         } else if (card.type === "AR") {
-                            document.getElementById("toOpacity").style.opacity = "0.5";
                             const link = LINK_FRONTEND + "/compra/" + id
                             window.location.assign(link)
                         } else if (card.type === "AU") {
-                            document.getElementById("toOpacity").style.opacity = "0.5";
                             const link = LINK_FRONTEND + "/auction/" + id
                             window.location.assign(link)
                         }
 
                     }
                 } else {
-                    alert("This user blocked you")
+                    setServerError("This user blocked you!")
+                    let blockModal = new Modal(document.getElementById('errorModal'), {
+                        keyboard: false, backdrop: 'static'
+                    })
+                    document.getElementById("toOpacity").style.opacity = "0.5";
+                    blockModal.show()
                 }
             } catch (error) { }
 
@@ -444,12 +450,10 @@ function Publicacion(props) {
     function updateOutput() {
         let description = input_textarea.value
         if (description.length === 0) {
-            alert("Description must not be empty")
             input_textarea.value = ""
         }
-       
+
         postPetCom(id, description)
-        alert("Petición hecha!")
         document.getElementById("toOpacity").style.opacity = "1"
         input_textarea.value = ""
     }
@@ -458,7 +462,6 @@ function Publicacion(props) {
         let reason = input_reason.value
         if (reason.length === 0) {
             complaintPopUp()
-            alert("Reason can't be empty")
         } else {
             fetch(LINK_BACKEND + "/api/catalog/complaint/get/post/" + id, {
                 method: 'POST',
@@ -477,7 +480,6 @@ function Publicacion(props) {
                     console.log(data)
                 }
                 )
-            alert("Complaint done!")
             document.getElementById("toOpacity").style.opacity = "1"
             input_reason.value = ""
         }
@@ -500,7 +502,7 @@ function Publicacion(props) {
             body: JSON.stringify({
                 'pub_id': pub_id,
                 'description': description,
-                'status':"PD",
+                'status': "PD"
             }),
         })
             .then((res) => res.json())
@@ -552,7 +554,7 @@ function Publicacion(props) {
             });
         }
         if (title.length === 0 || description.length === 0 || price.length === 0) {
-            alert("Fields cannot be empty!")
+            
 
         }
         else {
@@ -578,10 +580,9 @@ function Publicacion(props) {
             }),
         })
             .then((res) => {
-                if (res.status !== 201) alert("Error uploading")
+                if (res.status !== 201) return
                 callApi()
                 modal.hide()
-                return res.json()
             })
         document.getElementById("toOpacity").style.opacity = "1";
     }
@@ -842,6 +843,18 @@ function Publicacion(props) {
                         <div className="modal-footer">
                             <button className="button" id="close_button" onClick={cancelComplaint} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
                             <button onClick={complaintConfirm} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Complaint</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="errorModal" tabIndex="-1">
+                <div className="modal-dialog" style={{ width: '400px', textAlign: "center" }}>
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title text-dark" id="modal_title">{serverError}</h4>
+                        </div>
+                        <div className="modal-footer">
+                            <button onClick={() => { document.getElementById("toOpacity").style.opacity = "1" }} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Okay</button>
                         </div>
                     </div>
                 </div>

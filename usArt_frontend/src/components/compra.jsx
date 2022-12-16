@@ -12,7 +12,7 @@ import LINK_BACKEND from "./LINK_BACKEND"
 import { useParams } from "react-router-dom"
 
 
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 import {
@@ -59,7 +59,7 @@ function Compra(props) {
         setFormErrors(errors)
         setIsSubmit(true);
         if (Object.keys(errors).length === 0) {
-            postCompra(formValues.username, formValues.email, formValues.CodigoPostal,formValues.Direccion, formValues.Num, formValues.Fecha, formValues.ccv)
+            postCompra(formValues.username, formValues.email, formValues.CodigoPostal, formValues.Direccion, formValues.Num, formValues.Fecha, formValues.ccv)
         }
     };
     function postCompra(user_name, email, CodigoPostal, Direccion, Num, Fecha, ccv) {
@@ -79,26 +79,23 @@ function Compra(props) {
                             'pub_id': id,
                             'price': data.price,
                             'address': Direccion
-
                         })
                     })
 
                         .then(function (response) {
                             if (response.status === 201) {
-                                return response.json();
+                                return response.json()
                             } else {
-                                alert("No se ha podido realizar la compra")
+                                setServerError("Something went wrong")
+                            }
+                        }).then(data => {
+                            if (data.id != undefined) {
+                                const items = data
+                                console.log(items)
+                                const link = LINK_FRONTEND + "/purchasedetails/" + items.id
+                                window.location.assign(link)
                             }
                         })
-                        .then(function (data) {
-                            const items = data;
-                            console.log(items.id)
-                            const link = LINK_FRONTEND + "/purchasedetails/" + items.id
-
-                            window.location.assign(link)
-
-                        }
-                        )
 
 
                 }
@@ -109,7 +106,7 @@ function Compra(props) {
     const validate = (values, checkValue) => {
         const errors = {};
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-        var usernameRegex = /^[a-zA-Z0-9.\$]{3,30}$/;
+        var usernameRegex = /^[ñÑa-zA-Z0-9.\$]{3,30}$/;
 
         if (!values.username) {
             errors.username = "Username is required!";
@@ -126,22 +123,22 @@ function Compra(props) {
         }
 
         if (!values.Direccion) {
-            errors.Direccion = "Direction is required";
+            errors.Direccion = "Address is required";
         }
         if (!values.CodigoPostal) {
-            errors.CodigoPostal = "CodigoPostal is required";
+            errors.CodigoPostal = "Postal Code is required";
         }
         if (!values.Num) {
-            errors.Num = "Numero is required";
+            errors.Num = "Card number is required";
         } else if (values.Num.length != 16) {
-            errors.Num = "Numero has diferent length than expected"
+            errors.Num = "Card number has diferent length than expected"
         }
         if (!values.Fecha) {
-            errors.Fecha = "Fecha is required";
+            errors.Fecha = "Expiration date is required";
         } else if (usernameRegex.test(values.Fecha)) {
             errors.Fecha = "/ is required";
         } else if (values.Fecha.length != 5) {
-            errors.Fecha = "Fecha caducidad targeta has diferent length than expected";
+            errors.Fecha = "Expiration date has diferent length than expected";
         }
         if (!values.ccv) {
             errors.ccv = "CCV is required";
@@ -157,7 +154,7 @@ function Compra(props) {
             <MDBContainer className="vertical-center " >
                 <MDBCard className='text-black m-5 items-align-center shadow' style={{ borderRadius: '25px' }}>
                     <MDBCardBody className='shadow'>
-                        <a onClick={() => navigate(-1)} style={{cursor:"pointer"}} ><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
+                        <a onClick={() => navigate(-1)} style={{ cursor: "pointer" }} ><BsFillArrowLeftSquareFill size='30' className='mx-3 my-3 shadow' /></a>
                         <MDBRow>
                             <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
                                 <p id="title_signup" className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style={{ color: "#001a1a" }}>Purchase Process</p>
