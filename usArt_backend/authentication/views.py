@@ -10,7 +10,9 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
 from django.core.files.base import ContentFile
+from pusher import Pusher
 
+pusher = Pusher(app_id=u'1519042', key=u'464bf9750a028fa769ca', secret=u'215b58084e762c8107c6', cluster=u'eu')
 
 # Create your views here.
 class UsArtUserDetail(generics.RetrieveAPIView):
@@ -56,6 +58,7 @@ class SalaChat(generics.RetrieveAPIView):
     queryset = idChats.objects.all()
 
     def get(self, request, id):
+        ConnectionResetError
         criterion1 = Q(id_1=request.user.id)
         criterion2 = Q(id_2=id)
 
@@ -94,10 +97,11 @@ class SalaChat(generics.RetrieveAPIView):
 from django.core.files.storage import get_storage_class
 import json
 import datetime
+
 class ChatPost(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = idChats.objects.all()
-
+    
     def post(self, request):
         id_sala = request.data["id_sala"]
 
@@ -127,7 +131,8 @@ class ChatPost(generics.ListCreateAPIView):
         response.id_2_active = True
         response.save()
         response.chat.save(str(response.id_sala)+'.txt',myfile)
-
+       
+        pusher.trigger(str(id_sala), u'my-event',  dic)
         return Response(dic, status=status.HTTP_201_CREATED)
 
 class ChatDelete(generics.GenericAPIView):
