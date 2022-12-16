@@ -40,7 +40,7 @@ def upload_to_photo(instance, filename):
 class UsArtUser(AbstractBaseUser, PermissionsMixin, models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField('Correo electronico', unique=True)
+    email = models.EmailField('Email', unique=True)
     user_name = models.CharField(max_length=150, unique=True)
     description = models.TextField(default="")
     photo = models.ImageField(upload_to='images/',default='default.jpg')

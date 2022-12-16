@@ -6,8 +6,9 @@ from rest_framework.utils import json
 from catalog.models import Publication, PublicationImage, Commission, Complaint
 from catalog.serializers import PublicationListSerializer, PublicationPostSerializer, CommissionListSerializer, \
     ArtistCommissionListSerializer, ComplaintGetPutSerializer
-
-
+import base64
+import io
+from django.core.files.images import ImageFile
 from authentication.models import UsArtUser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -96,6 +97,7 @@ class CommissionAcceptDelete(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request, *args, **kwargs):
+
         commission = self.get_object()
         request.data['pub_id'] = self.kwargs['pub_id']
         request.data['user_id'] = self.kwargs['user_id']
@@ -129,6 +131,28 @@ class PublicationPosting(generics.CreateAPIView):
     def perform_create(self, serializer):
         author = get_object_or_404(UsArtUser, id=self.request.user.id)
         serializer.save(author=author, images=self.request.data['images'])
+
+
+class PublicationUpdating(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        publication = Publication.objects.filter(id = request.data['pub_id']).update(
+            title=request.data['title'],
+            description=request.data['description'],
+            price=request.data['price']
+            )
+        if len(request.data['images']) > 0:
+            publication = Publication.objects.get(id = request.data['pub_id'])
+            PublicationImage.objects.filter(publication = publication).delete()
+            for i, image in enumerate(request.data['images']):
+                imlist = image.split(",")
+                imageStr = imlist[1] #remove data:image/png;base64,
+                extension = imlist[0].split(';')[0].split('/')[1]
+                image_64_decode = base64.b64decode(imageStr)
+                im = ImageFile(io.BytesIO(image_64_decode), name= str(publication.id)+'_'+str(i)+'.' + extension)
+                PublicationImage.objects.create(publication=publication, image=im)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class ComplaintGetPost(generics.ListCreateAPIView):

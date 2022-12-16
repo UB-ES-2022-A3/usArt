@@ -207,7 +207,7 @@ function Search() {
             document.getElementById("box3").classList.toggle("active")
         }
         if (document.getElementById("box4").classList.contains("active")) {
-            console.log("Ha")
+            
             return
         }
         document.getElementById("box4").classList.toggle("active")
@@ -226,7 +226,7 @@ function Search() {
     }
     function addDeleteButton() {
         let text = ""
-        console.log(option)
+        
         if (option==="CO") text = "Comision"
         else if (option==="AR") text = "Arte"
         else if  (option==="AU") text = "Auctions"
