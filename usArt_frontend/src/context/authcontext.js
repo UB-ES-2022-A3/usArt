@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
       : null
   );
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   const history = useNavigate();
 
   const loginUser = async (user_name, password) => {
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
       setUser(incomeUser);
       if (incomeUser.status == "ALO") {
         localStorage.setItem("authTokens", JSON.stringify(data));
-        window.location.assign(LINK_FRONTEND + "/home");
+        navigate(-1)
       } else {
         alert("You have been banned and cannot access")
       }
@@ -67,11 +67,11 @@ export const AuthProvider = ({ children }) => {
       loginUser(user_name, password)
     } else {
       const data = await response.json();
-      console.log(Object.keys(data))
+      
       if (Object.keys(data).length === 1) { 
         alert(data[Object.keys(data)]) }
       else {
-        console.log("si aqui")
+        
         alert(data[Object.keys(data)[0]] + "\n" + data[Object.keys(data)[1]])
       }
     }
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
-    window.location.assign(LINK_FRONTEND + "/home");
+    navigate(-1)
   };
 
   const contextData = {

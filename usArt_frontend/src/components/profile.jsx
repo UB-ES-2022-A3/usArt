@@ -24,7 +24,7 @@ function Profile() {
     const [radioGender, setRadioProduct] = useState('Products');
     const [buttonPopup, setButtonPopup] = useState(false)
     const [block, setBlock] = useState('')
-    
+    const [serverError, setServerError] = useState()
     var input_textarea_title = document.getElementById('titlepost');
     var input_textarea_description = document.getElementById('descriptionpost');
     var input_textarea_price = document.getElementById('pricepost');
@@ -40,10 +40,24 @@ function Profile() {
     //----------------------------------------------------------------------------
 
     const [stateImages, setStateImages] = useState([]);
-
+    const [warning, setWarning] = useState(false)
+    const [warning2, setWarning2] = useState(false)
     const handleFileChange = (event) => {
         const { target } = event;
         const { files } = target;
+        let fileExtension = files[0].name.replace(/^.*\./, '');
+        let imagesExtension = ["png", "jpg", "jpeg"];
+        if (imagesExtension.indexOf(fileExtension) === -1) {
+            setWarning(true)
+            let modalImage = new Modal(document.getElementById('needImage'), {
+                keyboard: false, backdrop: "static"
+            })
+            setServerError("Try to upload a photo... ")
+            modalImage.show()
+
+            return
+        }
+
         if (files && files[0]) {
             var reader = new FileReader();
             reader.onloadstart = () => setStateImages([{ loading: true }]);
@@ -118,22 +132,22 @@ function Profile() {
                             'Content-Type': 'application/json'
                         },
                     })
-                    .then(data => {
-                        console.log(data)
-                        
-                        if (!data.ok) {
-        
-                            setBlock("Block")
+                        .then(data => {
                             
-                        } else {
-                            
-                            setBlock("Unblock")
-                        }
-                    })
+
+                            if (!data.ok) {
+
+                                setBlock("Block")
+
+                            } else {
+
+                                setBlock("Unblock")
+                            }
+                        })
 
                 }
                 )
-            
+
         } else {
             fetch(
                 LINK_BACKEND + "/api/userprofile/" + username)
@@ -188,7 +202,7 @@ function Profile() {
     }
 
     function renderBanIfAdmin() {
-        console.log(user)
+        
         if (user == null) return
         if (!user.is_superuser || user.username == username) return
         if (prof.status == "BAN") {
@@ -209,7 +223,8 @@ function Profile() {
     function showBanModal() {
         document.getElementById("profileOpacity").style.opacity = "0.5"
         var banModal = new Modal(document.getElementById('banModal'), {
-            keyboard: false
+            keyboard: false,
+            backdrop: "static"
         })
         setModal(banModal)
         banModal.show()
@@ -238,9 +253,6 @@ function Profile() {
             .then(data => {
                 const profile = { ...prof, status: data.status }
                 setProfile(profile)
-                if (ban) {
-                    alert("The user has been banned") 
-                }
                 document.getElementById("profileOpacity").style.opacity = "1"
                 modal.hide()
             })
@@ -279,22 +291,31 @@ function Profile() {
     }
 
     function RenderPurchaseHistory() {
-
+        
+        if (prof.length == 0){
+            return (<div className="btn-group px-4 py-5 ">
+                <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
+                <label className="btn btn-outline-dark" htmlFor="radio1">Products</label>
+                <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChangeRadio} />
+                <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
+            </div>)
+        }
+        let possesive = prof.user_name.charAt(prof.user_name.length - 1) === 's' ? prof.user_name + '\'' : prof.user_name + '\'s'
         if (prof.is_self) {
             return (<div className="btn-group px-4 py-5 ">
                 <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
-                <label className="btn btn-outline-dark" htmlFor="radio1">My products</label>
+                <label className="btn btn-outline-dark" htmlFor="radio1">{possesive} Products</label>
                 <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChangeRadio} />
-                <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
+                <label className="btn btn-outline-dark" htmlFor="radio2">{possesive} Reviews</label>
                 <input type="radio" className="btn-check" name="options" id="radio3" autoComplete="off" value="Purchase" checked={radioGender === 'Purchase'} onChange={handleChangeRadio} />
                 <label className="btn btn-outline-dark" htmlFor="radio3">Purchase History</label>
             </div>)
         } else {
             return (<div className="btn-group px-4 py-5 ">
                 <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
-                <label className="btn btn-outline-dark" htmlFor="radio1">My products</label>
+                <label className="btn btn-outline-dark" htmlFor="radio1">{possesive} Products</label>
                 <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChangeRadio} />
-                <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
+                <label className="btn btn-outline-dark" htmlFor="radio2">{possesive} Reviews</label>
             </div>)
         }
     }
@@ -309,20 +330,24 @@ function Profile() {
                 images.push(element.data)
             });
         } else {
-            alert("Put some images!")
+            setWarning2(true)
+            return
 
         }
         if (title.length === 0 || description.length === 0 || price.length === 0 || type == null) {
-            alert("Fields cannot be empty!")
-
+            setWarning2(true)
         }
         else {
+            setWarning2(false)
             postArt(title, description, price, type, images)
 
         }
     }
     const [modal, setModal] = useState()
     function postArt(title, description, price, type, images) {
+
+
+
         fetch(LINK_BACKEND + "/api/catalog/manage/post/", {
             method: 'POST',
             withCredentials: true,
@@ -340,7 +365,13 @@ function Profile() {
             }),
         })
             .then((res) => {
-                if (res.status !== 201) alert("Error uploading")
+                if (res.status !== 201) {
+                    let modalImage = new Modal(document.getElementById('needImage'), {
+                        keyboard: false, backdrop: "static"
+                    })
+                    modalImage.show()
+                    setServerError("Error uploading")
+                }
                 return res.json()
             })
             .then(data => {
@@ -355,7 +386,8 @@ function Profile() {
     function LINK_FRONTENDContact() {
         document.getElementById("profileOpacity").style.opacity = "0.5"
         var coModal = new Modal(document.getElementById('coModal'), {
-            keyboard: false
+            keyboard: false,
+            backdrop: "static"
         })
         setModal(coModal)
         coModal.show()
@@ -377,15 +409,15 @@ function Profile() {
             },
         })
         if (!response.ok) {
-            
+
             modalfade.show()
-            
-           
-       } else {
+
+
+        } else {
             PutBlock()
             setBlock("Block")
         }
-       
+
     }
 
     const handleChangePosting = (e) => {
@@ -397,7 +429,7 @@ function Profile() {
 
         if (user == null) return
         if (user.username === username)
-            return (<button onClick={LINK_FRONTENDContact} className="button" style={{width:"150px", verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
+            return (<button onClick={LINK_FRONTENDContact} className="button" style={{ width: "150px", verticalAlign: "middle", marginTop: "-10px", marginBottom: "5%" }} disabled={user === null | window.location.href.includes('edit')}><span>Upload Art</span></button>)
     }
 
     const { data, fullScreen, loading } = stateImages;
@@ -501,7 +533,7 @@ function Profile() {
             })
         }).then((res) => res.json())
             .then(data => {
-
+                callApiReviews()
                 takeReview()
             }
             )
@@ -540,7 +572,11 @@ function Profile() {
             })
                 .then((res) => {
                     if (res.status === 500) {
-                        alert("Load again the image")
+                        let modalImage = new Modal(document.getElementById('needImage'), {
+                            keyboard: false, backdrop: "static"
+                        })
+                        modalImage.show()
+                        setServerError("Load again the image")
                     } else {
                         const link = LINK_FRONTEND + "/profile/" + username + "/default";
                         window.location.assign(link)
@@ -554,7 +590,7 @@ function Profile() {
         }
         else {
             if (!re.test(selectedFile.type)) {
-                alert("Needs to be an image!")
+
                 return
             }
             let des = document.getElementById("description");
@@ -574,7 +610,11 @@ function Profile() {
             })
                 .then((res) => {
                     if (res.status === 500) {
-                        alert("Load again the image")
+                        let modalImage = new Modal(document.getElementById('needImage'), {
+                            keyboard: false, backdrop: "static"
+                        })
+                        modalImage.show()
+                        setServerError("Load again the image")
                     } else {
                         const link = LINK_FRONTEND + "/profile/" + username + "/default";
                         window.location.assign(link)
@@ -590,7 +630,7 @@ function Profile() {
 
 
     }
-    
+
     function is_other() {
         if (user == null) return
         if (username !== user.username) {
@@ -606,7 +646,7 @@ function Profile() {
         }
     }
 
-   
+
 
     function buttonsTogether() {
 
@@ -661,7 +701,7 @@ function Profile() {
                     <div className="mb-1">
                         <p className="lead fw-normal mb-1">About</p>
                         <div id="borderDes" className="p-4 rounded-top" style={{ backgroundColor: "#f5f5f5" }}>
-                            <p id="description" className="font-italic mb-1">{prof.description}</p>
+                            <p id="description" style={{ outline: "0px solid transparent" }} contentEditable={false} className="font-italic mb-1">{prof.description}</p>
 
                         </div>
                     </div>
@@ -693,6 +733,17 @@ function Profile() {
 
 
             }
+        } else {
+            return (
+                <div className="card-body p-4 text-black">
+                    <div className="mb-1">
+                        <p className="lead fw-normal mb-1">About</p>
+                        <div id="borderDes" className="p-4 rounded-top" style={{ backgroundColor: "#f5f5f5" }}>
+                            <p id="description" style={{ outline: "0px solid transparent" }} contentEditable={false} className="font-italic mb-1">{prof.description}</p>
+
+                        </div>
+                    </div>
+                </div>)
         }
     }
     function checkNumbers(e) {
@@ -706,7 +757,7 @@ function Profile() {
         let fileReader = stateImages.filter(function (value, index, arr) {
             return value.target !== e.src & e.accessKey !== index;
         });
-        console.log(fileReader)
+        
         setStateImages(fileReader)
 
     };
@@ -715,8 +766,8 @@ function Profile() {
         if (stateImages.length === 0) return
         return (
             <div class="image-div">
-                <img key={key} id={"image"+key} accessKey={key} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
-                <div onClick={()=>handleClearClick(document.getElementById("image"+key))} class="trashContainer hidden_img">
+                <img key={key} id={"image" + key} accessKey={key} style={{ margin: "5px", borderRadius: "20px" }} src={images.target} className="size-img stack-images" alt="Img selected"></img>
+                <div onClick={() => handleClearClick(document.getElementById("image" + key))} class="trashContainer hidden_img">
                     <div class="trash">
                         <div class="tap">
                             <div class="tip"></div>
@@ -734,9 +785,19 @@ function Profile() {
             </div>
         )
     }
+    function showWarning(images, key) {
+
+        if (warning) return <div><p style={{ color: "red" }}>Warning! We only accept :  "png", "jpg", "jpeg";</p></div>
+
+    }
+    function showConditions() {
+
+        if (warning2) return <div><p style={{ color: "red" }}>Fill all the fields please</p></div>
+
+    }
     function PutBlock() {
-        
-        fetch(LINK_BACKEND + "/api/userprofile/bloc/"+prof.id, {
+
+        fetch(LINK_BACKEND + "/api/userprofile/bloc/" + prof.id, {
             method: 'PUT',
             withCredentials: true,
             credentials: 'include',
@@ -746,21 +807,21 @@ function Profile() {
             },
         })
             .then((res) => res.json())
-            .then(data => {})
+            .then(data => { })
 
-        console.log(data)
+        
 
-        alert("User "+ block +"ed")
-        if (block == "Block"){
+
+        if (block == "Block") {
             setBlock("Unblock")
         }
-            
+
         document.getElementById("profileOpacity").style.opacity = "1"
-            
-        
+
+
         return
     }
-    
+
     return (
         <div>
             <div id='profileOpacity'>
@@ -821,8 +882,8 @@ function Profile() {
                             <h4 className="modal-title text-dark" id="modal_title">Are you sure you want to block this user?</h4>
                         </div>
                         <div className="modal-footer">
-                        <button className="button" id="close_button" onClick={() =>document.getElementById("profileOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
-                            <button onClick={PutBlock } id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Block</button>
+                            <button className="button" id="close_button" onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
+                            <button onClick={PutBlock} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "5%", verticalAlign: "middle", width: "100px" }}>Block</button>
                         </div>
                     </div>
                 </div>
@@ -865,7 +926,7 @@ function Profile() {
                 </div>
 
             </div>
-            
+
 
             <div className="modal" id="coModal" tabindex="-1">
                 <div class="modal-dialog">
@@ -896,7 +957,9 @@ function Profile() {
                                     </select>
                                 </p>
                             </div>
+                            {showConditions()}
                             <p>Attach some images:</p>
+                            {showWarning()}
                             <div style={{ display: "flex" }}>
                                 <input
                                     type="file"
@@ -955,16 +1018,28 @@ function Profile() {
             <div class="modal fade" id="banModal" tabIndex="-1" aria-labelledby="banModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-dark" id="banModalLabel">Do you want to ban this user?</h5>
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="banModalLabel">Do you want to ban this user?</h5>
+                        </div>
+                        <div class="modal-body">
+                            <textarea style={{ resize: "none" }} class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <textarea style={{resize:"none"}} class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"}  type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
-                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="needImage" tabIndex="-1">
+                <div className="modal-dialog" style={{ textAlign: "center" }}>
+                    <div className="modal-content">
+                        <div className="modal-header" style={{ width: "justifyContent" }}>
+                            <h4 className="modal-title text-dark" id="modal_title">{serverError}</h4>
+                        </div>
+                        <div className="modal-footer" style={{}} >
+                            <button onClick={() => { document.getElementById("toOpacity").style.opacity = "1" }} id="send_button" className="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Okay</button>
+                        </div>
                     </div>
                 </div>
             </div>

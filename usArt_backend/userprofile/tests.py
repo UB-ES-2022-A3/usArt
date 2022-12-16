@@ -195,6 +195,7 @@ class TestPublicationAPI(APITestCase):
             'pub_id': pub.id,
             'price': 100.0,
             'user_id': user.id,
+            'address': 'test address'
         }
         response = self.client.post(url, data=data, format='json')
         purchase_id = response.data['id']
@@ -223,11 +224,11 @@ class TestPublicationAPI(APITestCase):
 
         response = self.client.put(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        print(response.data)
+        
 
         response = self.client.put(url,  format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        print(response.data)
+        
 
     def test_get_block(self):
         user = UsArtUser.objects.get(user_name='test')
@@ -248,7 +249,7 @@ class TestPublicationAPI(APITestCase):
 
         response = self.client.put(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        print(response.data)
+        
 
 
         user = UsArtUser.objects.get(user_name='test2')
@@ -266,7 +267,7 @@ class TestPublicationAPI(APITestCase):
         url = reverse('userprofile:Userbloqued', kwargs={'id': user.id})
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        print("GET:", response.data)
+        
 
     def test_get_fav_lsit(self):
         url_post_login = reverse('api:token_obtain_pair')

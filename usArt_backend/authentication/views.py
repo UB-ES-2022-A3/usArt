@@ -127,6 +127,9 @@ class ChatPost(generics.ListCreateAPIView):
         myfile = ContentFile(st)
 
         response.chat.delete()
+        response.id_1_active = True
+        response.id_2_active = True
+        response.save()
         response.chat.save(str(response.id_sala)+'.txt',myfile)
        
         pusher.trigger(str(id_sala), u'my-event',  dic)

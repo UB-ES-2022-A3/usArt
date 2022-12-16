@@ -48,7 +48,9 @@
     margin-top: 35px;
     padding-left: 30px;
     padding-right: 30px;
-    min-height: 26vh;
+    min-height: 40vh;
+    max-height: 40vh;
+
 }
 
 
@@ -287,12 +289,22 @@ button[disabled] {
 
 .template {
     align-items: initial;
+    min-height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin-inline-start: 2%;
+    margin-inline-end: 2%;
+    justify-content: center;
+    grid-gap:5%;
 }
 
 .custom-container {
     grid-row: 1 / 3;
     grid-column: 2 / 3;
 }
+
+
 
 .modal-dialog {
     margin: 0;
@@ -309,11 +321,8 @@ button[disabled] {
 
 .card-item {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    margin-left: 5%;
-    margin-right: 5%;
     margin-bottom: 2%;
     border-radius: 20px;
-
     width: 35vw;
     height: 20vh;
     max-height: 400px;

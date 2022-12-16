@@ -28,6 +28,7 @@ function Publicacion(props) {
     const [formValues, setFormValues] = useState({})
     const [stateImages, setStateImages] = useState([])
     const [modal, setModal] = useState()
+    const [serverError, setServerError] = useState()
 
     const { data, fullScreen, loading } = stateImages;
     const previewClasses = ['preview', fullScreen ? 'preview--fullscreen' : ''].join(' ');
@@ -86,7 +87,7 @@ function Publicacion(props) {
                     }
                 })
         }
-        console.log("user: ", user)
+        
         refreshReports()
 
     }
@@ -151,9 +152,7 @@ function Publicacion(props) {
             }),
         })
             .then(data => {
-                if (data.status === 403) {
-                    alert("ERROR: Something went wrong")
-                }
+
             })
 
         refreshReports()
@@ -161,7 +160,7 @@ function Publicacion(props) {
 
     }
     function onDelete(e) {
-        console.log("entro en el delete")
+        
         fetch(
             LINK_BACKEND + "/api/catalog/complaint/put/delete/" + e, {
             method: 'DELETE',
@@ -173,7 +172,7 @@ function Publicacion(props) {
             },
         })
             .then(data => {
-                console.log(data);
+                ;
             })
         refreshReports()
         window.location.assign(LINK_FRONTEND + "/publicacion/" + id)
@@ -216,7 +215,7 @@ function Publicacion(props) {
                 })
                     .then((res) => res.json())
                     .then(data => {
-                        console.log(data)
+                        
                     }
                     )
             } else {
@@ -234,7 +233,7 @@ function Publicacion(props) {
                     },
                 })
                     .then(data => {
-                        console.log(data);
+                        ;
                     })
             }
         }
@@ -284,7 +283,7 @@ function Publicacion(props) {
     }
 
     function renderDelContactButton() {
-        console.log("este es el user", user)
+        
         if (authTokens) {
 
             if (author['id'] == user['user_id'] || user.is_superuser === true) {
@@ -396,30 +395,37 @@ function Publicacion(props) {
                         },
                     })
                     if (response.ok) {
-                        alert("You block this user")
-
+                        setServerError("You have this user blocked!")
+                        let blockModal = new Modal(document.getElementById('errorModal'), {
+                            keyboard: false, backdrop: 'static'
+                        })
+                        document.getElementById("toOpacity").style.opacity = "0.5";
+                        blockModal.show()
                     } else {
                         if (card.type === "CO") {
                             document.getElementById("toOpacity").style.opacity = "0.5";
                             coModal.show()
                         } else if (card.type === "AR") {
-                            document.getElementById("toOpacity").style.opacity = "0.5";
                             const link = LINK_FRONTEND + "/compra/" + id
                             window.location.assign(link)
                         } else if (card.type === "AU") {
-                            document.getElementById("toOpacity").style.opacity = "0.5";
                             const link = LINK_FRONTEND + "/auction/" + id
                             window.location.assign(link)
                         }
 
                     }
                 } else {
-                    alert("This user blocked you")
+                    setServerError("This user blocked you!")
+                    let blockModal = new Modal(document.getElementById('errorModal'), {
+                        keyboard: false, backdrop: 'static'
+                    })
+                    document.getElementById("toOpacity").style.opacity = "0.5";
+                    blockModal.show()
                 }
             } catch (error) { }
 
         } else {
-            alert("You must be logged!")
+            window.location.assign(LINK_FRONTEND + "/login")
         }
     }
     function LINK_FRONTENDProfile() {
@@ -431,7 +437,7 @@ function Publicacion(props) {
     }
     function Nameaux() {
         let name = ""
-        console.log(card.type)
+        
         if (card.type == "CO") {
             name = "Contact"
         } else if (card.type == "AR") {
@@ -444,12 +450,10 @@ function Publicacion(props) {
     function updateOutput() {
         let description = input_textarea.value
         if (description.length === 0) {
-            alert("La descripción no puede estar vacia")
             input_textarea.value = ""
         }
-        console.log(description)
+
         postPetCom(id, description)
-        alert("Petición hecha!")
         document.getElementById("toOpacity").style.opacity = "1"
         input_textarea.value = ""
     }
@@ -458,7 +462,6 @@ function Publicacion(props) {
         let reason = input_reason.value
         if (reason.length === 0) {
             complaintPopUp()
-            alert("Reason can't be empty")
         } else {
             fetch(LINK_BACKEND + "/api/catalog/complaint/get/post/" + id, {
                 method: 'POST',
@@ -474,10 +477,9 @@ function Publicacion(props) {
             })
                 .then((res) => res.json())
                 .then(data => {
-                    console.log(data)
+                    
                 }
                 )
-            alert("Complaint done!")
             document.getElementById("toOpacity").style.opacity = "1"
             input_reason.value = ""
         }
@@ -499,12 +501,13 @@ function Publicacion(props) {
             },
             body: JSON.stringify({
                 'pub_id': pub_id,
-                'description': description
+                'description': description,
+                'status': "PD"
             }),
         })
             .then((res) => res.json())
             .then(data => {
-                console.log(data)
+                
             }
             )
     }
@@ -551,7 +554,7 @@ function Publicacion(props) {
             });
         }
         if (title.length === 0 || description.length === 0 || price.length === 0) {
-            alert("Fields cannot be empty!")
+            
 
         }
         else {
@@ -577,10 +580,9 @@ function Publicacion(props) {
             }),
         })
             .then((res) => {
-                if (res.status !== 201) alert("Error uploading")
+                if (res.status !== 201) return
                 callApi()
                 modal.hide()
-                return res.json()
             })
         document.getElementById("toOpacity").style.opacity = "1";
     }
@@ -649,29 +651,6 @@ function Publicacion(props) {
             <div id='toOpacity'>
                 <div className="main" style={{ minHeight: "88vh", backgroundColor: "white", marginInlineStart: "5%", marginInlineEnd: "5%", borderRadius: "20px", marginBlockEnd: "1%" }}>
                     <div className="grid template" >
-                        <div className="card card-item ">
-                            <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
-                                <picture >
-                                    <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
-                                </picture>
-                                <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
-                                <div className="ratings">
-                                    <div className="empty-stars"></div>
-                                    <div className="full-stars" style={{ width: review }}></div>
-                                </div>
-                                <div className="card-body" style={{ paddingTop: "0%" }}>
-                                </div>
-                            </div>
-                            <hr></hr>
-                            <div style={{ marginLeft: "2%" }}>
-                                <h5 className="card-title" style={{ color: "black" }}>Descripcion</h5>
-                                <p placeholder="Description not found.." className="card-text">{author.description}</p>
-                            </div>
-                            <hr></hr>
-                            <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
-                                <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Profile </span></button>
-                            </div>
-                        </div>
                         <div>
                             <div className="custom-container rounded">
                                 <div id="carouselExampleControls" className="carousel carousel-dark  slide" data-bs-ride="carousel"  >
@@ -715,7 +694,29 @@ function Publicacion(props) {
                             </div>
                             {renderReportsUser()}
                         </div>
-
+                        <div className="card card-item ">
+                            <div className="grid " style={{ marginInlineStart: "1%", minHeight: "0%", justifyContent: "normal" }}>
+                                <picture >
+                                    <img src={author.photo} className="card-img-top size-img-card" alt="Sorry! not available at this time"></img>
+                                </picture>
+                                <h1 style={{ color: "black", marginLeft: "3%" }}>{card.author.user_name}</h1>
+                                <div className="ratings">
+                                    <div className="empty-stars"></div>
+                                    <div className="full-stars" style={{ width: review }}></div>
+                                </div>
+                                <div className="card-body" style={{ paddingTop: "0%" }}>
+                                </div>
+                            </div>
+                            <hr></hr>
+                            <div style={{ marginLeft: "2%" }}>
+                                <h5 className="card-title" style={{ color: "black" }}>Description</h5>
+                                <p placeholder="Description not found.." className="card-text">{author.description}</p>
+                            </div>
+                            <hr></hr>
+                            <div style={{ bottom: "0", right: "0", position: "absolute", marginRight: "2%", marginBottom: "2%" }}>
+                                <button onClick={LINK_FRONTENDProfile} className="button" style={{ verticalAlign: "middle", width: "100px" }}><span>Profile </span></button>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -726,12 +727,12 @@ function Publicacion(props) {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title text-dark" id="modal_title">Que servicio quieres adquirir del artista?</h5>
+                            <h5 className="modal-title text-dark" id="modal_title">Which service would you like to contract?</h5>
                             <button type="button" className="btn-close" onClick={() => document.getElementById("toOpacity").style.opacity = "1"} data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
 
-                            <p><textarea name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
+                            <p><textarea style={{ resize: "none" }} name="comentario" className="content-input" rows="5" cols="60" id="modal_review" required ></textarea></p>
 
                         </div>
 
@@ -837,11 +838,23 @@ function Publicacion(props) {
                             <h4 className="modal-title text-dark" id="modal_title">Reason for the complaint?</h4>
                         </div>
                         <div className="modal-body">
-                            <p><textarea name="reason" className="reason-input" rows="5" cols="45" id="reason" maxlength="300" required ></textarea></p>
+                            <p><textarea style={{ resize: "none" }} name="reason" className="reason-input" rows="5" cols="45" id="reason" maxlength="300" required ></textarea></p>
                         </div>
                         <div className="modal-footer">
                             <button className="button" id="close_button" onClick={cancelComplaint} data-bs-dismiss="modal" style={{ marginRight: "24.5%", verticalAlign: "middle", width: "100px" }}>Cancel</button>
                             <button onClick={complaintConfirm} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Complaint</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="errorModal" tabIndex="-1">
+                <div className="modal-dialog" style={{ width: '400px', textAlign: "center" }}>
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h4 className="modal-title text-dark" id="modal_title">{serverError}</h4>
+                        </div>
+                        <div className="modal-footer">
+                            <button onClick={() => { document.getElementById("toOpacity").style.opacity = "1" }} id="send_button" className="button" data-bs-dismiss="modal" style={{ marginRight: "10%", verticalAlign: "middle", width: "100px" }}>Okay</button>
                         </div>
                     </div>
                 </div>
