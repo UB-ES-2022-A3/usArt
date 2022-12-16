@@ -9,7 +9,7 @@ import AuthContext from "../context/authcontext";
 import './register.css'
 import Footer from './footer';
 import LINK_BACKEND from "./LINK_BACKEND"
-import { useParams } from "react-router-dom"
+import { useParams,useNavigate } from "react-router-dom"
 
 import { Modal } from 'bootstrap'
 
@@ -36,6 +36,7 @@ function Details(props) {
     const [Direccion, setDireccion] = useState("")
     const [Tiempodeentrega, setTiempodeentrega] = useState("")
     const [Imagen, setImagen] = useState([])
+    const navigate = useNavigate();
     console.log(id)
     useEffect(getCompra, [])
     function getCompra() {
@@ -85,11 +86,12 @@ function Details(props) {
     function updateOutput() {
         var description = input_textarea_description.value
         if (description.length === 0) {
-            alert("Please fill the textfield explaining the reason!")
+            input_textarea_description.value= ("Please fill the textfield explaining the reason!")
+            
         }
         else {
             postComplain(description)
-            window.location.assign(LINK_FRONTEND + "/home")
+            navigate(-1)
 
         }
     }
@@ -99,13 +101,8 @@ function Details(props) {
         if (emailCreator != null && emailUser != null) {
             window.open('mailto:' + emailCreator + '?subject=Refund inquiry&body=' + description);
 
-
-            alert("Your complain has been sent to the creator with email: " + emailCreator)
-
         }
-        else {
-            alert("There was an error sending your inquiri, contact us to resolve this issue.")
-        }
+        
     }
 
 
@@ -163,13 +160,13 @@ function Details(props) {
                                         </div>
                                         <p><textarea style={{ resize: "none", position: "relative" }} name="reason" className="content-input" rows="5" cols="60" id="modal_reason" required ></textarea></p>
                                         <div style={{display:"flex",justifyContent:"space-between"}}>
-                                            <button className="button" onClick={() => window.location.assign(LINK_FRONTEND + "/home")} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Cancel</button>
+                                            <button className="button" onClick={() =>  navigate(-1)} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Cancel</button>
                                             <button className="button" onClick={updateOutput} style={{ right: "0", verticalAlign: "middle", width: "100px" }}>Send</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <button className="button" onClick={() => window.location.assign(LINK_FRONTEND + "/home")} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Close</button>
+                            <button className="button" onClick={() => navigate(-1)} data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }} >Close</button>
                         </div>
                     </MDBCardBody>
                 </MDBCard>

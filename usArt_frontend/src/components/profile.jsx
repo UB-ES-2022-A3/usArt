@@ -24,7 +24,7 @@ function Profile() {
     const [radioGender, setRadioProduct] = useState('Products');
     const [buttonPopup, setButtonPopup] = useState(false)
     const [block, setBlock] = useState('')
-
+    const [serverError, setServerError] = useState()
     var input_textarea_title = document.getElementById('titlepost');
     var input_textarea_description = document.getElementById('descriptionpost');
     var input_textarea_price = document.getElementById('pricepost');
@@ -41,6 +41,7 @@ function Profile() {
 
     const [stateImages, setStateImages] = useState([]);
     const [warning, setWarning] = useState(false)
+    const [warning2, setWarning2] = useState(false)
     const handleFileChange = (event) => {
         const { target } = event;
         const { files } = target;
@@ -48,6 +49,12 @@ function Profile() {
         let imagesExtension = ["png", "jpg", "jpeg"];
         if (imagesExtension.indexOf(fileExtension) === -1) {
             setWarning(true)
+            let modalImage = new Modal(document.getElementById('needImage'), {
+                keyboard: false, backdrop: "static"
+            })
+            setServerError("Try to upload a photo... ")
+            modalImage.show()
+
             return
         }
 
@@ -216,7 +223,8 @@ function Profile() {
     function showBanModal() {
         document.getElementById("profileOpacity").style.opacity = "0.5"
         var banModal = new Modal(document.getElementById('banModal'), {
-            keyboard: false
+            keyboard: false,
+            backdrop: "static"
         })
         setModal(banModal)
         banModal.show()
@@ -245,9 +253,6 @@ function Profile() {
             .then(data => {
                 const profile = { ...prof, status: data.status }
                 setProfile(profile)
-                if (ban) {
-                    alert("The user has been banned")
-                }
                 document.getElementById("profileOpacity").style.opacity = "1"
                 modal.hide()
             })
@@ -287,15 +292,15 @@ function Profile() {
 
     function RenderPurchaseHistory() {
         console.log(prof)
-        if (prof.length == 0){
+        if (prof.length == 0) {
             return (<div className="btn-group px-4 py-5 ">
-            <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
-            <label className="btn btn-outline-dark" htmlFor="radio1">Products</label>
-            <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChangeRadio} />
-            <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
-        </div>)
+                <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
+                <label className="btn btn-outline-dark" htmlFor="radio1">Products</label>
+                <input type="radio" className="btn-check" name="options" id="radio2" autoComplete="off" value="Reviews" checked={radioGender === 'Reviews'} onChange={handleChangeRadio} />
+                <label className="btn btn-outline-dark" htmlFor="radio2">Reviews</label>
+            </div>)
         }
-        let possesive = prof.user_name.charAt(prof.user_name.length - 1) === 's'? prof.user_name +'\'': prof.user_name+'\'s'
+        let possesive = prof.user_name.charAt(prof.user_name.length - 1) === 's' ? prof.user_name + '\'' : prof.user_name + '\'s'
         if (prof.is_self) {
             return (<div className="btn-group px-4 py-5 ">
                 <input type="radio" className="btn-check " name="options" id="radio1" autoComplete="off" value="Products" checked={radioGender === 'Products'} onChange={handleChangeRadio} />
@@ -325,14 +330,15 @@ function Profile() {
                 images.push(element.data)
             });
         } else {
-            alert("Put some images!")
+            setWarning2(true)
+            return
 
         }
         if (title.length === 0 || description.length === 0 || price.length === 0 || type == null) {
-            alert("Fields cannot be empty!")
-
+            setWarning2(true)
         }
         else {
+            setWarning2(false)
             postArt(title, description, price, type, images)
 
         }
@@ -359,7 +365,13 @@ function Profile() {
             }),
         })
             .then((res) => {
-                if (res.status !== 201) alert("Error uploading")
+                if (res.status !== 201) {
+                    let modalImage = new Modal(document.getElementById('needImage'), {
+                        keyboard: false, backdrop: "static"
+                    })
+                    modalImage.show()
+                    setServerError("Error uploading")
+                }
                 return res.json()
             })
             .then(data => {
@@ -560,7 +572,11 @@ function Profile() {
             })
                 .then((res) => {
                     if (res.status === 500) {
-                        alert("Load again the image")
+                        let modalImage = new Modal(document.getElementById('needImage'), {
+                            keyboard: false, backdrop: "static"
+                        })
+                        modalImage.show()
+                        setServerError("Load again the image")
                     } else {
                         const link = LINK_FRONTEND + "/profile/" + username + "/default";
                         window.location.assign(link)
@@ -574,7 +590,7 @@ function Profile() {
         }
         else {
             if (!re.test(selectedFile.type)) {
-                alert("Needs to be an image!")
+
                 return
             }
             let des = document.getElementById("description");
@@ -594,7 +610,11 @@ function Profile() {
             })
                 .then((res) => {
                     if (res.status === 500) {
-                        alert("Load again the image")
+                        let modalImage = new Modal(document.getElementById('needImage'), {
+                            keyboard: false, backdrop: "static"
+                        })
+                        modalImage.show()
+                        setServerError("Load again the image")
                     } else {
                         const link = LINK_FRONTEND + "/profile/" + username + "/default";
                         window.location.assign(link)
@@ -767,7 +787,12 @@ function Profile() {
     }
     function showWarning(images, key) {
 
-        if (warning) return <div><p style={{color:"red"}}>Warning! We only accept :  "png", "jpg", "jpeg";</p></div>
+        if (warning) return <div><p style={{ color: "red" }}>Warning! We only accept :  "png", "jpg", "jpeg";</p></div>
+
+    }
+    function showConditions() {
+
+        if (warning2) return <div><p style={{ color: "red" }}>Fill all the fields please</p></div>
 
     }
     function PutBlock() {
@@ -786,7 +811,7 @@ function Profile() {
 
         console.log(data)
 
-        alert("User " + block + "ed")
+
         if (block == "Block") {
             setBlock("Unblock")
         }
@@ -932,6 +957,7 @@ function Profile() {
                                     </select>
                                 </p>
                             </div>
+                            {showConditions()}
                             <p>Attach some images:</p>
                             {showWarning()}
                             <div style={{ display: "flex" }}>
@@ -1001,6 +1027,18 @@ function Profile() {
                         <div class="modal-footer">
                             <button onClick={() => document.getElementById("profileOpacity").style.opacity = "1"} type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button>
                             <button type="button" class="btn btn-danger" onClick={(e) => banUser(e, true)}>Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="needImage" tabIndex="-1">
+                <div className="modal-dialog" style={{ textAlign: "center" }}>
+                    <div className="modal-content">
+                        <div className="modal-header" style={{ width: "justifyContent" }}>
+                            <h4 className="modal-title text-dark" id="modal_title">{serverError}</h4>
+                        </div>
+                        <div className="modal-footer" style={{}} >
+                            <button onClick={() => { document.getElementById("toOpacity").style.opacity = "1" }} id="send_button" className="button" data-bs-dismiss="modal" style={{ verticalAlign: "middle", width: "100px" }}>Okay</button>
                         </div>
                     </div>
                 </div>
